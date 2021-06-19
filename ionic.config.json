@@ -1,0 +1,7 @@
+{
+  "name": "veggie-foodie",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue"
+}
