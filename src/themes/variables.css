@@ -1,0 +1,112 @@
+@font-face {
+  font-family: Benne;
+  src: url('../assets/fonts/Benne-Regular.ttf');
+}
+
+/* Ionic Variables and Theming. For more info, please see:
+http://ionicframework.com/docs/theming/ */
+
+/** Ionic CSS Variables **/
+:root {
+  --ion-font-family: Benne;
+  --ion-color-contrast: #262626;
+  --ion-color-contrast-rgb: 38, 38, 38;
+
+  --ion-color-primary: #005b71;
+  --ion-color-primary-rgb: 0, 91, 113;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #005063;
+  --ion-color-primary-tint: #1a6b7f;
+
+  --ion-color-item: #005b71;
+  --ion-color-item-rgb: 0, 91, 113;
+  --ion-color-focus: #005b71;
+
+  --ion-color-secondary: #569eae;
+  --ion-color-secondary-rgb: 86, 158, 174;
+  --ion-color-secondary-contrast: #000000;
+  --ion-color-secondary-contrast-rgb: 0, 0, 0;
+  --ion-color-secondary-shade: #4c8b99;
+  --ion-color-secondary-tint: #67a8b6;
+
+  --ion-color-tertiary: #005b71;
+  --ion-color-tertiary-rgb: 32, 117, 103;
+  --ion-color-tertiary-contrast: #ffffff;
+  --ion-color-tertiary-contrast-rgb: 255, 255, 255;
+  --ion-color-tertiary-shade: #1c675b;
+  --ion-color-tertiary-tint: #368376;
+
+  /* to work with color in IOS */
+  --ion-toolbar-color: var(--ion-color-primary-contrast);
+}
+
+@media (prefers-color-scheme: dark) {
+  /*
+   * Dark Colors
+   * -------------------------------------------
+   */
+
+ /*  body {
+    --ion-color-primary: #121212;
+    --ion-color-primary-rgb: 18, 18, 18;
+    --ion-color-primary-contrast: #ffffff;
+    --ion-color-primary-contrast-rgb: 255, 255, 255;
+    --ion-color-primary-shade: #101010;
+    --ion-color-primary-tint: #2a2a2a;
+    --ion-color-item: #ffffff;
+    --ion-color-item-rgb: 255, 255, 255;
+
+    --ion-color-focus: #000000;
+    --ion-color-contrast: #ffffff;
+    --ion-color-contrast-rgb: 255, 255, 255;
+
+    --ion-color-secondary: #1a1b1e;
+    --ion-color-secondary-rgb: 26, 27, 30;
+    --ion-color-secondary-contrast: #ffffff;
+    --ion-color-secondary-contrast-rgb: 255, 255, 255;
+    --ion-color-secondary-shade: #17181a;
+    --ion-color-secondary-tint: #313235;
+    --ion-color-tertiary: #005b71;
+    --ion-color-tertiary-rgb: 0, 91, 113;
+    --ion-color-tertiary-contrast: #ffffff;
+    --ion-color-tertiary-contrast-rgb: 255, 255, 255;
+    --ion-color-tertiary-shade: #005063;
+    --ion-color-tertiary-tint: #1a6b7f;
+
+  } */
+}
+
+/*
+   * Fallback Dark Colors
+   * -------------------------------------------
+   */
+
+body.dark {
+  --ion-color-primary: #121212;
+  --ion-color-primary-rgb: 18, 18, 18;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #101010;
+  --ion-color-primary-tint: #2a2a2a;
+
+  --ion-color-focus: #000000;
+  --ion-color-item: #ffffff;
+  --ion-color-item-rgb: 255, 255, 255;
+
+  --ion-color-contrast: #ffffff;
+  --ion-color-contrast-rgb: 255, 255, 255;
+
+  --ion-color-secondary: #1a1b1e;
+  --ion-color-secondary-rgb: 26, 27, 30;
+  --ion-color-secondary-contrast: #ffffff;
+  --ion-color-secondary-contrast-rgb: 255, 255, 255;
+  --ion-color-secondary-shade: #17181a;
+  --ion-color-secondary-tint: #313235;
+  --ion-color-tertiary: #005b71;
+  --ion-color-tertiary-rgb: 0, 91, 113;
+  --ion-color-tertiary-contrast: #ffffff;
+  --ion-color-tertiary-contrast-rgb: 255, 255, 255;
+  --ion-color-tertiary-shade: #005063;
+  --ion-color-tertiary-tint: #1a6b7f;
+}

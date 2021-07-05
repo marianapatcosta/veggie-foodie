@@ -4,15 +4,35 @@
   </ion-app>
 </template>
 
-<script lang="ts">
-import { IonApp, IonRouterOutlet } from '@ionic/vue';
-import { defineComponent } from 'vue';
-
+<script >
+import { IonApp, IonRouterOutlet } from '@ionic/vue'
+import { Storage } from '@capacitor/storage'
+import { defineComponent } from 'vue'
+import { defaultLocale } from './locales'
 export default defineComponent({
   name: 'App',
   components: {
     IonApp,
-    IonRouterOutlet
-  }
-});
+    IonRouterOutlet,
+  },
+  methods: {
+    async setlocale() {
+      const { value: language } = await Storage.get({
+        key: 'language',
+      })
+      this.$i18n.locale = language || defaultLocale
+    },
+    async setTheme() {
+      const { value: theme } = await Storage.get({
+        key: 'theme',
+      })
+      const prefersDark = theme === 'dark'
+      document.body.classList.toggle('dark', prefersDark)
+    },
+  },
+  mounted() {
+    this.setlocale()
+    this.setTheme()
+  },
+})
 </script>

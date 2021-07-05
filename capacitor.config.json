@@ -1,6 +1,6 @@
 {
-	"appId": "io.ionic.starter",
-	"appName": "veggie-foodie",
-	"webDir": "dist",
-	"bundledWebRuntime": false
+  "appId": "io.costa.mariana",
+  "appName": "veggie-foodie",
+  "webDir": "dist",
+  "bundledWebRuntime": false
 }

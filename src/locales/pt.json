@@ -1,0 +1,47 @@
+{
+  "global": {
+    "cancel": "cancelar",
+    "confirmDelete": "Pretende eliminar {title}?",
+    "dark": "escuro",
+    "english": "inglês",
+    "light": "claro",
+    "ok": "ok",
+    "portuguese": "português",
+    "save": "Guardar",
+    "search": "Pesquisar"
+  },
+  "meals": {
+    "addMeal": "Adicionar refeição",
+    "date": "Data",
+    "description": "Descrição",
+    "deleteMeal": "Eliminar refeição?",
+    "district": "Distrito de",
+    "image": "Imagem",
+    "itemToKeep": "1",
+    "location": "Local",
+    "municipality": "Município",
+    "myMeals": "As minhas refeições",
+    "region": "Região de",
+    "title": "Título"
+  },
+  "products": {
+    "addProduct": "Adicionar um producto",
+    "description": "Description",
+    "myProducts": "Os meus productos",
+    "title": "Title"
+  },
+  "recipes": {
+    "addRecipe": "Adicionar uma receita",
+    "ingredients": "Ingredientes",
+    "preparation": "Preparação",
+    "myRecipes": "As minhas receitas",
+    "source": "Fonte"
+  },
+  "user": {
+    "language": "Idioma",
+    "myProfile": "O meu perfil",
+    "preferences": "Preferências",
+    "selectOne": "Selecione um",
+    "theme": "Tema"
+  }
+}
