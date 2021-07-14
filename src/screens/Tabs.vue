@@ -23,12 +23,12 @@ import { IonTabs, IonTabBar, IonTabButton, IonIcon, IonPage } from '@ionic/vue'
 import {
   cart,
   cartOutline,
-  person,
-  personOutline,
   receipt,
   receiptOutline,
   restaurant,
   restaurantOutline,
+  settings,
+  settingsOutline
 } from 'ionicons/icons'
 export default {
   components: {
@@ -44,7 +44,7 @@ export default {
         { name: 'meals', icon: restaurant, iconOutline: restaurantOutline },
         { name: 'recipes', icon: receipt, iconOutline: receiptOutline },
         { name: 'products', icon: cart, iconOutline: cartOutline },
-        { name: 'user', icon: person, iconOutline: personOutline },
+        { name: 'user', icon: settings, iconOutline: settingsOutline },
       ],
       selectedTab: undefined,
     }

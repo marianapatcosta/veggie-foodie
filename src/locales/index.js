@@ -15,13 +15,3 @@ export const i18n = createI18n({
   messages
 })
 
-export const getLanguages = () => ([
-  {
-    locale: 'en',
-    label: i18n.global.t('global.english')
-  },
-  {
-    locale: 'pt',
-    label: i18n.global.t('global.portuguese')
-  }
-])

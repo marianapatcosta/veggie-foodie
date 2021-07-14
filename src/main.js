@@ -1,4 +1,6 @@
 import { createApp } from 'vue'
+import { useSQLite } from 'vue-sqlite-hook/dist'
+import { useState } from './composables/useState'
 import App from './App.vue'
 import router from './router'
 import store from './store'
@@ -36,6 +38,88 @@ const app = createApp(App)
   .use(i18n)
 
 app.component('layout', Layout)
+
+/* SQLite Global Variables and Hook */
+const [jsonListeners, setJsonListeners] = useState(false)
+const [isModal, setIsModal] = useState(false)
+const [message, setMessage] = useState('')
+app.config.globalProperties.$isModalOpen = {
+  isModal: isModal,
+  setIsModal: setIsModal
+}
+app.config.globalProperties.$isJsonListeners = {
+  jsonListeners: jsonListeners,
+  setJsonListeners: setJsonListeners
+}
+app.config.globalProperties.$messageContent = {
+  message: message,
+  setMessage: setMessage
+}
+
+const onProgressImport = async progress => {
+  if (app.config.globalProperties.$isJsonListeners.jsonListeners.value) {
+    if (!app.config.globalProperties.$isModalOpen.isModal.value)
+      app.config.globalProperties.$isModalOpen.setIsModal(true)
+    app.config.globalProperties.$messageContent.setMessage(
+      app.config.globalProperties.$messageContent.message.value.concat(
+        `${progress}\n`
+      )
+    )
+  }
+}
+const onProgressExport = async progress => {
+  if (app.config.globalProperties.$isJsonListeners.jsonListeners.value) {
+    if (!app.config.globalProperties.$isModalOpen.isModal.value)
+      app.config.globalProperties.$isModalOpen.setIsModal(true)
+    app.config.globalProperties.$messageContent.setMessage(
+      app.config.globalProperties.$messageContent.message.value.concat(
+        `${progress}\n`
+      )
+    )
+  }
+}
+
+// SQLite Hook
+const {
+  echo,
+  getPlatform,
+  createConnection,
+  closeConnection,
+  retrieveConnection,
+  retrieveAllConnections,
+  closeAllConnections,
+  addUpgradeStatement,
+  importFromJson,
+  isJsonValid,
+  copyFromAssets,
+  isAvailable
+} = useSQLite({
+  onProgressImport,
+  onProgressExport
+})
+
+// Singleton SQLite Hook
+app.config.globalProperties.$sqlite = {
+  echo,
+  getPlatform,
+  createConnection,
+  closeConnection,
+  retrieveConnection,
+  retrieveAllConnections,
+  closeAllConnections,
+  addUpgradeStatement,
+  importFromJson,
+  isJsonValid,
+  copyFromAssets,
+  isAvailable
+}
+
+//  Existing Connections Store
+const [existConn, setExistConn] = useState(false)
+app.config.globalProperties.$existingConn = {
+  existConn,
+  setExistConn
+}
 
 router.isReady().then(() => {
   app.mount('#app')

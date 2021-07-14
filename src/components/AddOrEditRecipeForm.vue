@@ -56,7 +56,6 @@ export default {
     return {
       enteredTitle: '',
       enteredDescription: '',
-     /*  enteredImageUrl: '', */
       takenImageUrl: null,
       camera,
     }
@@ -81,8 +80,3 @@ export default {
   },
 }
 </script>
-<style scoped>
-ion-list {
-  background: var(--ion-color-secondary);
-}
-</style>

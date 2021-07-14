@@ -1,10 +1,6 @@
 <template>
-  <layout :screenTitle="$t('user.myProfile')" pageDefaultBackLink="/tabs/meals">
+  <layout :screenTitle="$t('user.preferences')" pageDefaultBackLink="/tabs/meals">
     <ion-list class="ion-padding preferences-list">
-      <ion-list-header>
-        <ion-label>{{ $t('user.preferences') }}</ion-label>
-      </ion-list-header>
-
       <ion-item class="preferences-select">
         <ion-label>{{ $t('user.language') }}</ion-label>
         <ion-select
@@ -53,11 +49,9 @@ import {
   IonLabel,
   IonSelect,
   IonSelectOption,
-  IonListHeader,
 } from '@ionic/vue'
 import { Storage } from '@capacitor/storage'
-import { getLanguages } from '../locales'
-import { getThemes } from '../themes'
+import { getLanguages, getThemes } from '../utils/constants'
 export default {
   components: {
     IonList,
@@ -65,7 +59,6 @@ export default {
     IonLabel,
     IonSelect,
     IonSelectOption,
-    IonListHeader,
   },
   data() {
     return {
@@ -89,29 +82,40 @@ export default {
   },
   methods: {
     async updateLanguage(event) {
-      this.$i18n.locale = event.target.value
-      await Storage.set({
-        key: 'language',
-        value: event.target.value,
-      })
+      try {
+        this.$i18n.locale = event.target.value
+        await Storage.set({
+          key: 'language',
+          value: event.target.value,
+        })
+      } catch (error) {
+        console.error(error)
+      }
     },
     async updateTheme(event) {
-      this.theme = event.target.value
-      const prefersDark = event.target.value === 'dark'
-      document.body.classList.toggle('dark', prefersDark)
-      await Storage.set({
-        key: 'theme',
-        value: event.target.value,
-      })
+      try {
+        this.theme = event.target.value
+        const prefersDark = event.target.value === 'dark'
+        document.body.classList.toggle('dark', prefersDark)
+        await Storage.set({
+          key: 'theme',
+          value: event.target.value,
+        })
+      } catch (error) {
+        console.error(error)
+      }
     },
     async getTheme() {
-      const { value: theme } = await Storage.get({
-        key: 'theme',
-      })
-      this.theme =
-        theme ||
-        window.matchMedia('(prefers-color-scheme: dark)').matches ||
-        'dark'
+      try {
+        const { value: theme } = await Storage.get({
+          key: 'theme',
+        })
+        this.theme =
+          theme ||
+          window.matchMedia('(prefers-color-scheme: dark)').matches 
+      } catch (error) {
+        console.error(error)
+      }
     },
   },
   mounted() {

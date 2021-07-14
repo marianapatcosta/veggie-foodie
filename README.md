@@ -37,3 +37,6 @@ opens the build app in XCode
 
 ### build apk
 in Android studio go to `Build -> Generate Signed Bundle / APK` and fill the form and follow the instructions. The .apk will be generate in `app\android\app\release\app-release.apk`
+
+### debug device emulator in chrome
+```chrome://inspect:device```

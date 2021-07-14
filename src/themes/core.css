@@ -49,14 +49,38 @@ ion-button {
 ion-searchbar {
   --icon-color: var(--ion-color-item) !important;
   --clear-button-color: var(--ion-color-item) !important;
-  --color: var(--ion-color-primary-contrast) !important;
-  --placeholder-color: var(--ion-color-primary-contrast) !important;
+  --color: var(--ion-color-contrast) !important;
+  --placeholder-color: var(--ion-color-contrast) !important;
+  --box-shadow: none !important;
   padding: 0 !important;
+}
+
+ion-searchbar .searchbar-search-icon,
+ion-searchbar .searchbar-clear-icon {
+  color: var(--ion-color-item) !important;
 }
 
 ion-picker {
   color: var(--ion-color-contrast) !important;
   --background: var(--ion-color-primary) !important;
+}
+
+ion-select::part(icon) {
+  color: var(--ion-color-item) !important;
+  opacity: 1;
+}
+
+ion-card {
+  color: var(--ion-color-primary-contrast) !important;
+  --background: var(--ion-color-primary) !important;
+  padding: 1.5rem;
+  text-align: center;
+  margin-top: 3rem;
+  font-size: 1.1rem;
+}
+
+ion-list {
+  background: var(--ion-color-secondary) !important;
 }
 
 .submit-button {
@@ -89,6 +113,11 @@ ion-picker {
   top: 0;
   bottom: 0;
   margin: auto 0;
+}
+
+.icon-button--clear {
+  width: 2.8rem;
+  height: 2.8rem;
 }
 
 .icon-button:active,

@@ -1,14 +1,23 @@
 <template>
   <ion-item :router-link="`/${path}/${item.id}`" color="secondary" lines="none">
     <ion-thumbnail slot="start">
-      <ion-img :src="item.imageUrl" :alt="item.title" />
+      <ion-img v-if="item.imageUrl" :src="item.imageUrl" :alt="item.title" />
+      <div v-else class="image-placeholder" />
     </ion-thumbnail>
     <ion-label>{{ item.title }}</ion-label>
     <ion-buttons>
-      <ion-button fill="clear" @click.prevent="editMeal(item.id)">
+      <ion-button
+        class="icon-button--clear"
+        fill="clear"
+        @click.prevent="editMeal(item.id)"
+      >
         <ion-icon slot="icon-only" :icon="pencil" />
       </ion-button>
-      <ion-button fill="clear" @click.prevent="deleteMeal(item)">
+      <ion-button
+        class="icon-button--clear"
+        fill="clear"
+        @click.prevent="deleteMeal(item)"
+      >
         <ion-icon slot="icon-only" :icon="trash" />
       </ion-button>
     </ion-buttons>
@@ -58,10 +67,6 @@ export default {
 }
 </script>
 <style scoped>
-ion-button {
-  width: 2.8rem;
-  height: 2.8rem;
-}
 ion-icon {
   color: var(--ion-color-item);
 }
@@ -70,5 +75,9 @@ ion-item {
 }
 ion-item::part(inner) {
   border-color: var(--ion-color-contrast) !important;
+}
+.image-placeholder {
+  background-color: var(--ion-color-primary);
+  height: 100%;
 }
 </style>
