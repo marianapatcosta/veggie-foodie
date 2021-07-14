@@ -28,7 +28,7 @@ const routes = [
       {
         path: 'user',
         name: 'user',
-        component: () => import('../screens/UserProfile.vue')
+        component: () => import('../screens/UserPreferences.vue')
       }
     ]
   },
@@ -59,7 +59,7 @@ const routes = [
   {
     path: '/recipes/edit/:id',
     name: 'edit-recipe',
-    component: () => import('../screens/AddOrEditMeal.vue')
+    component: () => import('../screens/AddOrEditRecipe.vue')
   },
   { path: '/:pathMatch(.*)*', component: Meals }
 ]

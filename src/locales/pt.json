@@ -1,14 +1,25 @@
 {
   "global": {
+    "addSuccess": "A/O {item} foi adicionado.",
     "cancel": "cancelar",
     "confirmDelete": "Pretende eliminar {title}?",
+    "created": "criação",
     "dark": "escuro",
+    "date": "data",
+    "delete": "Eliminar?",
+    "deleteSuccess": "A/O {item} foi eliminada/o.",
+    "description": "descrição",
+    "editSuccess": "A/O {item} foi editada/o.",
     "english": "inglês",
+    "error": "Ocorreu um erro.",
     "light": "claro",
+    "location": "localização",
     "ok": "ok",
+    "orderBy": "Ordenar por",
     "portuguese": "português",
     "save": "Guardar",
-    "search": "Pesquisar"
+    "search": "Pesquisar",
+    "title": "título"
   },
   "meals": {
     "addMeal": "Adicionar refeição",
@@ -19,8 +30,11 @@
     "image": "Imagem",
     "itemToKeep": "1",
     "location": "Local",
+    "meal": "refeição",
     "municipality": "Município",
     "myMeals": "As minhas refeições",
+    "noMeals": "Ainda não há refeições para mostrar.",
+    "notFound": "Não foi possível encontrar uma refeição para esse id.",
     "region": "Região de",
     "title": "Título"
   },
@@ -39,7 +53,6 @@
   },
   "user": {
     "language": "Idioma",
-    "myProfile": "O meu perfil",
     "preferences": "Preferências",
     "selectOne": "Selecione um",
     "theme": "Tema"

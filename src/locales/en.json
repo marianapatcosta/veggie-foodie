@@ -1,14 +1,25 @@
 {
   "global": {
+    "addSuccess": "The {item} was added.",
     "cancel": "cancel",
+    "created": "created",
     "confirmDelete": "Do you want to delete {title}?",
     "dark": "dark",
+    "date": "date",
+    "delete": "Delete?",
+    "deleteSuccess": "The {item} was deleted.",
+    "description": "description",
+    "editSuccess": "The {item} was edited.",
     "english": "english",
+    "error": "An error occurred.",
     "light": "light",
+    "location": "location",
     "ok": "ok",
+    "orderBy": "Order by",
     "portuguese": "portuguese",
     "save": "Save",
-    "search": "Search"
+    "search": "Search",
+    "title": "title"
   },
   "meals": {
     "addMeal": "Add meal",
@@ -21,8 +32,11 @@
     "photo": "Photo",
     "itemToKeep": "0",
     "location": "Location",
+    "meal": "meal",
     "municipality": "Municipality",
     "myMeals": "My meals",
+    "noMeals": "No meals to show yet.",
+    "notFound": "Could not find a meal for that id",
     "region": "Region",
     "title": "Title"
   },
@@ -44,7 +58,6 @@
   },
   "user": {
     "language": "Language",
-    "myProfile": "My profile",
     "preferences": "Preferences",
     "selectOne": "Select one",
     "theme": "Theme"

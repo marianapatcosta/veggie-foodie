@@ -17,10 +17,7 @@ export default {
         recipeId: this.$route.params.id,
       }
     },
-    saveRecipe(recipe) {
-      this.$store.dispatch('addRecipe', recipe)
-      this.$router.replace('/recipes')
-    },
+    
   },
 }
 </script>

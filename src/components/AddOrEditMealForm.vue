@@ -11,7 +11,7 @@
           v-model="date"
           display-format="YYYY MM DD HH:mm"
           placeholder="YYYY MM DD HH:mm"
-        ></ion-datetime>
+        />
       </ion-item>
       <ion-item
         :style="{
@@ -102,29 +102,43 @@ export default {
   },
   data() {
     return {
-      title: this.meal?.title || '',
-      description: this.meal?.description || '',
-      imageUrl: this.meal?.imageUrl || '',
-      location: this.meal?.location || '',
-      date: this.meal?.date || new Date().toISOString(),
+      title: '',
+      description: '',
+      imageUrl: '',
+      location: '',
+      date: new Date().toISOString(),
       camera,
       yourLocation: locationIcon,
     }
   },
+  watch: {
+    meal () {
+      this.title = this.meal?.title || ''
+      this.description = this.meal?.description || ''
+      this.imageUrl = this.meal?.imageUrl || ''
+      this.location = this.meal?.location || ''
+      this.date = this.meal?.date || new Date().toISOString()
+    },
+  },
   methods: {
     async takePhoto() {
-      const photo = await Camera.getPhoto({
-        resultType: CameraResultType.Uri, // stores images in a temp localition in the device
-        source: CameraSource.Prompt, // to open the camera or the file explorer so the user can select one image
-        quality: 60, // in %
-      })
-      this.imageUrl = photo.webPath // path to the image in the device
+      try {
+        const photo = await Camera.getPhoto({
+          resultType: CameraResultType.DataUrl, // stores images as data url in base 64
+          source: CameraSource.Prompt, // to open the camera or the file explorer so the user can select one image
+          quality: 60, // in %
+        })
+        this.imageUrl = photo.dataUrl
+      } catch (error) {
+        console.error(error)
+      }
     },
     submitForm() {
       const meal = {
         title: this.title,
         date: this.date,
         imageUrl: this.imageUrl,
+        location: this.location,
         description: this.description,
       }
       this.$emit('save-meal', meal)
@@ -158,24 +172,25 @@ export default {
       return locationArray.join(', ')
     },
     async findCurrentLocation() {
-      const language = 'pt'
-      const GEOLOCATION_KEY = process.env.VUE_APP_GEOLOCATION_KEY
-      const coordinates = await Geolocation.getCurrentPosition()
-      const geolocationParams = `${coordinates.coords.longitude},${coordinates.coords.latitude}`
-      const geolocation = await axios.get(
-        `https://api.mapbox.com/geocoding/v5/mapbox.places/${geolocationParams}.json?access_token=${GEOLOCATION_KEY}&autocomplete=false&language=${language}`
-      )
-      this.location = this.getLocationName(
-        geolocation.data.features[3].place_name
-      )
+      try {
+        const language = this.$i18n.locale
+        const GEOLOCATION_KEY = process.env.VUE_APP_GEOLOCATION_KEY
+        const coordinates = await Geolocation.getCurrentPosition()
+        const geolocationParams = `${coordinates.coords.longitude},${coordinates.coords.latitude}`
+        const geolocation = await axios.get(
+          `https://api.mapbox.com/geocoding/v5/mapbox.places/${geolocationParams}.json?access_token=${GEOLOCATION_KEY}&autocomplete=false&language=${language}`
+        )
+        this.location = this.getLocationName(
+          geolocation.data.features[3].place_name
+        )
+      } catch (error) {
+        console.error(error)
+      }
     },
   },
 }
 </script>
 <style scoped>
-ion-list {
-  background: var(--ion-color-secondary);
-}
 ion-item {
   --background: var(--ion-color-secondary);
   --border-color: rgba(var(--ion-color-item-rgb), 0.5);
