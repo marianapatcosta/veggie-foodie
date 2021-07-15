@@ -50,19 +50,19 @@ export default {
     IonButtons,
     IonIcon,
   },
-  data() {
+  setup(_, context) {
+    const editMeal = id => {
+      context.emit('edit-meal', id)
+    }
+    const deleteMeal = meal => {
+      context.emit('delete-meal', meal)
+    }
     return {
       pencil,
       trash,
+      editMeal,
+      deleteMeal,
     }
-  },
-  methods: {
-    editMeal(id) {
-      this.$emit('edit-meal', id)
-    },
-    deleteMeal(meal) {
-      this.$emit('delete-meal', meal)
-    },
   },
 }
 </script>

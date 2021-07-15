@@ -5,11 +5,11 @@
 </template>
 
 <script >
-import { getCurrentInstance } from 'vue'
-
+import { defineComponent, getCurrentInstance, onMounted, ref, computed } from 'vue'
 import { IonApp, IonRouterOutlet } from '@ionic/vue'
 import { Storage } from '@capacitor/storage'
-import { defineComponent } from 'vue'
+import { useStore } from 'vuex'
+import { useI18n } from 'vue-i18n'
 import { defaultLocale } from './locales'
 import { CREATE_TABLES } from './utils/create-tables'
 
@@ -19,51 +19,54 @@ export default defineComponent({
     IonApp,
     IonRouterOutlet,
   },
-  data() {
-    return {
-      app: getCurrentInstance(),
-      sqlite: null,
-      database: this.$store.getters.database,
-      isDbInitialized: false,
-    }
-  },
-  methods: {
-    async connectDatabase() {
+  setup() {
+    const store = useStore()
+    const { locale } = useI18n()
+
+    const app = getCurrentInstance()
+    const sqlite = ref(null)
+    const database = computed(() => store.getters.database)
+    const isDbInitialized = ref(false)
+
+    const connectDatabase = async () => {
       try {
-        const sqlite = this.app?.appContext.config.globalProperties.$sqlite
-        this.sqlite = sqlite
-        const db = await this.sqlite?.createConnection(
+        const sqlite = app?.appContext.config.globalProperties.$sqlite
+
+        sqlite.value = sqlite
+        const db = await sqlite?.createConnection(
           'veggie-foodie',
           false,
           'no-encryption'
         )
         await db?.open()
-        this.database = db
-        this.$store.dispatch('setDatabase', db)
-        await this.initDbTables()
-        this.isDbInitialized = true
+        store.dispatch('setDatabase', db)
+        await initDbTables()
+        isDbInitialized.value = true
       } catch (error) {
         console.error(error)
       }
-    },
-    async initDbTables() {
+    }
+
+    const initDbTables = async () => {
       try {
-        this.database.run(CREATE_TABLES)
+        database.value.run(CREATE_TABLES)
       } catch (error) {
         console.error(error)
       }
-    },
-    async setlocale() {
+    }
+
+    const setlocale = async () => {
       try {
         const { value: language } = await Storage.get({
           key: 'language',
         })
-        this.$i18n.locale = language || defaultLocale
+        locale.value = language || defaultLocale
       } catch (error) {
         console.error(error)
       }
-    },
-    async setTheme() {
+    }
+
+    const setTheme = async () => {
       try {
         const { value } = await Storage.get({
           key: 'theme',
@@ -75,18 +78,22 @@ export default defineComponent({
           key: 'theme',
           value: theme,
         })
+
       } catch (error) {
         console.error(error)
       }
-    },
-   
-  },
-  created() {
-      this.connectDatabase()
-  },
-  mounted() {
-    this.setlocale()
-    this.setTheme()
+    }
+
+    onMounted(() => {
+      connectDatabase()
+      setlocale()
+      setTheme()
+    })
+
+    return {
+      app: sqlite,
+      isDbInitialized,
+    }
   },
 })
 </script>

@@ -1,6 +1,6 @@
 <template>
   <layout
-    :screenTitle="!mealId ? $t('meals.addMeal') : $t('meals.editMeal')"
+    :screenTitle="!mealId ? t('meals.addMeal') : t('meals.editMeal')"
     pageDefaultBackLink="/tabs/meals"
   >
     <add-or-edit-meal-form :meal="meal" @save-meal="saveMeal" />
@@ -8,6 +8,10 @@
 </template>
 
 <script>
+import { ref, onMounted } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import { useStore } from 'vuex'
+import { useI18n } from 'vue-i18n'
 import { toastController } from '@ionic/vue'
 import { AddOrEditMealForm } from '../components'
 
@@ -15,57 +19,66 @@ export default {
   components: {
     AddOrEditMealForm,
   },
-  data() {
-    return {
-      database: this.$store.getters.database,
-      mealId: this.$route.params.id,
-      meal: null,
-    }
-  },
-  methods: {
-    async fetchMeal() {
+  setup() {
+    const route = useRoute()
+    const router = useRouter()
+    const store = useStore()
+    const { t } = useI18n()
+
+    const meal = ref(null)
+    const mealId = ref(route.params.id)
+    const database = store.getters.database
+
+    const fetchMeal = async () => {
       try {
-        const statement = `SELECT * FROM meals WHERE id = ${this.mealId};`
-        const response = await this.database.query(statement)
-        this.meal = response.values[0]
+        const statement = `SELECT * FROM meals WHERE id = ${mealId.value};`
+        const response = await database.query(statement)
+        meal.value = response.values[0]
       } catch (error) {
         console.error(error)
       }
-    },
-    async saveMeal(meal) {
+    }
+
+    const saveMeal = async meal => {
       try {
         const { title, description, imageUrl, location, date } = meal
-        // `UPDATE meals SET (title, description, imageUrl, location, date) VALUES(?, ?, ?, ?, ?) WHERE id = ${this.mealId}`
-        const statement = this.mealId
-          ? `UPDATE meals SET title = ?, description = ?, imageUrl = ?, location = ?, date = ?  WHERE id = ${this.mealId}`
+        // `UPDATE meals SET (title, description, imageUrl, location, date) VALUES(?, ?, ?, ?, ?) WHERE id = ${mealId}`
+        const statement = mealId.value
+          ? `UPDATE meals SET title = ?, description = ?, imageUrl = ?, location = ?, date = ?  WHERE id = ${mealId.value}`
           : 'INSERT INTO meals (title, description, imageUrl, location, date) VALUES(?, ?, ?, ?, ?);'
         const values = [title, description, imageUrl, location, date]
-         await this.database.run(statement, values)
-        this.$router.replace('/tabs/meals')
+        await database.run(statement, values)
+        router.replace('/tabs/meals')
         const toast = await toastController.create({
-          message: !this.mealId
-            ? this.$t('global.addSuccess', {
-            item: this.$t('meals.meal'),
-          })
-            : this.$t('global.editSuccess', {
-            item: this.$t('meals.meal'),
-          }),
+          message: !mealId.value
+            ? t('global.addSuccess', {
+                item: t('meals.meal'),
+              })
+            : t('global.editSuccess', {
+                item: t('meals.meal'),
+              }),
           duration: 2000,
           color: 'success',
         })
         return toast.present()
       } catch (error) {
         const toast = await toastController.create({
-          message: this.$t('global.error'),
+          message: t('global.error'),
           duration: 2000,
           color: 'danger',
         })
         return toast.present()
       }
-    },
-  },
-  mounted() {
-    this.fetchMeal()
+    }
+
+    onMounted(fetchMeal)
+
+    return {
+      t,
+      mealId,
+      meal,
+      saveMeal,
+    }
   },
 }
 </script>
