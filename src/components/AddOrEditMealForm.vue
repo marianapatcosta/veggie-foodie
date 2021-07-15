@@ -2,11 +2,11 @@
   <form class="ion-padding" @submit.prevent="submitForm">
     <ion-list>
       <ion-item>
-        <ion-label position="floating">{{ $t('meals.title') }}</ion-label>
+        <ion-label position="floating">{{ t('meals.title') }}</ion-label>
         <ion-input type="text" required v-model="title" />
       </ion-item>
       <ion-item class="item-datetime">
-        <ion-label>{{ $t('meals.date') }} </ion-label>
+        <ion-label>{{ t('meals.date') }} </ion-label>
         <ion-datetime
           v-model="date"
           display-format="YYYY MM DD HH:mm"
@@ -19,7 +19,7 @@
         }"
       >
         <div>
-          <ion-label position="floating">{{ $t('meals.location') }} </ion-label>
+          <ion-label position="floating">{{ t('meals.location') }} </ion-label>
           <ion-input type="text" v-model="location" />
         </div>
         <ion-button
@@ -27,7 +27,7 @@
           fill="outline"
           @click="findCurrentLocation"
         >
-          <ion-icon slot="icon-only" :icon="yourLocation"></ion-icon>
+          <ion-icon slot="icon-only" :icon="locationIcon"></ion-icon>
         </ion-button>
       </ion-item>
       <ion-item
@@ -35,9 +35,7 @@
           marginTop: '0.5rem',
         }"
       >
-        <ion-label position="floating"
-          >{{ $t('meals.description') }}
-        </ion-label>
+        <ion-label position="floating">{{ t('meals.description') }} </ion-label>
         <ion-textarea rows="3" v-model="description"></ion-textarea>
       </ion-item>
     </ion-list>
@@ -52,7 +50,7 @@
       <ion-label
         position="floating"
         :class="['image-label', imageUrl ? 'image-label--small' : '']"
-        >{{ $t('meals.image') }}
+        >{{ t('meals.image') }}
       </ion-label>
       <ion-button class="icon-button" fill="outline" @click="takePhoto">
         <ion-icon slot="icon-only" :icon="camera"></ion-icon>
@@ -63,12 +61,13 @@
       </ion-thumbnail>
     </ion-item>
     <ion-button type="submit" expand="block" class="submit-button"
-      >{{ $t('global.save') }}
+      >{{ t('global.save') }}
     </ion-button>
   </form>
 </template>
  ~
 <script>
+import { ref } from 'vue'
 import {
   IonList,
   IonItem,
@@ -80,6 +79,7 @@ import {
   IonIcon,
   IonDatetime,
 } from '@ionic/vue'
+import { useI18n } from 'vue-i18n'
 import { camera, location as locationIcon } from 'ionicons/icons'
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera'
 import { Geolocation } from '@capacitor/geolocation'
@@ -100,50 +100,41 @@ export default {
     IonIcon,
     IonDatetime,
   },
-  data() {
-    return {
-      title: '',
-      description: '',
-      imageUrl: '',
-      location: '',
-      date: new Date().toISOString(),
-      camera,
-      yourLocation: locationIcon,
-    }
-  },
-  watch: {
-    meal () {
-      this.title = this.meal?.title || ''
-      this.description = this.meal?.description || ''
-      this.imageUrl = this.meal?.imageUrl || ''
-      this.location = this.meal?.location || ''
-      this.date = this.meal?.date || new Date().toISOString()
-    },
-  },
-  methods: {
-    async takePhoto() {
+  // setup takes props and context as args
+  setup(_, context) {
+    const { t, locale } = useI18n()
+
+    const title = ref('')
+    const description = ref('')
+    const imageUrl = ref('')
+    const location = ref('')
+    const date = ref(new Date().toISOString())
+
+    const takePhoto = async () => {
       try {
         const photo = await Camera.getPhoto({
           resultType: CameraResultType.DataUrl, // stores images as data url in base 64
           source: CameraSource.Prompt, // to open the camera or the file explorer so the user can select one image
           quality: 60, // in %
         })
-        this.imageUrl = photo.dataUrl
+        imageUrl.value = photo.dataUrl
       } catch (error) {
         console.error(error)
       }
-    },
-    submitForm() {
+    }
+
+    const submitForm = () => {
       const meal = {
-        title: this.title,
-        date: this.date,
-        imageUrl: this.imageUrl,
-        location: this.location,
-        description: this.description,
+        title: title.value,
+        date: date.value,
+        imageUrl: imageUrl.value,
+        location: location.value,
+        description: description.value,
       }
-      this.$emit('save-meal', meal)
-    },
-    getLocationName(location) {
+      context.emit('save-meal', meal)
+    }
+
+    const getLocationName = location => {
       if (!location) {
         return
       }
@@ -153,11 +144,12 @@ export default {
         locationArray.length
       )
       const wordsToDelete = [
-        this.$t('meals.municipality'),
-        this.$t('meals.region'),
-        this.$t('meals.district'),
+        t('meals.municipality'),
+        t('meals.region'),
+        t('meals.district'),
       ]
-      const itemToKeep = +this.$t('meals.itemToKeep')
+      const itemToKeep = +t('meals.itemToKeep')
+
       wordsToDelete.forEach(word => {
         locationArray.forEach((item, index) => {
           locationArray[index] = item.includes(word)
@@ -170,22 +162,46 @@ export default {
         locationArray.splice(0, 1)
       }
       return locationArray.join(', ')
-    },
-    async findCurrentLocation() {
+    }
+
+    const findCurrentLocation = async () => {
       try {
-        const language = this.$i18n.locale
+        const language = locale.value
         const GEOLOCATION_KEY = process.env.VUE_APP_GEOLOCATION_KEY
         const coordinates = await Geolocation.getCurrentPosition()
         const geolocationParams = `${coordinates.coords.longitude},${coordinates.coords.latitude}`
         const geolocation = await axios.get(
           `https://api.mapbox.com/geocoding/v5/mapbox.places/${geolocationParams}.json?access_token=${GEOLOCATION_KEY}&autocomplete=false&language=${language}`
         )
-        this.location = this.getLocationName(
+        location.value = getLocationName(
           geolocation.data.features[3].place_name
         )
       } catch (error) {
         console.error(error)
       }
+    }
+
+    return {
+      t,
+      title,
+      description,
+      imageUrl,
+      location,
+      date,
+      camera,
+      locationIcon,
+      takePhoto,
+      submitForm,
+      findCurrentLocation,
+    }
+  },
+  watch: {
+    meal() {
+      this.title = this.meal?.title || ''
+      this.description = this.meal?.description || ''
+      this.imageUrl = this.meal?.imageUrl || ''
+      this.location = this.meal?.location || ''
+      this.date = this.meal?.date || new Date().toISOString()
     },
   },
 }

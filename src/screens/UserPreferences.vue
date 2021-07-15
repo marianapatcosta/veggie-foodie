@@ -1,14 +1,17 @@
 <template>
-  <layout :screenTitle="$t('user.preferences')" pageDefaultBackLink="/tabs/meals">
+  <layout
+    :screenTitle="t('user.preferences')"
+    pageDefaultBackLink="/tabs/meals"
+  >
     <ion-list class="ion-padding preferences-list">
       <ion-item class="preferences-select">
-        <ion-label>{{ $t('user.language') }}</ion-label>
+        <ion-label>{{ t('user.language') }}</ion-label>
         <ion-select
           :interface-options="customAlertOptions"
           :value="language"
-          :placeholder="$t('user.selectOne')"
-          :ok-text="$t('global.ok')"
-          :cancel-text="$t('global.cancel')"
+          :placeholder="t('user.selectOne')"
+          :ok-text="t('global.ok')"
+          :cancel-text="t('global.cancel')"
           @ionChange="updateLanguage"
         >
           <ion-select-option
@@ -21,13 +24,13 @@
       </ion-item>
 
       <ion-item class="preferences-select">
-        <ion-label>{{ $t('user.theme') }}</ion-label>
+        <ion-label>{{ t('user.theme') }}</ion-label>
         <ion-select
           :interface-options="customAlertOptions"
           :value="theme"
-          :placeholder="$t('user.selectOne')"
-          :ok-text="$t('global.ok')"
-          :cancel-text="$t('global.cancel')"
+          :placeholder="t('user.selectOne')"
+          :ok-text="t('global.ok')"
+          :cancel-text="t('global.cancel')"
           @ionChange="updateTheme"
         >
           <ion-select-option
@@ -50,6 +53,8 @@ import {
   IonSelect,
   IonSelectOption,
 } from '@ionic/vue'
+import { onMounted, ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { Storage } from '@capacitor/storage'
 import { getLanguages, getThemes } from '../utils/constants'
 export default {
@@ -60,30 +65,19 @@ export default {
     IonSelect,
     IonSelectOption,
   },
-  data() {
-    return {
-      customAlertOptions: { cssClass: 'app-alert preferences-alert' },
-      theme: '',
-    }
-  },
-  computed: {
-    meal() {
-      return this.$store.getters.meal(this.mealId)
-    },
-    language() {
-      return this.$i18n.locale
-    },
-    languages() {
-      return getLanguages()
-    },
-    themes() {
-      return getThemes()
-    },
-  },
-  methods: {
-    async updateLanguage(event) {
+  setup() {
+    const { t, locale } = useI18n()
+
+    const theme = ref('')
+    const customAlertOptions = ref({ cssClass: 'app-alert preferences-alert' })
+
+    const language = computed(() => locale.value)
+    const languages = computed(getLanguages)
+    const themes = computed(getThemes)
+
+    const updateLanguage = async event => {
       try {
-        this.$i18n.locale = event.target.value
+        locale.value = event.target.value
         await Storage.set({
           key: 'language',
           value: event.target.value,
@@ -91,10 +85,11 @@ export default {
       } catch (error) {
         console.error(error)
       }
-    },
-    async updateTheme(event) {
+    }
+
+    const updateTheme = async event => {
       try {
-        this.theme = event.target.value
+        theme.value = event.target.value
         const prefersDark = event.target.value === 'dark'
         document.body.classList.toggle('dark', prefersDark)
         await Storage.set({
@@ -104,22 +99,32 @@ export default {
       } catch (error) {
         console.error(error)
       }
-    },
-    async getTheme() {
+    }
+
+    const getTheme = async () => {
       try {
-        const { value: theme } = await Storage.get({
+        const { value } = await Storage.get({
           key: 'theme',
         })
-        this.theme =
-          theme ||
-          window.matchMedia('(prefers-color-scheme: dark)').matches 
+        theme.value =
+          value || window.matchMedia('(prefers-color-scheme: dark)').matches
       } catch (error) {
         console.error(error)
       }
-    },
-  },
-  mounted() {
-    this.getTheme()
+    }
+
+    onMounted(getTheme)
+
+    return {
+      t,
+      customAlertOptions,
+      theme,
+      language,
+      languages,
+      themes,
+      updateLanguage,
+      updateTheme,
+    }
   },
 }
 </script>

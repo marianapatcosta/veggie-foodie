@@ -18,15 +18,6 @@
             <ion-fab horizontal="end">
               <slot name="fab-button" />
             </ion-fab>
-            <!--      <ion-button
-              v-for="route in routes"
-              :key="`route-${route.name}`"
-              fill="clear"
-              :routerLink="`/${route.name}`"
-              :color="route.name === currentRoute ? 'light' : 'secondary'"
-            >
-              {{ route.name }}
-            </ion-button>-->
           </ion-col>
         </ion-row>
       </ion-toolbar>
@@ -57,7 +48,7 @@ export default {
   },
 
   components: {
-    IonPage, // wrappes a page (a component loaded through router) to ensure that ionic can load the page qith animations and transitions)
+    IonPage, // wrapps a page (a component loaded through router) to ensure that ionic can load the page qith animations and transitions)
     IonHeader,
     IonToolbar,
     IonContent,

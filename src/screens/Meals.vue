@@ -1,10 +1,10 @@
 <template>
-  <layout :screenTitle="$t('meals.myMeals')">
+  <layout :screenTitle="t('meals.myMeals')">
     <div class="filter-options">
       <ion-searchbar
         color="secondary"
         v-model="keyword"
-        :placeholder="$t('global.search')"
+        :placeholder="t('global.search')"
         @ionChange="fetchMeals"
         :style="{
           flex: 1,
@@ -12,13 +12,13 @@
       />
       <ion-item class="select-wrapper" lines="none">
         <ion-label :style="{ display: 'none' }">{{
-          $t('global.orderBy')
+          t('global.orderBy')
         }}</ion-label>
         <ion-select
           :interface-options="customAlertOptions"
           :value="orderBy"
-          :ok-text="$t('global.ok')"
-          :cancel-text="$t('global.cancel')"
+          :ok-text="t('global.ok')"
+          :cancel-text="t('global.cancel')"
           @ionChange="updateOrderBy"
         >
           <ion-select-option
@@ -66,7 +66,7 @@
         </ion-infinite-scroll-content>
       </ion-infinite-scroll>
     </div>
-    <ion-card v-else>{{ $t('meals.noMeals') }}</ion-card>
+    <ion-card v-else>{{ t('meals.noMeals') }}</ion-card>
     <template v-slot:fab-button>
       <ion-fab-button router-link="/meals/add" color="secondary">
         <ion-icon :icon="add" />
@@ -95,6 +95,10 @@ import {
   alertController,
   toastController,
 } from '@ionic/vue'
+import { ref, computed, watch, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { useStore } from 'vuex'
+import { useI18n } from 'vue-i18n'
 import { Storage } from '@capacitor/storage'
 import { add, swapVertical } from 'ionicons/icons'
 import { ListItem } from '../components'
@@ -122,50 +126,37 @@ export default {
     IonButton,
     IonButtons,
   },
-  data() {
-    return {
-      add,
-      swapVertical,
-      meals: [
-        /*   {
-          id: 'm1',
-          date: '2021-06-20T20:11:06.368Z',
-          title: 'A trip to Lisbon',
-          location: 'Lisbon, Portugal',
-          description: 'Very nice trip! Walked a lot!!!!',
-          imageUrl: '',
-        },
-        {
-          id: 'm2',
-          date: '2021-01-12T11:11:06.368Z',
-          location: 'Porto, Portugal',
-          title: 'A visit to the garden',
-          description: 'Always nice to feel mother nature!',
-          imageUrl:
-            'https://yachtdouro.pt/wp-content/uploads/2018/03/yachtdouro-sunset-900x600.jpg',
-        }, */
-      ],
-      keyword: '',
-      database: this.$store.getters.database,
-      isInfiniteScrollDisabled: false,
-      numberOfMealsToLoad: 10,
-      firstItemToFetch: 0,
-      totalMealsCount: 0,
-      customAlertOptions: { cssClass: 'app-alert list-alert' },
-      orderBy: MEALS_ORDER_BY_DEFAULT,
-      order: 'DESC',
-    }
-  },
-  computed: {
-    orderByOptions() {
-      return getMealsOrderBy()
-    },
-  },
-  methods: {
-    async getSortSettings() {
+  setup() {
+    const route = useRoute()
+    const router = useRouter()
+    const store = useStore()
+    const { t } = useI18n()
+    const database = store.getters.database
+
+    const meals = ref([
+    
+    ])
+    const keyword = ref('')
+    const isInfiniteScrollDisabled = ref(false)
+    const numberOfMealsToLoad = ref(10)
+    const firstItemToFetch = ref(0)
+    const totalMealsCount = ref(0)
+    const customAlertOptions = ref({ cssClass: 'app-alert list-alert' })
+    const orderBy = ref(MEALS_ORDER_BY_DEFAULT)
+    const order = ref(ORDERS.DESC)
+
+    const orderByOptions = computed(getMealsOrderBy)
+
+    watch(route, () => {
+      firstItemToFetch.value = 0
+      isInfiniteScrollDisabled.value = false
+      fetchMeals()
+    })
+
+    const getSortSettings = async () => {
       try {
         const storageKeys = ['meals-order', 'meals-order-by']
-        const [{ value: order }, { value: orderBy }] = await Promise.all(
+        const [{ value: orderValue }, { value: orderByValue }] = await Promise.all(
           storageKeys.map(
             async key =>
               await Storage.get({
@@ -173,51 +164,49 @@ export default {
               })
           )
         )
-        this.order = order || ORDERS.DESC
-        this.orderBy = orderBy || MEALS_ORDER_BY_DEFAULT
-        await this.fetchMeals()
+        order.value = orderValue || ORDERS.DESC
+        orderBy.value = orderByValue || MEALS_ORDER_BY_DEFAULT
       } catch (error) {
         console.error(error)
       }
-    },
-    async updateOrder() {
+    }
+    const updateOrder = async () => {
       try {
-        this.order = this.order === ORDERS.ASC ? ORDERS.DESC : ORDERS.ASC
+        order.value = order.value === ORDERS.ASC ? ORDERS.DESC : ORDERS.ASC
         await Storage.set({
           key: 'meals-order',
-          value: this.order,
+          value: order.value,
         })
-        await this.fetchMeals()
+        await fetchMeals()
       } catch (error) {
         console.error(error)
       }
-    },
-    async updateOrderBy(event) {
+    }
+
+    const updateOrderBy = async event => {
       try {
-        this.orderBy = event.target.value
+        orderBy.value = event.target.value
         await Storage.set({
           key: 'meals-order-by',
           value: event.target.value,
         })
-        await this.fetchMeals()
+        await fetchMeals()
       } catch (error) {
         console.error(error)
       }
-    },
-    editMeal(id) {
-      this.$router.push(`/meals/edit/${id}`)
-    },
-    onCancelDeleteMeal() {
-      this.itemToDeleteId = ''
-    },
-    async onConfirmDeleteMeal(mealToDelete) {
+    }
+    const editMeal = id => {
+      router.push(`/meals/edit/${id}`)
+    }
+
+    const onConfirmDeleteMeal = async mealToDelete => {
       try {
         const statement = `DELETE FROM meals WHERE id = ${mealToDelete.id};`
-        await this.database.query(statement)
-        await this.fetchMeals()
+        await database.query(statement)
+        await fetchMeals()
         const toast = await toastController.create({
-          message: this.$t('global.deleteSuccess', {
-            item: this.$t('meals.meal'),
+          message: t('global.deleteSuccess', {
+            item: t('meals.meal'),
           }),
           duration: 2000,
           color: 'success',
@@ -225,34 +214,31 @@ export default {
         return toast.present()
       } catch (error) {
         const toast = await toastController.create({
-          message: this.$t('global.error'),
+          message: t('global.error'),
           duration: 2000,
           color: 'danger',
         })
         return toast.present()
       }
-    },
-    setOpen(state) {
-      this.isOpenRef.value = state
-    },
-    async deleteMeal(mealToDelete) {
+    }
+
+    const deleteMeal = async mealToDelete => {
       try {
         const alert = await alertController.create({
           cssClass: 'app-alert',
-          header: this.$t('global.delete'),
-          message: this.$t('global.confirmDelete', {
+          header: t('global.delete'),
+          message: t('global.confirmDelete', {
             title: `<strong>${mealToDelete.title}</strong>`,
           }),
           buttons: [
             {
-              text: this.$t('global.cancel'),
+              text: t('global.cancel'),
               role: 'cancel',
-              cssClass: 'secondary',
-              handler: this.onCancelDeleteMeal,
+              cssClass: 'secondary'
             },
             {
-              text: this.$t('global.ok'),
-              handler: () => this.onConfirmDeleteMeal(mealToDelete),
+              text: t('global.ok'),
+              handler: () => onConfirmDeleteMeal(mealToDelete),
             },
           ],
         })
@@ -260,53 +246,70 @@ export default {
       } catch (error) {
         console.error(error)
       }
-    },
-    async fetchMeals() {
+    }
+
+    const fetchMeals = async () => {
       try {
-        const countStatement = this.keyword
-          ? `SELECT COUNT(*) FROM meals WHERE title LIKE "%${this.keyword}%";`
+        const countStatement = keyword.value
+          ? `SELECT COUNT(*) FROM meals WHERE title LIKE "%${keyword.value}%";`
           : `SELECT COUNT(*) FROM meals;`
-        const statement = this.keyword
-          ? `SELECT * FROM meals WHERE title LIKE "%${this.keyword}%" ORDER BY ${this.orderBy} ${this.order} LIMIT ${this.numberOfMealsToLoad};`
-          : `SELECT * FROM meals ORDER BY ${this.orderBy} ${this.order} LIMIT ${this.numberOfMealsToLoad};`
+        const statement = keyword.value
+          ? `SELECT * FROM meals WHERE title LIKE "%${keyword.value}%" ORDER BY ${orderBy.value} ${order.value} LIMIT ${numberOfMealsToLoad.value};`
+          : `SELECT * FROM meals ORDER BY ${orderBy.value} ${order.value} LIMIT ${numberOfMealsToLoad.value};`
         const [responseCount, responseMeals] = await Promise.all(
           [countStatement, statement].map(
-            async query => await this.database.query(query)
+            async query => await database.query(query)
           )
         )
-        this.meals = responseMeals.values
-        this.totalMealsCount = responseCount.values[0]['COUNT(*)']
-        console.log(777, responseMeals.values, this.isInfiniteScrollDisabled)
+        meals.value = responseMeals.values
+        totalMealsCount.value = responseCount.values[0]['COUNT(*)']
       } catch (error) {
         console.error(error)
       }
-    },
-    async loadMoreMeals() {
-      try {
-        this.firstItemToFetch += this.numberOfMealsToLoad
-        const statement = this.keyword
-          ? `SELECT * FROM meals WHERE title LIKE "%${this.keyword}%" ORDER BY ${this.orderBy} ${this.order} LIMIT ${this.numberOfMealsToLoad} OFFSET ${this.firstItemToFetch};`
-          : `SELECT * FROM meals ORDER BY ${this.orderBy} ${this.order} LIMIT ${this.numberOfMealsToLoad} OFFSET ${this.firstItemToFetch};`
-        const response = await this.database.query(statement)
-        this.meals = [...this.meals, ...response.values]
+    }
 
-        if (this.meals.length >= this.totalMealsCount) {
-          this.isInfiniteScrollDisabled = true
+    const loadMoreMeals = async () => {
+      try {
+        firstItemToFetch.value += numberOfMealsToLoad.value
+        const statement = keyword.value
+          ? `SELECT * FROM meals WHERE title LIKE "%${keyword.value}%" ORDER BY ${orderBy.value} ${order.value} LIMIT ${numberOfMealsToLoad.value} OFFSET ${firstItemToFetch.value};`
+          : `SELECT * FROM meals ORDER BY ${orderBy.value} ${order.value} LIMIT ${numberOfMealsToLoad.value} OFFSET ${firstItemToFetch.value};`
+        const response = await database.query(statement)
+        meals.value = [...meals.value, ...response.values]
+
+        if (meals.value.length >= totalMealsCount.value) {
+          isInfiniteScrollDisabled.value = true
         }
       } catch (error) {
         console.error(error)
       }
-    },
-  },
-  watch: {
-    $route() {
-      this.firstItemToFetch = 0
-      this.isInfiniteScrollDisabled = false
-      this.fetchMeals()
-    },
-  },
-  mounted() {
-    this.getSortSettings()
+    }
+
+    onMounted(async () => {
+      await getSortSettings()
+      await fetchMeals()
+    })
+    return {
+      t,
+      add,
+      swapVertical,
+      meals,
+      keyword,
+      isInfiniteScrollDisabled,
+      numberOfMealsToLoad,
+      firstItemToFetch,
+      totalMealsCount,
+      customAlertOptions,
+      orderBy,
+      order,
+      orderByOptions,
+      updateOrder,
+      updateOrderBy,
+      editMeal,
+      deleteMeal,
+      loadMoreMeals,
+      fetchMeals
+    }
   },
 }
 </script>

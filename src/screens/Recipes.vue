@@ -1,5 +1,5 @@
 <template>
-  <layout :screenTitle="$t('recipes.myRecipes')" pageDefaultBackLink="/meals">
+  <layout :screenTitle="t('recipes.myRecipes')" pageDefaultBackLink="/meals">
     <ion-list>
       <list-item
         v-for="recipe in recipes"
