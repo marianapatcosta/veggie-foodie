@@ -1,6 +1,5 @@
 <template>
   <layout :screenTitle="meal?.title" pageDefaultBackLink="/tabs/meals">
-    <!--   <ion-card v-if="!meal">{{ t('meals.notFound') }}</ion-card> -->
     <div>
       <ion-img
         v-if="meal.imageUrl"
@@ -46,9 +45,10 @@ import { IonImg, IonButton, IonButtons, IonIcon } from '@ionic/vue'
 import { pencil, trash, shareSocial } from 'ionicons/icons'
 import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-import { useStore } from 'vuex'
 import { useI18n } from 'vue-i18n'
 import { Share } from '@capacitor/share'
+import { useCrud } from '../composables/useCrud'
+import { COLLECTIONS } from '../utils/constants'
 export default {
   components: {
     IonImg,
@@ -58,22 +58,11 @@ export default {
   },
   setup() {
     const route = useRoute()
-    const store = useStore()
     const { locale } = useI18n()
+    const { getItem } = useCrud(COLLECTIONS.MEALS)
 
-    const database = store.getters.database
     const mealId = ref(route.params.id)
-    const meal = ref(
-      null /* {
-        id: 'm2',
-        date: '2021-01-12T11:11:06.368Z',
-        location: 'Porto, Portugal',
-        title: 'A visit to the garden',
-        description: 'Always nice to feel mother nature!',
-        imageUrl:
-          'https://yachtdouro.pt/wp-content/uploads/2018/03/yachtdouro-sunset-900x600.jpg',
-      } */
-    )
+    const meal = ref(null)
 
     const dateOptions = ref({
       weekday: 'short',
@@ -84,15 +73,6 @@ export default {
 
     const language = computed(() => locale.value)
 
-    const fetchMeal = async () => {
-      try {
-        const statement = `SELECT * FROM meals WHERE id = ${mealId.value};`
-        const response = await database.query(statement)
-        meal.value = response.values[0]
-      } catch (error) {
-        console.error(error)
-      }
-    }
     const shareMeal = async meal => {
       console.log('share', meal)
       await Share.share({
@@ -104,7 +84,10 @@ export default {
       })
     }
 
-    onMounted(fetchMeal)
+    onMounted(async () => {
+      const mealResponseData = await getItem(mealId.value)
+      meal.value = mealResponseData
+    })
 
     return {
       pencil,

@@ -50,4 +50,8 @@ export const getMealsOrderBy = () => [
   }
 ]
 
-export const MEALS_ORDER_BY_DEFAULT = 'created'
+export const COLLECTIONS = {
+  MEALS: 'meals',
+  RECIPES: 'recipes',
+  PRODUCTS: 'products'
+}

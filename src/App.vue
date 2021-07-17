@@ -5,7 +5,14 @@
 </template>
 
 <script >
-import { defineComponent, getCurrentInstance, onMounted, ref, computed } from 'vue'
+import {
+  defineComponent,
+  getCurrentInstance,
+  ref,
+  computed,
+  onMounted,
+  onUnmounted,
+} from 'vue'
 import { IonApp, IonRouterOutlet } from '@ionic/vue'
 import { Storage } from '@capacitor/storage'
 import { useStore } from 'vuex'
@@ -29,6 +36,7 @@ export default defineComponent({
     const isDbInitialized = ref(false)
 
     const connectDatabase = async () => {
+      // if (isDbInitialized.value) return
       try {
         const sqlite = app?.appContext.config.globalProperties.$sqlite
 
@@ -41,6 +49,7 @@ export default defineComponent({
         await db?.open()
         store.dispatch('setDatabase', db)
         await initDbTables()
+        //   await setMeals()
         isDbInitialized.value = true
       } catch (error) {
         console.error(error)
@@ -78,17 +87,101 @@ export default defineComponent({
           key: 'theme',
           value: theme,
         })
-
       } catch (error) {
         console.error(error)
       }
     }
+
+    /* const setMeals = async () => {
+      const setMeals = [
+        {
+          statement:
+            'INSERT INTO meals (title, description, imageUrl, location, date) VALUES(?, ?, ?, ?, ?);',
+          values: ['c2ogumelos', '', '', 'porto', ''],
+        },
+        {
+          statement:
+            'INSERT INTO meals (title, description, imageUrl, location, date) VALUES(?, ?, ?, ?, ?);',
+          values: ['p2izza', '', '', 'porto', ''],
+        },
+        {
+          statement:
+            'INSERT INTO meals (title, description, imageUrl, location, date) VALUES(?, ?, ?, ?, ?);',
+          values: ['fr2ancesinha', '', '', 'porto', ''],
+        },
+        {
+          statement:
+            'INSERT INTO meals (title, description, imageUrl, location, date) VALUES(?, ?, ?, ?, ?);',
+          values: ['t2ofu', '', '', 'porto', ''],
+        },
+        {
+          statement:
+            'INSERT INTO meals (title, description, imageUrl, location, date) VALUES(?, ?, ?, ?, ?);',
+          values: ['se2itan', '', '', 'porto', ''],
+        },
+        {
+          statement:
+            'INSERT INTO meals (title, description, imageUrl, location, date) VALUES(?, ?, ?, ?, ?);',
+          values: ['al2monds', '', '', 'porto', ''],
+        },
+        {
+          statement:
+            'INSERT INTO meals (title, description, imageUrl, location, date) VALUES(?, ?, ?, ?, ?);',
+          values: ['nu2ts', '', '', 'porto', ''],
+        },
+        {
+          statement:
+            ' INSERT INTO meals (title, description, imageUrl, location, date) VALUES(?, ?, ?, ?, ?);',
+          values: ['co2gumsoyaelos', '', '', 'porto', ''],
+        },
+        {
+          statement:
+            'INSERT INTO meals (title, description, imageUrl, location, date) VALUES(?, ?, ?, ?, ?);',
+          values: ['lent2ills', '', '', 'porto', ''],
+        },
+        {
+          statement:
+            'INSERT INTO meals (title, description, imageUrl, location, date) VALUES(?, ?, ?, ?, ?);',
+          values: ['car2rots', '', '', 'porto', ''],
+        },
+
+        {
+          statement:
+            'INSERT INTO meals (title, description, imageUrl, location, date) VALUES(?, ?, ?, ?, ?);',
+          values: ['icecream', '', '', 'porto', ''],
+        },
+        {
+          statement:
+            'INSERT INTO meals (title, description, imageUrl, location, date) VALUES(?, ?, ?, ?, ?);',
+          values: ['spinash', '', '', 'porto', ''],
+        },
+        {
+          statement:
+            'INSERT INTO meals (title, description, imageUrl, location, date) VALUES(?, ?, ?, ?, ?);',
+          values: ['peach', '', '', 'porto', ''],
+        },
+        {
+          statement:
+            'INSERT INTO meals (title, description, imageUrl, location, date) VALUES(?, ?, ?, ?, ?);',
+          values: ['banana', '', '', 'porto', ''],
+        },
+      ]
+
+      try {
+        await this.database.executeSet(setMeals)
+        console.log('insert success')
+      } catch (error) {
+        console.log('insert error', error)
+      }
+    }, */
 
     onMounted(() => {
       connectDatabase()
       setlocale()
       setTheme()
     })
+
+    onUnmounted(async () => sqlite.value.closeConnection('veggie-foodie'))
 
     return {
       app: sqlite,

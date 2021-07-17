@@ -87,7 +87,7 @@ import axios from 'axios'
 export default {
   emits: ['save-meal'],
   props: {
-    meal: Object,
+    meal: { type: Object, required: true },
   },
   components: {
     IonList,

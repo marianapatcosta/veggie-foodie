@@ -5,7 +5,7 @@
         color="secondary"
         v-model="keyword"
         :placeholder="t('global.search')"
-        @ionChange="fetchMeals"
+        @ionChange="fetchItems"
         :style="{
           flex: 1,
         }"
@@ -19,7 +19,7 @@
           :value="orderBy"
           :ok-text="t('global.ok')"
           :cancel-text="t('global.cancel')"
-          @ionChange="updateOrderBy"
+          @ionChange="updateItemsOrderBy"
         >
           <ion-select-option
             v-for="option in orderByOptions"
@@ -33,7 +33,7 @@
         <ion-button
           class="icon-button--clear"
           fill="clear"
-          @click.prevent="updateOrder"
+          @click.prevent="updateItemsOrder"
         >
           <ion-icon
             :style="{ color: 'var(--ion-color-item)' }"
@@ -43,22 +43,22 @@
         </ion-button>
       </ion-buttons>
     </div>
-    <div class="ion-padding" v-if="!!meals?.length">
+    <div class="ion-padding" v-if="!!items?.length">
       <ion-list>
-        <ion-refresher slot="fixed" @ionRefresh="fetchMeals">
+        <ion-refresher slot="fixed" @ionRefresh="fetchItems">
           <ion-refresher-content />
         </ion-refresher>
         <list-item
-          v-for="meal in meals"
-          :key="meal.id"
-          :item="meal"
-          path="meals"
-          @edit-meal="editMeal"
-          @delete-meal="deleteMeal"
+          v-for="item in items"
+          :key="item.id"
+          :item="item"
+          :path="collection"
+          @edit-item="onEditItem"
+          @delete-item="onDeleteItem"
         />
       </ion-list>
       <ion-infinite-scroll
-        @ionInfinite="loadMoreMeals"
+        @ionInfinite="loadMoreItems"
         threshold="100px"
         :disabled="isInfiniteScrollDisabled"
       >
@@ -68,7 +68,7 @@
     </div>
     <ion-card v-else>{{ t('meals.noMeals') }}</ion-card>
     <template v-slot:fab-button>
-      <ion-fab-button router-link="/meals/add" color="secondary">
+      <ion-fab-button :router-link="`/${collection}/add`" color="secondary">
         <ion-icon :icon="add" />
       </ion-fab-button>
     </template>
@@ -92,21 +92,15 @@ import {
   IonLabel,
   IonButton,
   IonButtons,
-  alertController,
-  toastController,
 } from '@ionic/vue'
 import { ref, computed, watch, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { useStore } from 'vuex'
 import { useI18n } from 'vue-i18n'
-import { Storage } from '@capacitor/storage'
 import { add, swapVertical } from 'ionicons/icons'
 import { ListItem } from '../components'
-import {
-  getMealsOrderBy,
-  MEALS_ORDER_BY_DEFAULT,
-  ORDERS,
-} from '../utils/constants'
+import { COLLECTIONS, getMealsOrderBy } from '../utils/constants'
+import { useCrud } from '../composables/useCrud'
+import { useSortSettings } from '../composables/useSortSettings'
 export default {
   components: {
     ListItem,
@@ -126,158 +120,87 @@ export default {
     IonButton,
     IonButtons,
   },
+  /*  props: {
+    collection: {
+      type: String,
+      required: true
+    }
+  }, */
   setup() {
+    const collection = 'meals'
     const route = useRoute()
     const router = useRouter()
-    const store = useStore()
     const { t } = useI18n()
-    const database = store.getters.database
+    const { getItems, loadMore, deleteItem } = useCrud(COLLECTIONS.MEALS)
 
-    const meals = ref([
-    
+    const { getSortSettings, updateOrderBy, updateOrder, orderBy, order } =
+      useSortSettings(COLLECTIONS.MEALS)
+
+    const items = ref([
+      /*  {
+        id: 'm1',
+        date: '2021-06-20T20:11:06.368Z',
+        title: 'A trip to Lisbon',
+        location: 'Lisbon, Portugal',
+        description: 'Very nice trip! Walked a lot!!!!',
+        imageUrl: '',
+      },
+      {
+        id: 'm2',
+        date: '2021-01-12T11:11:06.368Z',
+        location: 'Porto, Portugal',
+        title: 'A visit to the garden',
+        description: 'Always nice to feel mother nature!',
+        imageUrl:
+          'https://yachtdouro.pt/wp-content/uploads/2018/03/yachtdouro-sunset-900x600.jpg',
+      }, */
     ])
     const keyword = ref('')
     const isInfiniteScrollDisabled = ref(false)
-    const numberOfMealsToLoad = ref(10)
-    const firstItemToFetch = ref(0)
-    const totalMealsCount = ref(0)
+    const totalItemsCount = ref(0)
     const customAlertOptions = ref({ cssClass: 'app-alert list-alert' })
-    const orderBy = ref(MEALS_ORDER_BY_DEFAULT)
-    const order = ref(ORDERS.DESC)
 
     const orderByOptions = computed(getMealsOrderBy)
 
-    watch(route, () => {
-      firstItemToFetch.value = 0
-      isInfiniteScrollDisabled.value = false
-      fetchMeals()
-    })
-
-    const getSortSettings = async () => {
+    const updateItemsOrder = async () => {
       try {
-        const storageKeys = ['meals-order', 'meals-order-by']
-        const [{ value: orderValue }, { value: orderByValue }] = await Promise.all(
-          storageKeys.map(
-            async key =>
-              await Storage.get({
-                key,
-              })
-          )
+        await updateOrder()
+        await fetchItems()
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
+    const updateItemsOrderBy = async event => {
+      try {
+        await updateOrderBy(event.target.value)
+        await fetchItems()
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
+    const fetchItems = async () => {
+      try {
+        const { items: fetchedItems, count } = await getItems(
+          orderBy.value,
+          order.value,
+          keyword.value
         )
-        order.value = orderValue || ORDERS.DESC
-        orderBy.value = orderByValue || MEALS_ORDER_BY_DEFAULT
-      } catch (error) {
-        console.error(error)
-      }
-    }
-    const updateOrder = async () => {
-      try {
-        order.value = order.value === ORDERS.ASC ? ORDERS.DESC : ORDERS.ASC
-        await Storage.set({
-          key: 'meals-order',
-          value: order.value,
-        })
-        await fetchMeals()
+        items.value = fetchedItems
+        totalItemsCount.value = count
+        console.log({ items, totalItemsCount, fetchedItems })
       } catch (error) {
         console.error(error)
       }
     }
 
-    const updateOrderBy = async event => {
+    const loadMoreItems = async () => {
       try {
-        orderBy.value = event.target.value
-        await Storage.set({
-          key: 'meals-order-by',
-          value: event.target.value,
-        })
-        await fetchMeals()
-      } catch (error) {
-        console.error(error)
-      }
-    }
-    const editMeal = id => {
-      router.push(`/meals/edit/${id}`)
-    }
+        const fetchedItems = await loadMore(orderBy.value, order.value, keyword.value)
+        items.value = [...items.value, ...fetchedItems]
 
-    const onConfirmDeleteMeal = async mealToDelete => {
-      try {
-        const statement = `DELETE FROM meals WHERE id = ${mealToDelete.id};`
-        await database.query(statement)
-        await fetchMeals()
-        const toast = await toastController.create({
-          message: t('global.deleteSuccess', {
-            item: t('meals.meal'),
-          }),
-          duration: 2000,
-          color: 'success',
-        })
-        return toast.present()
-      } catch (error) {
-        const toast = await toastController.create({
-          message: t('global.error'),
-          duration: 2000,
-          color: 'danger',
-        })
-        return toast.present()
-      }
-    }
-
-    const deleteMeal = async mealToDelete => {
-      try {
-        const alert = await alertController.create({
-          cssClass: 'app-alert',
-          header: t('global.delete'),
-          message: t('global.confirmDelete', {
-            title: `<strong>${mealToDelete.title}</strong>`,
-          }),
-          buttons: [
-            {
-              text: t('global.cancel'),
-              role: 'cancel',
-              cssClass: 'secondary'
-            },
-            {
-              text: t('global.ok'),
-              handler: () => onConfirmDeleteMeal(mealToDelete),
-            },
-          ],
-        })
-        return alert.present()
-      } catch (error) {
-        console.error(error)
-      }
-    }
-
-    const fetchMeals = async () => {
-      try {
-        const countStatement = keyword.value
-          ? `SELECT COUNT(*) FROM meals WHERE title LIKE "%${keyword.value}%";`
-          : `SELECT COUNT(*) FROM meals;`
-        const statement = keyword.value
-          ? `SELECT * FROM meals WHERE title LIKE "%${keyword.value}%" ORDER BY ${orderBy.value} ${order.value} LIMIT ${numberOfMealsToLoad.value};`
-          : `SELECT * FROM meals ORDER BY ${orderBy.value} ${order.value} LIMIT ${numberOfMealsToLoad.value};`
-        const [responseCount, responseMeals] = await Promise.all(
-          [countStatement, statement].map(
-            async query => await database.query(query)
-          )
-        )
-        meals.value = responseMeals.values
-        totalMealsCount.value = responseCount.values[0]['COUNT(*)']
-      } catch (error) {
-        console.error(error)
-      }
-    }
-
-    const loadMoreMeals = async () => {
-      try {
-        firstItemToFetch.value += numberOfMealsToLoad.value
-        const statement = keyword.value
-          ? `SELECT * FROM meals WHERE title LIKE "%${keyword.value}%" ORDER BY ${orderBy.value} ${order.value} LIMIT ${numberOfMealsToLoad.value} OFFSET ${firstItemToFetch.value};`
-          : `SELECT * FROM meals ORDER BY ${orderBy.value} ${order.value} LIMIT ${numberOfMealsToLoad.value} OFFSET ${firstItemToFetch.value};`
-        const response = await database.query(statement)
-        meals.value = [...meals.value, ...response.values]
-
-        if (meals.value.length >= totalMealsCount.value) {
+        if (items.value.length >= totalItemsCount.value) {
           isInfiniteScrollDisabled.value = true
         }
       } catch (error) {
@@ -285,30 +208,40 @@ export default {
       }
     }
 
+    const onEditItem = id => router.push(`/${collection}/edit/${id}`)
+
+    const onDeleteItem = (itemToDelete) => {
+      deleteItem(itemToDelete, fetchItems)
+    }
+
+    watch(route, () => {
+      isInfiniteScrollDisabled.value = false
+      fetchItems()
+    })
+
     onMounted(async () => {
       await getSortSettings()
-      await fetchMeals()
+      await fetchItems()
     })
     return {
       t,
       add,
       swapVertical,
-      meals,
+      items,
       keyword,
       isInfiniteScrollDisabled,
-      numberOfMealsToLoad,
-      firstItemToFetch,
-      totalMealsCount,
+      totalItemsCount,
       customAlertOptions,
       orderBy,
       order,
       orderByOptions,
-      updateOrder,
-      updateOrderBy,
-      editMeal,
-      deleteMeal,
-      loadMoreMeals,
-      fetchMeals
+      collection,
+      updateItemsOrder,
+      updateItemsOrderBy,
+      loadMoreItems,
+      onEditItem,
+      fetchItems,
+      onDeleteItem,
     }
   },
 }
