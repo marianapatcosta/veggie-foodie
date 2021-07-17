@@ -36,10 +36,10 @@ import {
 } from '@ionic/vue'
 import { pencil, trash } from 'ionicons/icons'
 export default {
-  emits: ['edit-item', 'delete-meal'],
+  emits: ['edit-item', 'delete-item'],
   props: {
-    item: Object,
-    path: String,
+    item: { type: Object, required: true },
+    path: { type: String, required: true },
   },
   components: {
     IonItem,
@@ -52,10 +52,10 @@ export default {
   },
   setup(_, context) {
     const editMeal = id => {
-      context.emit('edit-meal', id)
+      context.emit('edit-item', id)
     }
     const deleteMeal = meal => {
-      context.emit('delete-meal', meal)
+      context.emit('delete-item', meal)
     }
     return {
       pencil,
