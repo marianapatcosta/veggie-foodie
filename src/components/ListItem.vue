@@ -9,14 +9,14 @@
       <ion-button
         class="icon-button--clear"
         fill="clear"
-        @click.prevent="editMeal(item.id)"
+        @click.prevent="onEditItem(item.id)"
       >
         <ion-icon slot="icon-only" :icon="pencil" />
       </ion-button>
       <ion-button
         class="icon-button--clear"
         fill="clear"
-        @click.prevent="deleteMeal(item)"
+        @click.prevent="onDeleteItem(item)"
       >
         <ion-icon slot="icon-only" :icon="trash" />
       </ion-button>
@@ -51,17 +51,17 @@ export default {
     IonIcon,
   },
   setup(_, context) {
-    const editMeal = id => {
+    const onEditItem = id => {
       context.emit('edit-item', id)
     }
-    const deleteMeal = meal => {
-      context.emit('delete-item', meal)
+    const onDeleteItem = item => {
+      context.emit('delete-item', item)
     }
     return {
       pencil,
       trash,
-      editMeal,
-      deleteMeal,
+      onEditItem,
+      onDeleteItem,
     }
   },
 }

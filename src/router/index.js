@@ -26,6 +26,11 @@ const routes = [
         component: () => import('../screens/Recipes.vue')
       },
       {
+        path: 'products',
+        name: 'products',
+        component: () => import('../screens/Products.vue')
+      },
+      {
         path: 'user',
         name: 'user',
         component: () => import('../screens/UserPreferences.vue')
@@ -53,13 +58,28 @@ const routes = [
   },
   {
     path: '/recipes/add',
-    name: 'recipes-meal',
+    name: 'add-recipe',
     component: () => import('../screens/AddOrEditRecipe.vue')
-  },
+  }, 
   {
     path: '/recipes/edit/:id',
     name: 'edit-recipe',
     component: () => import('../screens/AddOrEditRecipe.vue')
+  },
+  {
+    path: '/products/:id',
+    name: 'product-details',
+    component: () => import('../screens/ProductDetails.vue')
+  },
+  {
+    path: '/products/add',
+    name: 'add-product',
+    component: () => import('../screens/AddOrEditProduct.vue')
+  }, 
+  {
+    path: '/products/edit/:id',
+    name: 'edit-product',
+    component: () => import('../screens/AddOrEditProduct.vue')
   },
   { path: '/:pathMatch(.*)*', component: Meals }
 ]

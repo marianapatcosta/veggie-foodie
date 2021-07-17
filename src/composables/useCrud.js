@@ -10,9 +10,9 @@ import {
   COUNT_STATEMENT,
   COUNT_STATEMENT_SEARCH,
   GET_ITEMS_STATEMENT,
-  GET_ITEMS_STATEMENT_SEARCH,
-  CRUD_METADATA
-} from './crud-utils'
+  GET_ITEMS_STATEMENT_SEARCH
+} from '../utils/crud-utils'
+import { ITEM_METADATA } from '../utils/constants'
 
 export const useCrud = collection => {
   const router = useRouter()
@@ -20,7 +20,7 @@ export const useCrud = collection => {
   const { t } = useI18n()
   const database = store.getters.database
 
-  const { SAVE_SUCCESS, FIELDS } = CRUD_METADATA[collection]
+  const { FIELDS } = ITEM_METADATA[collection.toUpperCase()]
 
   const NUMBER_OF_ITEMS_TO_LOAD = 10
   let firstItemToFetch = 0
@@ -106,13 +106,7 @@ export const useCrud = collection => {
       await database.run(statement, values)
       router.replace(`/tabs/${collection}`)
       const toast = await toastController.create({
-        message: !itemId
-          ? t('global.addSuccess', {
-              item: t(SAVE_SUCCESS)
-            })
-          : t('global.editSuccess', {
-              item: t(SAVE_SUCCESS)
-            }),
+        message: !itemId ? t('global.addSuccess') : t('global.editSuccess'),
         duration: 2000,
         color: 'success'
       })
@@ -133,9 +127,7 @@ export const useCrud = collection => {
       await database.query(statement)
       await onConfirmDelete()
       const toast = await toastController.create({
-        message: t('global.deleteSuccess', {
-          item: t('meals.meal')
-        }),
+        message: t('global.deleteSuccess'),
         duration: 2000,
         color: 'success'
       })
