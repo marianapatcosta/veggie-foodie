@@ -2,24 +2,29 @@
   <form class="ion-padding" @submit.prevent="submitForm">
     <ion-list>
       <ion-item>
-        <ion-label position="floating">{{ t('meals.title') }}</ion-label>
+        <ion-label position="floating">{{ t('global.title') }}</ion-label>
         <ion-input type="text" required v-model="title" />
       </ion-item>
       <ion-item class="item-datetime">
-        <ion-label>{{ t('meals.date') }} </ion-label>
+        <ion-label>{{ t('global.date') }} </ion-label>
         <ion-datetime
           v-model="date"
           display-format="YYYY MM DD HH:mm"
           placeholder="YYYY MM DD HH:mm"
         />
       </ion-item>
+      <ion-item v-if="collection === COLLECTIONS.PRODUCTS">
+        <ion-label position="floating">{{ t('global.store') }}</ion-label>
+        <ion-input type="text" v-model="store" />
+      </ion-item>
       <ion-item
+        v-else
         :style="{
           marginTop: '0.5rem',
         }"
       >
         <div>
-          <ion-label position="floating">{{ t('meals.location') }} </ion-label>
+          <ion-label position="floating">{{ t('global.location') }} </ion-label>
           <ion-input type="text" v-model="location" />
         </div>
         <ion-button
@@ -35,13 +40,15 @@
           marginTop: '0.5rem',
         }"
       >
-        <ion-label position="floating">{{ t('meals.description') }} </ion-label>
+        <ion-label position="floating"
+          >{{ t('global.description') }}
+        </ion-label>
         <ion-textarea rows="3" v-model="description"></ion-textarea>
       </ion-item>
     </ion-list>
 
     <ion-item
-      lines="none"
+      :lines="collection === COLLECTIONS.PRODUCTS ? 'full' : 'none'"
       class="item--padding"
       :style="{
         alignItems: 'flex-end',
@@ -50,24 +57,30 @@
       <ion-label
         position="floating"
         :class="['image-label', imageUrl ? 'image-label--small' : '']"
-        >{{ t('meals.image') }}
+        >{{ t('global.image') }}
       </ion-label>
-      <ion-button class="icon-button" fill="outline" @click="takePhoto">
-        <ion-icon slot="icon-only" :icon="camera"></ion-icon>
-      </ion-button>
+      <div class="image-wrapper">
+        <ion-button class="icon-button" fill="outline" @click="takePhoto">
+          <ion-icon slot="icon-only" :icon="camera"></ion-icon>
+        </ion-button>
 
-      <ion-thumbnail slot="end" v-if="imageUrl">
-        <img :src="imageUrl" />
-      </ion-thumbnail>
+        <ion-thumbnail slot="end" v-if="imageUrl">
+          <img :src="imageUrl" />
+        </ion-thumbnail>
+      </div>
+      <ion-input
+        v-if="collection === COLLECTIONS.PRODUCTS"
+        v-model="imageUrl"
+        :placeholder="t('global.imageLink')"
+      />
     </ion-item>
     <ion-button type="submit" expand="block" class="submit-button"
       >{{ t('global.save') }}
     </ion-button>
   </form>
 </template>
- ~
 <script>
-import { ref } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import {
   IonList,
   IonItem,
@@ -84,10 +97,13 @@ import { camera, location as locationIcon } from 'ionicons/icons'
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera'
 import { Geolocation } from '@capacitor/geolocation'
 import axios from 'axios'
+import { COLLECTIONS } from '../utils/constants'
+import { useCrud } from '../composables/useCrud'
 export default {
-  emits: ['save-meal'],
+  emits: ['save-item'],
   props: {
-    meal: { type: Object, required: true },
+    itemId: { type: Object },
+    collection: { type: String, required: true },
   },
   components: {
     IonList,
@@ -101,12 +117,17 @@ export default {
     IonDatetime,
   },
   // setup takes props and context as args
-  setup(_, context) {
+  setup(props) {
     const { t, locale } = useI18n()
+    const { getItem, saveItem } = useCrud(
+      COLLECTIONS[props.collection.toUpperCase()]
+    )
+    const item = ref(null)
 
     const title = ref('')
     const description = ref('')
     const imageUrl = ref('')
+    const store = ref('')
     const location = ref('')
     const date = ref(new Date().toISOString())
 
@@ -124,14 +145,19 @@ export default {
     }
 
     const submitForm = () => {
-      const meal = {
+      const data = {
         title: title.value,
         date: date.value,
         imageUrl: imageUrl.value,
-        location: location.value,
         description: description.value,
       }
-      context.emit('save-meal', meal)
+      if (props.collection === COLLECTIONS.PRODUCTS) {
+        data.store = store.value
+      }
+      if (props.collection === COLLECTIONS.MEALS) {
+        data.location = location.value
+      }
+      saveItem(data, props.itemId)
     }
 
     const getLocationName = location => {
@@ -144,11 +170,11 @@ export default {
         locationArray.length
       )
       const wordsToDelete = [
-        t('meals.municipality'),
-        t('meals.region'),
-        t('meals.district'),
+        t('global.municipality'),
+        t('global.region'),
+        t('global.district'),
       ]
-      const itemToKeep = +t('meals.itemToKeep')
+      const itemToKeep = +t('global.itemToKeep')
 
       wordsToDelete.forEach(word => {
         locationArray.forEach((item, index) => {
@@ -181,11 +207,27 @@ export default {
       }
     }
 
+    watch(item, () => {
+      title.value = item.value.title || ''
+      description.value = item.value.description || ''
+      imageUrl.value = item.value.imageUrl || ''
+      location.value = item.value.location || ''
+      store.value = item.value.store || ''
+      date.value = item.value.date || new Date().toISOString()
+    })
+
+    onMounted(async () => {
+      if (!props.itemId) return
+      const responseData = await getItem(props.itemId)
+      item.value = responseData
+    })
+
     return {
       t,
       title,
       description,
       imageUrl,
+      store,
       location,
       date,
       camera,
@@ -193,16 +235,8 @@ export default {
       takePhoto,
       submitForm,
       findCurrentLocation,
+      COLLECTIONS,
     }
-  },
-  watch: {
-    meal() {
-      this.title = this.meal?.title || ''
-      this.description = this.meal?.description || ''
-      this.imageUrl = this.meal?.imageUrl || ''
-      this.location = this.meal?.location || ''
-      this.date = this.meal?.date || new Date().toISOString()
-    },
   },
 }
 </script>
@@ -224,6 +258,9 @@ ion-item.item-has-focus ion-label {
 ion-item.item-has-focus {
   --border-color: var(--ion-color-focus) !important;
 }
+ion-label {
+  text-transform: capitalize;
+}
 .item-datetime {
   margin-top: 1.5rem;
 }
@@ -241,5 +278,11 @@ span {
 }
 .image-label--small {
   transform: scale(0.82);
+}
+.image-wrapper {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
 }
 </style>

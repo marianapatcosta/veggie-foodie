@@ -1,11 +1,10 @@
 import { ref } from 'vue'
 import { Storage } from '@capacitor/storage'
-import { ORDERS } from '../utils/constants'
-import { CRUD_METADATA } from './crud-utils'
+import { ORDERS, ITEM_METADATA } from '../utils/constants'
 
 export const useSortSettings = collection => {
-  const { ORDER_STORAGE, ORDER_BY_STORAGE, ORDER_BY_DEFAULT } = CRUD_METADATA[
-    collection
+  const { ORDER_STORAGE, ORDER_BY_STORAGE, ORDER_BY_DEFAULT } = ITEM_METADATA[
+    collection.toUpperCase()
   ]
 
   const orderBy = ref(ORDER_BY_DEFAULT)

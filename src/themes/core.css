@@ -38,6 +38,10 @@ ion-datetime {
   color: var(--ion-color-contrast) !important;
 }
 
+ion-input {
+  --placeholder-color: var(--ion-color-contrast) !important;
+}
+
 ion-label {
   line-height: 2.5rem;
 }

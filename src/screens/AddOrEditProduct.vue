@@ -1,10 +1,10 @@
 <template>
   <layout
-    :screenTitle="!itemId ? t('meals.addMeal') : t('meals.editMeal')"
-    :pageDefaultBackLink="`/tabs/${COLLECTIONS.MEALS}`"
+    :screenTitle="!itemId ? t('products.addProduct') : t('products.editProduct')"
+    :pageDefaultBackLink="`/tabs/${COLLECTIONS.PRODUCTS}`"
   >
     <add-or-edit-meal-product-form
-      :collection="COLLECTIONS.MEALS"
+      :collection="COLLECTIONS.PRODUCTS"
       :itemId="itemId"
     />
   </layout>

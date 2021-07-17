@@ -1,6 +1,6 @@
 # Veggie Foodie App
 
-This app was developed during a ionic-vue course to learn more about ionic and capacitor libraries.
+This app allows the user to keep a record of her/his favourite vegetarian meals, recipes and products, by listing, creating, editing, deleting them. It was developed using Ionic, capacitor, Vue 3 with Composition API and SQLite database.
 
 ### Available Scripts
 

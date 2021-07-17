@@ -1,15 +1,8 @@
 <template>
-  <layout :screenTitle="t('recipes.myRecipes')" pageDefaultBackLink="/meals">
-    <ion-list>
-      <list-item
-        v-for="recipe in recipes"
-        :key="recipe.id"
-        :item="recipe"
-        path="recipes"
-      />
-    </ion-list>
+  <layout :screenTitle="t('recipes.myRecipes')">
+    <list collection="recipes" :noData="t('recipes.noRecipes')" />
     <template v-slot:fab-button>
-      <ion-fab-button router-link="/recipes/add" color="tertiary">
+      <ion-fab-button :router-link="`/recipes/add`" color="secondary">
         <ion-icon :icon="add" />
       </ion-fab-button>
     </template>
@@ -17,28 +10,19 @@
 </template>
 
 <script>
-import { IonList, IonFabButton, IonIcon } from '@ionic/vue'
+import { IonFabButton, IonIcon } from '@ionic/vue'
+import { useI18n } from 'vue-i18n'
 import { add } from 'ionicons/icons'
-import { ListItem } from '../components'
+import { List } from '../components'
 export default {
   components: {
-    ListItem,
-    IonList,
     IonFabButton,
     IonIcon,
+    List,
   },
-  data() {
-    return { add }
-  },
-  computed: {
-    recipes() {
-      return this.$store.getters.recipes
-    },
+  setup() {
+    const { t } = useI18n()
+    return { t, add }
   },
 }
 </script>
-<style scoped>
-ion-list {
-  background: var(--ion-color-secondary);
-}
-</style>

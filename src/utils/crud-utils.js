@@ -1,3 +1,35 @@
+export const CREATE_TABLES = `
+    CREATE TABLE IF NOT EXISTS meals (
+    id INTEGER PRIMARY KEY NOT NULL,
+    title TEXT UNIQUE NOT NULL,
+    description TEXT,
+    imageUrl TEXT,
+    location TEXT,
+    date DATE,
+    created INTEGER DEFAULT (strftime('%s', 'now'))
+  );
+
+  CREATE TABLE IF NOT EXISTS recipes (
+    id INTEGER PRIMARY KEY NOT NULL,
+    title TEXT UNIQUE NOT NULL,
+    imageUrl TEXT,
+    ingredients TEXT,
+    preparation TEXT,
+    source TEXT,
+    created INTEGER DEFAULT (strftime('%s', 'now'))
+  );
+
+  CREATE TABLE IF NOT EXISTS products (
+    id INTEGER PRIMARY KEY NOT NULL,
+    title TEXT UNIQUE NOT NULL,
+    description TEXT,
+    imageUrl TEXT,
+    store TEXT,
+    date DATE,
+    created INTEGER DEFAULT (strftime('%s', 'now'))
+  );
+`
+
 export const GET_ITEM_BY_ID_STATEMENT = (collection, itemId) =>
   `SELECT * FROM ${collection} WHERE id = ${itemId};`
 
@@ -41,32 +73,4 @@ export const GET_ITEMS_STATEMENT_SEARCH = (
     firstItemToFetch ? ` OFFSET ${firstItemToFetch}` : ''
   };`
 
-const MEALS_METADATA = {
-  SAVE_SUCCESS: 'meals.meal',
-  FIELDS: ['title', 'description', 'imageUrl', 'location', 'date'],
-  ORDER_BY_STORAGE: 'meals-order-by',
-  ORDER_STORAGE: 'meals-order',
-  ORDER_BY_DEFAULT: 'created'
-}
 
-const RECIPES_METADATA = {
-  SAVE_SUCCESS: 'meals.meal',
-  FIELDS: ['title', 'description', 'imageUrl', 'location', 'date'],
-  ORDER_BY_STORAGE: 'recipes-order-by',
-  ORDER_STORAGE: 'recipes-order',
-  ORDER_BY_DEFAULT: 'created'
-}
-
-const PRODUCTS_METADATA = {
-  SAVE_SUCCESS: 'meals.meal',
-  FIELDS: ['title', 'description', 'imageUrl', 'location', 'date'],
-  ORDER_BY_STORAGE: 'products-order-by',
-  ORDER_STORAGE: 'products-order',
-  ORDER_BY_DEFAULT: 'created'
-}
-
-export const CRUD_METADATA = {
-  meals: MEALS_METADATA,
-  recipes: RECIPES_METADATA,
-  products: PRODUCTS_METADATA
-}
