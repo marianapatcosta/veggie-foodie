@@ -3,7 +3,7 @@ export const DATABASE_NAME = 'veggie-foodie'
 export const CREATE_TABLES = `
     CREATE TABLE IF NOT EXISTS meals (
     id INTEGER PRIMARY KEY NOT NULL,
-    title TEXT UNIQUE NOT NULL,
+    title TEXT NOT NULL,
     description TEXT,
     imageUrl TEXT,
     location TEXT,
@@ -13,7 +13,7 @@ export const CREATE_TABLES = `
 
   CREATE TABLE IF NOT EXISTS recipes (
     id INTEGER PRIMARY KEY NOT NULL,
-    title TEXT UNIQUE NOT NULL,
+    title TEXT NOT NULL,
     imageUrl TEXT,
     ingredients TEXT,
     preparation TEXT,
@@ -23,7 +23,7 @@ export const CREATE_TABLES = `
 
   CREATE TABLE IF NOT EXISTS products (
     id INTEGER PRIMARY KEY NOT NULL,
-    title TEXT UNIQUE NOT NULL,
+    title TEXT NOT NULL,
     description TEXT,
     imageUrl TEXT,
     store TEXT,
