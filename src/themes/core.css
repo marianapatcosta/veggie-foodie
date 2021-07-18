@@ -171,6 +171,7 @@ ion-list {
 .app-alert .alert-input-group {
   margin-top: 1rem;
   font-size: 1rem;
+  line-height: 2rem;
   background: var(--ion-color-secondary);
   color: var(--ion-color-contrast) !important;
 }

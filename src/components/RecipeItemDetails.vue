@@ -85,7 +85,7 @@ export default {
 
     const onShareItem = async item => {
       if (
-        !isImageUrlAHttpUrl(item.imageurl) &&
+        !isImageUrlAHttpUrl(item.imageUrl) &&
         !isImageUrlAHttpUrl(item.source)
       )
         return

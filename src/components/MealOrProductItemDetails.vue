@@ -80,7 +80,7 @@ export default {
     const language = computed(() => locale.value)
 
     const onShareItem = async item => {
-      if (!isImageUrlAHttpUrl(item.imageurl)) return
+      if (!isImageUrlAHttpUrl(item.imageUrl)) return
       try {
         await Share.share({
           title: t('global.shareTitle'),
