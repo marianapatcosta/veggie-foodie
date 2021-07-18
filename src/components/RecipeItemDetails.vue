@@ -8,6 +8,9 @@
       </ion-router-link>
       <ion-buttons>
         <ion-button
+          v-if="
+            isImageUrlAHttpUrl(item.source) || isImageUrlAHttpUrl(item.imageurl)
+          "
           class="icon-button--clear"
           fill="clear"
           @click.prevent="onShareItem(item)"
@@ -55,6 +58,7 @@ import { useRouter } from 'vue-router'
 import { Share } from '@capacitor/share'
 import { useCrud } from '../composables/useCrud'
 import { COLLECTIONS } from '../utils/constants'
+import { isImageUrlAHttpUrl } from '../utils/utils'
 export default {
   components: {
     IonImg,
@@ -80,14 +84,21 @@ export default {
     const { deleteItem } = useCrud(COLLECTIONS[collection.value.toUpperCase()])
 
     const onShareItem = async item => {
-      if (!item.imageUrl && !item.source) return
-      await Share.share({
-        title: 'See cool stuff',
-        text: item.title,
-        message: item.title,
-        url: item.source || item.imageUrl,
-        dialogTitle: 'Share with buddies',
-      })
+      if (
+        !isImageUrlAHttpUrl(item.imageurl) &&
+        !isImageUrlAHttpUrl(item.source)
+      )
+        return
+      try {
+        await Share.share({
+          title: t('global.shareTitle'),
+          text: item.title,
+          url: isImageUrlAHttpUrl(item.source) ? item.source : item.imageUrl,
+          dialogTitle: '',
+        })
+      } catch (error) {
+        console.error(error)
+      }
     }
     const onEditItem = id => router.push(`/${props.collection}/edit/${id}`)
 
@@ -105,6 +116,7 @@ export default {
       onShareItem,
       onEditItem,
       onDeleteItem,
+      isImageUrlAHttpUrl,
       COLLECTIONS,
     }
   },
