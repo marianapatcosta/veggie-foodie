@@ -83,7 +83,7 @@ export default {
         title: 'See cool stuff',
         text: item.title,
         message: item.title,
-        url: item.imageUrl,
+        url: item.source,
         dialogTitle: 'Share with buddies',
       })
     }

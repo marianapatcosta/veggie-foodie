@@ -17,7 +17,7 @@ import { Storage } from '@capacitor/storage'
 import { useStore } from 'vuex'
 import { useI18n } from 'vue-i18n'
 import { defaultLocale } from './locales'
-import { CREATE_TABLES } from './utils/crud-utils'
+import { CREATE_TABLES, DATABASE_NAME } from './utils/crud-utils'
 
 export default defineComponent({
   name: 'App',
@@ -39,7 +39,7 @@ export default defineComponent({
 
         sqlite.value = sqlite
         const db = await sqlite?.createConnection(
-          'veggie-foodie',
+          DATABASE_NAME,
           false,
           'no-encryption'
         )
@@ -94,7 +94,7 @@ export default defineComponent({
       setTheme()
     })
 
-    onUnmounted(async () => sqlite.value.closeConnection('veggie-foodie'))
+    onUnmounted(async () => sqlite.value.closeConnection(DATABASE_NAME))
 
     return {
       app: sqlite,

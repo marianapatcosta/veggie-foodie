@@ -1,3 +1,5 @@
+export const DATABASE_NAME = 'veggie-foodie'
+
 export const CREATE_TABLES = `
     CREATE TABLE IF NOT EXISTS meals (
     id INTEGER PRIMARY KEY NOT NULL,
@@ -39,7 +41,9 @@ export const INSERT_ITEM_STATEMENT = (collection, fields) =>
     .slice(0, -2)});`
 
 export const EDIT_ITEM_STATEMENT = (collection, fields, itemId) =>
-  `UPDATE ${collection} SET ${fields.map(field => `${field} = ?`).join(', ')} WHERE id = ${itemId};`
+  `UPDATE ${collection} SET ${fields
+    .map(field => `${field} = ?`)
+    .join(', ')} WHERE id = ${itemId};`
 
 export const DELETE_BY_ID_STATEMENT = (collection, itemId) =>
   `DELETE FROM ${collection} WHERE id = ${itemId};`
@@ -72,5 +76,3 @@ export const GET_ITEMS_STATEMENT_SEARCH = (
   `SELECT * FROM ${collection} WHERE title LIKE "%${keyword}%" ORDER BY ${orderBy} ${order} LIMIT ${numberOfMealsToLoad} ${
     firstItemToFetch ? ` OFFSET ${firstItemToFetch}` : ''
   };`
-
-

@@ -41,6 +41,9 @@ ion-datetime {
 ion-input {
   --placeholder-color: var(--ion-color-contrast) !important;
 }
+ion-input input {
+  line-height: 2rem;
+}
 
 ion-label {
   line-height: 2.5rem;
@@ -102,16 +105,16 @@ ion-list {
 }
 
 .icon-button {
-  --box-shadow: 0 0.2rem var(--ion-color-primary-shade);
-  width: 2.8rem;
-  height: 2.8rem;
+  --box-shadow: 0 0.15rem var(--ion-color-primary-shade);
+  width: 3rem;
+  height: 3rem;
   align-self: flex-start;
 }
 
 .icon-button--absolute {
-  --box-shadow: 0 0.2rem var(--ion-color-primary-shade);
-  width: 2.8rem;
-  height: 2.8rem;
+  --box-shadow: 0 0.15rem var(--ion-color-primary-shade);
+  width: 3rem;
+  height: 3rem;
   position: absolute;
   right: 0rem;
   top: 0;
@@ -120,13 +123,13 @@ ion-list {
 }
 
 .icon-button--clear {
-  width: 2.8rem;
-  height: 2.8rem;
+  width: 3rem;
+  height: 3rem;
 }
 
 .icon-button:active,
 .icon-button--absolute:active {
-  --box-shadow: 0 0.1rem var(--ion-color-primary-shade);
+  --box-shadow: 0 0.075rem var(--ion-color-primary-shade);
   transform: translateY(0.1rem);
   -webkit-transform: translateY(0.1rem);
   -moz-transform: translateY(0.1rem);
@@ -189,4 +192,12 @@ ion-list {
 .app-alert .alert-radio-inner.sc-ion-alert-md {
   border-color: var(--ion-color-item) !important;
   background: var(--ion-color-item) !important;
+}
+
+.refresher-pulling-icon {
+  background: var(--ion-color-item) !important;
+}
+
+.refresher-pulling-icon ion-spinner{
+  color: var(--ion-color-primary-contrast) !important;
 }
