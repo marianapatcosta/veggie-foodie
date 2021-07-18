@@ -43,10 +43,10 @@
     </ion-buttons>
   </div>
   <div class="ion-padding" v-if="!!items?.length">
+    <ion-refresher slot="fixed" @ionRefresh="fetchItems">
+      <ion-refresher-content />
+    </ion-refresher>
     <ion-list>
-      <ion-refresher slot="fixed" @ionRefresh="fetchItems">
-        <ion-refresher-content />
-      </ion-refresher>
       <list-item
         v-for="item in items"
         :key="item.id"
@@ -65,7 +65,7 @@
       </ion-infinite-scroll-content>
     </ion-infinite-scroll>
   </div>
-  <ion-card v-else>{{ noData}}</ion-card>
+  <ion-card v-else>{{ noData }}</ion-card>
 </template>
 
 <script>

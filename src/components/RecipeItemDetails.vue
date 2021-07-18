@@ -80,12 +80,12 @@ export default {
     const { deleteItem } = useCrud(COLLECTIONS[collection.value.toUpperCase()])
 
     const onShareItem = async item => {
-      console.log('share', item)
+      if (!item.imageUrl && !item.source) return
       await Share.share({
         title: 'See cool stuff',
         text: item.title,
         message: item.title,
-        url: item.imageUrl,
+        url: item.source || item.imageUrl,
         dialogTitle: 'Share with buddies',
       })
     }
@@ -126,6 +126,7 @@ h4 {
   margin: 0.5rem 0 1.5rem;
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
 .recipe-body {
   margin-bottom: 1.5rem;
