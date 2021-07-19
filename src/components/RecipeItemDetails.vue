@@ -128,8 +128,8 @@ ion-icon {
 }
 ion-router-link {
   margin-left: 0.5rem;
-  --color: var(--ion-color-link);
-  border-bottom: 0.0625rem solid var(--ion-color-link);
+  --color: var(--ion-color-item);
+  border-bottom: 0.0625rem solid var(--ion-color-item);
 }
 h4 {
   text-transform: capitalize;
