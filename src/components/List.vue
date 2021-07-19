@@ -43,7 +43,7 @@
     </ion-buttons>
   </div>
   <div class="ion-padding" v-if="!!items?.length">
-    <ion-refresher slot="fixed" @ionRefresh="fetchItems">
+    <ion-refresher slot="fixed" @ionRefresh="onRefresh">
       <ion-refresher-content />
     </ion-refresher>
     <ion-list>
@@ -159,6 +159,13 @@ export default {
       }
     }
 
+    const onRefresh = async event => {
+      await fetchItems()
+      setTimeout(() => {
+        event.target.complete()
+      }, 2000)
+    }
+
     const fetchItems = async () => {
       try {
         const { items: fetchedItems, count } = await getItems(
@@ -221,6 +228,7 @@ export default {
       loadMoreItems,
       onEditItem,
       fetchItems,
+      onRefresh,
       onDeleteItem,
     }
   },
