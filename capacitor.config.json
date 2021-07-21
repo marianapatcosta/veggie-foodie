@@ -1,6 +1,6 @@
 {
   "appId": "io.costa.mariana",
-  "appName": "veggie Foodie",
+  "appName": "Veggie Foodie",
   "webDir": "dist",
   "bundledWebRuntime": false,
   "plugins": {

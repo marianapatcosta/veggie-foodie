@@ -163,7 +163,7 @@ export default {
       await fetchItems()
       setTimeout(() => {
         event.target.complete()
-      }, 2000)
+      }, 1000)
     }
 
     const fetchItems = async () => {

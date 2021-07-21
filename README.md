@@ -27,7 +27,7 @@ The build is minified and the filenames include the hashes.\
 Your app is ready to be deployed!
 
 #### `npx cap copy`
-wraps the native app into the build ionic app
+wraps the native app into the build ionic app. should be run every time the app is built.
 
 #### `npx cap run android`
 

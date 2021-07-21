@@ -17,6 +17,7 @@
     "@capacitor/core": "3.0.1",
     "@capacitor/geolocation": "^1.0.2",
     "@capacitor/haptics": "1.0.1",
+    "@capacitor/ios": "^3.1.1",
     "@capacitor/keyboard": "1.0.1",
     "@capacitor/share": "^1.0.3",
     "@capacitor/splash-screen": "^1.0.2",
