@@ -3,7 +3,7 @@
     <ion-list>
       <ion-item>
         <ion-label position="floating">{{ t('global.title') }}</ion-label>
-        <ion-input type="text" required v-model="title" />
+        <ion-input required v-model="title" max-length="150" />
       </ion-item>
       <ion-item class="item-datetime">
         <ion-label>{{ t('global.date') }} </ion-label>
@@ -15,7 +15,7 @@
       </ion-item>
       <ion-item v-if="collection === COLLECTIONS.PRODUCTS">
         <ion-label position="floating">{{ t('global.store') }}</ion-label>
-        <ion-input type="text" v-model="store" />
+        <ion-input v-model="store" max-length="150" />
       </ion-item>
       <ion-item
         v-else
@@ -23,9 +23,9 @@
           marginTop: '0.5rem',
         }"
       >
-        <div>
+        <div class="location">
           <ion-label position="floating">{{ t('global.location') }} </ion-label>
-          <ion-input type="text" v-model="location" />
+          <ion-input v-model="location" max-length="150" />
         </div>
         <ion-button
           class="icon-button--absolute"
@@ -64,8 +64,9 @@
           <ion-icon slot="icon-only" :icon="camera"></ion-icon>
         </ion-button>
 
-        <ion-thumbnail slot="end" v-if="imageUrl">
-          <img :src="imageUrl" />
+        <ion-thumbnail slot="end">
+          <img v-if="imageUrl" :src="imageUrl" />
+          <image-placeholder v-else isSmall />
         </ion-thumbnail>
       </div>
       <ion-input
@@ -97,6 +98,7 @@ import { camera, location as locationIcon } from 'ionicons/icons'
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera'
 import { Geolocation } from '@capacitor/geolocation'
 import axios from 'axios'
+import ImagePlaceholder from './ImagePlaceholder.vue'
 import { COLLECTIONS } from '../utils/constants'
 import { useCrud } from '../composables/useCrud'
 export default {
@@ -104,6 +106,7 @@ export default {
   props: {
     itemId: { type: Object },
     collection: { type: String, required: true },
+    isEditImage: { type: Boolean },
   },
   components: {
     IonList,
@@ -115,6 +118,7 @@ export default {
     IonThumbnail,
     IonIcon,
     IonDatetime,
+    ImagePlaceholder,
   },
   // setup takes props and context as args
   setup(props) {
@@ -123,7 +127,6 @@ export default {
       COLLECTIONS[props.collection.toUpperCase()]
     )
     const item = ref(null)
-
     const title = ref('')
     const description = ref('')
     const imageUrl = ref('')
@@ -137,6 +140,7 @@ export default {
           resultType: CameraResultType.DataUrl, // stores images as data url in base 64
           source: CameraSource.Prompt, // to open the camera or the file explorer so the user can select one image
           quality: 60, // in %
+          allowEditing: true,
         })
         imageUrl.value = photo.dataUrl
       } catch (error) {
@@ -160,36 +164,6 @@ export default {
       saveItem(data, props.itemId)
     }
 
-    const getLocationName = location => {
-      if (!location) {
-        return
-      }
-      let locationArray = location.split(',')
-      locationArray = locationArray.slice(
-        locationArray.length - 3 >= 0 ? locationArray.length - 3 : 0,
-        locationArray.length
-      )
-      const wordsToDelete = [
-        t('global.municipality'),
-        t('global.region'),
-        t('global.district'),
-      ]
-      const itemToKeep = +t('global.itemToKeep')
-
-      wordsToDelete.forEach(word => {
-        locationArray.forEach((item, index) => {
-          locationArray[index] = item.includes(word)
-            ? item.split(word)[itemToKeep].trim()
-            : item.trim()
-        })
-      })
-
-      if (locationArray[0].includes(locationArray[1])) {
-        locationArray.splice(0, 1)
-      }
-      return locationArray.join(', ')
-    }
-
     const findCurrentLocation = async () => {
       try {
         const language = locale.value
@@ -199,9 +173,7 @@ export default {
         const geolocation = await axios.get(
           `https://api.mapbox.com/geocoding/v5/mapbox.places/${geolocationParams}.json?access_token=${GEOLOCATION_KEY}&autocomplete=false&language=${language}`
         )
-        location.value = getLocationName(
-          geolocation.data.features[3].place_name
-        )
+        location.value = geolocation.data.features[0].place_name
       } catch (error) {
         console.error(error)
       }
@@ -220,6 +192,9 @@ export default {
       if (!props.itemId) return
       const responseData = await getItem(props.itemId)
       item.value = responseData
+      if (props.isEditImage) {
+        await takePhoto()
+      }
     })
 
     return {
@@ -261,15 +236,19 @@ ion-item.item-has-focus {
 ion-label {
   text-transform: capitalize;
 }
+ion-thumbnail {
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+    0 1px 5px 0 rgba(0, 0, 0, 0.12);
+}
 .item-datetime {
   margin-top: 1.5rem;
 }
 span {
-  padding-top: 5px;
+  padding-top: 0.3rem;
 }
 .item--padding {
-  --padding-top: 25px;
-  --padding-bottom: 25px;
+  --padding-top: 1.5rem;
+  --padding-bottom: 1.5rem;
 }
 .image-label {
   transform: revert;
@@ -284,5 +263,8 @@ span {
   width: 100%;
   align-items: center;
   justify-content: space-between;
+}
+.location {
+  width: calc(100% - 3.75rem);
 }
 </style>

@@ -3,7 +3,7 @@
     <ion-list>
       <ion-item>
         <ion-label position="floating">{{ t('global.title') }}</ion-label>
-        <ion-input type="text" required v-model="title" />
+        <ion-input type="text" required v-model="title" max-length="150" />
       </ion-item>
       <ion-item>
         <ion-label position="floating">{{ t('global.source') }}</ion-label>
@@ -40,12 +40,16 @@
         <ion-button class="icon-button" fill="outline" @click="takePhoto">
           <ion-icon slot="icon-only" :icon="camera"></ion-icon>
         </ion-button>
-
-        <ion-thumbnail slot="end" v-if="imageUrl">
-          <img :src="imageUrl" />
+        <ion-thumbnail slot="end">
+          <ion-img v-if="imageUrl" :src="imageUrl" max-length="350" />
+          <image-placeholder v-else isSmall />
         </ion-thumbnail>
       </div>
-      <ion-input v-model="imageUrl" :placeholder="t('global.imageLink')"/>
+      <ion-input
+        v-model="imageUrl"
+        :placeholder="t('global.imageLink')"
+        max-length="350"
+      />
     </ion-item>
     <ion-button type="submit" expand="block" class="submit-button"
       >{{ t('global.save') }}
@@ -64,10 +68,12 @@ import {
   IonButton,
   IonThumbnail,
   IonIcon,
+  IonImg,
 } from '@ionic/vue'
 import { useI18n } from 'vue-i18n'
 import { camera } from 'ionicons/icons'
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera'
+import ImagePlaceholder from './ImagePlaceholder.vue'
 import { COLLECTIONS } from '../utils/constants'
 import { useCrud } from '../composables/useCrud'
 export default {
@@ -75,6 +81,7 @@ export default {
   props: {
     itemId: { type: Object },
     collection: { type: String, required: true },
+    isEditImage: { type: Boolean },
   },
   components: {
     IonList,
@@ -85,13 +92,14 @@ export default {
     IonButton,
     IonThumbnail,
     IonIcon,
+    IonImg,
+    ImagePlaceholder,
   },
   // setup takes props and context as args
   setup(props) {
     const { t } = useI18n()
     const { getItem, saveItem } = useCrud(COLLECTIONS.RECIPES)
     const item = ref(null)
-
     const title = ref('')
     const ingredients = ref('')
     const source = ref('')
@@ -104,6 +112,7 @@ export default {
           resultType: CameraResultType.DataUrl, // stores images as data url in base 64
           source: CameraSource.Prompt, // to open the camera or the file explorer so the user can select one image
           quality: 60, // in %
+          allowEditing: true,
         })
         imageUrl.value = photo.dataUrl
       } catch (error) {
@@ -134,6 +143,9 @@ export default {
       if (!props.itemId) return
       const responseData = await getItem(props.itemId)
       item.value = responseData
+      if (props.isEditImage) {
+        await takePhoto()
+      }
     })
 
     return {
@@ -172,15 +184,19 @@ ion-item.item-has-focus {
 ion-label {
   text-transform: capitalize;
 }
+ion-thumbnail {
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+    0 1px 5px 0 rgba(0, 0, 0, 0.12);
+}
 .item-datetime {
   margin-top: 1.5rem;
 }
 span {
-  padding-top: 5px;
+  padding-top: 0.3rem;
 }
 .item--padding {
-  --padding-top: 25px;
-  --padding-bottom: 25px;
+  --padding-top: 1.5rem;
+  --padding-bottom: 1.5rem;
 }
 .image-label {
   transform: revert;

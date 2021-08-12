@@ -2,10 +2,10 @@
   <ion-item :router-link="`/${path}/${item.id}`" color="secondary" lines="none">
     <ion-thumbnail slot="start">
       <ion-img v-if="item.imageUrl" :src="item.imageUrl" :alt="item.title" />
-      <div v-else class="image-placeholder" />
+      <image-placeholder v-else isSmall />
     </ion-thumbnail>
     <ion-label>{{ item.title }}</ion-label>
-    <ion-buttons>
+    <ion-buttons v-if="showActionButtons">
       <ion-button
         class="icon-button--clear"
         fill="clear"
@@ -35,11 +35,13 @@ import {
   IonIcon,
 } from '@ionic/vue'
 import { pencil, trash } from 'ionicons/icons'
+import ImagePlaceholder from './ImagePlaceholder.vue'
 export default {
   emits: ['edit-item', 'delete-item'],
   props: {
     item: { type: Object, required: true },
     path: { type: String, required: true },
+    showActionButtons: { type: Boolean, default: true },
   },
   components: {
     IonItem,
@@ -49,6 +51,7 @@ export default {
     IonButton,
     IonButtons,
     IonIcon,
+    ImagePlaceholder,
   },
   setup(_, context) {
     const onEditItem = id => {
@@ -57,6 +60,7 @@ export default {
     const onDeleteItem = item => {
       context.emit('delete-item', item)
     }
+
     return {
       pencil,
       trash,
@@ -76,8 +80,11 @@ ion-item {
 ion-item::part(inner) {
   border-color: var(--ion-color-contrast) !important;
 }
-.image-placeholder {
-  background-color: var(--ion-color-primary);
-  height: 100%;
+ion-label {
+  padding-left: 8px;
+}
+ion-thumbnail {
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+    0 1px 5px 0 rgba(0, 0, 0, 0.12);
 }
 </style>

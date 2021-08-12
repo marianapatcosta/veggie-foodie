@@ -12,7 +12,7 @@ import {
   GET_ITEMS_STATEMENT,
   GET_ITEMS_STATEMENT_SEARCH
 } from '../utils/crud-utils'
-import { ITEM_METADATA } from '../utils/constants'
+import { ITEM_METADATA, ORDERS } from '../utils/constants'
 
 export const useCrud = collection => {
   const router = useRouter()
@@ -46,6 +46,30 @@ export const useCrud = collection => {
           )
       const response = await database.query(statement)
       return response.values
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  const getLatestItems = async nrItemsToLoad => {
+    try {
+      const countStatement = COUNT_STATEMENT(collection)
+      const statement = GET_ITEMS_STATEMENT(
+        collection,
+        'created',
+        ORDERS.DESC,
+        nrItemsToLoad
+      )
+
+      const [responseCount, responseMeals] = await Promise.all(
+        [countStatement, statement].map(
+          async query => await database.query(query)
+        )
+      )
+      return {
+        items: responseMeals.values,
+        count: responseCount.values[0]['COUNT(*)']
+      }
     } catch (error) {
       console.error(error)
     }
@@ -170,6 +194,7 @@ export const useCrud = collection => {
 
   return {
     getItems,
+    getLatestItems,
     loadMore,
     getItem,
     saveItem,

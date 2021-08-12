@@ -13,6 +13,7 @@
     "editSuccess": "The item was edited.",
     "english": "english",
     "error": "An error occurred.",
+    "hello": "Olá {username}",
     "image": "image",
     "imageLink": "Image link",
     "ingredients": "ingredients",
@@ -20,6 +21,7 @@
     "light": "light",
     "location": "location",
     "municipality": "Municipality",
+    "noImage": "No image to display. Add it now!",
     "ok": "ok",
     "orderBy": "Order by",
     "portuguese": "portuguese",
@@ -34,21 +36,27 @@
   },
   "meals": {
     "addMeal": "Add meal",
+    "details": "Meal details",
     "editMeal": "Edit meal",
+    "meals": "meals",
     "myMeals": "My meals",
     "noMeals": "No meals to show yet."
   },
   "products": {
     "addProduct": "Add product",
+    "details": "Product details",
     "editMeal": "Edit product",
     "myProducts": "My products",
-    "noProducts": "No products to show yet."
+    "noProducts": "No products to show yet.",
+    "products": "products"
   },
   "recipes": {
     "addRecipe": "Add recipe",
+    "details": "Recipe details",
     "editRecipe": "Edit recipe",
     "myRecipes": "My recipes",
-    "noRecipes": "No recipes to show yet."
+    "noRecipes": "No recipes to show yet.",
+    "recipes": "recipes"
   },
   "user": {
     "language": "Language",

@@ -1,20 +1,19 @@
 <template>
-<ion-page>
-  <ion-tabs ref="tabs" @ionTabsDidChange="setCurrentTab()">
-    
-    <ion-tab-bar slot="bottom">
-      <ion-tab-button
-        v-for="route in routes"
-        :key="`route-${route.name}`"
-        :tab="route.name"
-        :href="`/tabs/${route.name}`"
-      >
-        <ion-icon
-          :icon="route.name === selectedTab ? route.icon : route.iconOutline"
-        ></ion-icon>
-      </ion-tab-button>
-    </ion-tab-bar>
-  </ion-tabs>
+  <ion-page>
+    <ion-tabs ref="tabs" @ionTabsDidChange="setCurrentTab()">
+      <ion-tab-bar slot="bottom">
+        <ion-tab-button
+          v-for="route in routes"
+          :key="`route-${route.name}`"
+          :tab="route.name"
+          :href="`/tabs/${route.name}`"
+        >
+          <ion-icon
+            :icon="route.name === selectedTab ? route.icon : route.iconOutline"
+          />
+        </ion-tab-button>
+      </ion-tab-bar>
+    </ion-tabs>
   </ion-page>
 </template>
 
@@ -23,12 +22,14 @@ import { IonTabs, IonTabBar, IonTabButton, IonIcon, IonPage } from '@ionic/vue'
 import {
   cart,
   cartOutline,
+  home,
+  homeOutline,
   receipt,
   receiptOutline,
   restaurant,
   restaurantOutline,
   settings,
-  settingsOutline
+  settingsOutline,
 } from 'ionicons/icons'
 export default {
   components: {
@@ -36,11 +37,12 @@ export default {
     IonTabBar,
     IonTabButton,
     IonIcon,
-    IonPage
+    IonPage,
   },
   data() {
     return {
       routes: [
+        { name: 'home', icon: home, iconOutline: homeOutline },
         { name: 'meals', icon: restaurant, iconOutline: restaurantOutline },
         { name: 'recipes', icon: receipt, iconOutline: receiptOutline },
         { name: 'products', icon: cart, iconOutline: cartOutline },
@@ -63,7 +65,17 @@ export default {
 }
 </script>
 <style scoped>
-ion-tab-bar,
+ion-tabs {
+  background: var(--ion-color-secondary);
+}
+ion-tab-bar {
+  border-top-right-radius: 1.5rem;
+  border-top-left-radius: 1.5rem;
+  background: var(--ion-color-primary);
+  border: none;
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+    0 1px 5px 0 rgba(0, 0, 0, 0.12);
+}
 ion-tab-button {
   background: var(--ion-color-primary);
 }

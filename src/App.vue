@@ -36,7 +36,6 @@ export default defineComponent({
     const connectDatabase = async () => {
       try {
         const sqlite = app?.appContext.config.globalProperties.$sqlite
-
         sqlite.value = sqlite
         const db = await sqlite?.createConnection(
           DATABASE_NAME,

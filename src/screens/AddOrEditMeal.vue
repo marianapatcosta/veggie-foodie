@@ -6,6 +6,7 @@
     <add-or-edit-meal-product-form
       :collection="COLLECTIONS.MEALS"
       :itemId="itemId"
+      :isEditImage="isEditImage"
     />
   </layout>
 </template>
@@ -25,10 +26,12 @@ export default {
     const route = useRoute()
     const { t } = useI18n()
     const itemId = ref(route.params.id)
+    const isEditImage = route.query.isEditImage
 
     return {
       t,
       itemId,
+      isEditImage,
       COLLECTIONS,
     }
   },

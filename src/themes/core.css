@@ -80,10 +80,8 @@ ion-select::part(icon) {
 ion-card {
   color: var(--ion-color-primary-contrast) !important;
   --background: var(--ion-color-primary) !important;
-  padding: 1.5rem;
-  text-align: center;
-  margin-top: 3rem;
   font-size: 1.1rem;
+  border-radius: 0;
 }
 
 ion-list {
@@ -199,6 +197,11 @@ ion-list {
   background: var(--ion-color-item) !important;
 }
 
-.refresher-pulling-icon ion-spinner{
+.refresher-pulling-icon ion-spinner {
   color: var(--ion-color-primary-contrast) !important;
+}
+
+* {
+  margin: 0;
+  padding: 0;
 }

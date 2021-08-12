@@ -1,11 +1,14 @@
 <template>
   <layout
-    :screenTitle="!itemId ? t('products.addProduct') : t('products.editProduct')"
+    :screenTitle="
+      !itemId ? t('products.addProduct') : t('products.editProduct')
+    "
     :pageDefaultBackLink="`/tabs/${COLLECTIONS.PRODUCTS}`"
   >
     <add-or-edit-meal-product-form
       :collection="COLLECTIONS.PRODUCTS"
       :itemId="itemId"
+      :isEditImage="isEditImage"
     />
   </layout>
 </template>
@@ -25,10 +28,12 @@ export default {
     const route = useRoute()
     const { t } = useI18n()
     const itemId = ref(route.params.id)
+    const isEditImage = route.query.isEditImage
 
     return {
       t,
       itemId,
+      isEditImage,
       COLLECTIONS,
     }
   },

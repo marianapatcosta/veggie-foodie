@@ -1,7 +1,8 @@
 <template>
   <layout
     :screenTitle="t('user.preferences')"
-    pageDefaultBackLink="/tabs/meals"
+    pageDefaultBackLink="/tabs/home"
+    headerCurved
   >
     <ion-list class="ion-padding preferences-list">
       <ion-item class="preferences-select">
