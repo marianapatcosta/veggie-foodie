@@ -1,9 +1,13 @@
 <template>
   <ion-page>
-    <ion-header>
-      <ion-toolbar>
+    <ion-header class="ion-no-border">
+      <ion-toolbar :class="{ 'header-curved': headerCurved }">
         <ion-row>
-          <ion-col class="ion-align-self-center" size="1" v-if="pageDefaultBackLink">
+          <ion-col
+            class="ion-align-self-center"
+            size="1"
+            v-if="pageDefaultBackLink"
+          >
             <ion-buttons>
               <ion-back-button :default-href="pageDefaultBackLink" text="" />
             </ion-buttons>
@@ -45,6 +49,7 @@ export default {
   props: {
     screenTitle: String,
     pageDefaultBackLink: String,
+    headerCurved: { type: Boolean, default: false },
   },
 
   components: {
@@ -61,8 +66,17 @@ export default {
 }
 </script>
 <style scoped>
+ion-header {
+  background: var(--ion-color-secondary);
+}
+ion-header::after {
+  background: none;
+}
+
 ion-toolbar {
   --background: var(--ion-color-primary);
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+    0 1px 5px 0 rgba(0, 0, 0, 0.12);
 }
 ion-icon {
   color: var(--ion-color-primary);
@@ -70,7 +84,14 @@ ion-icon {
 ion-button {
   font-weight: 700;
 }
+.header-curved {
+  border-bottom-right-radius: 1.25rem;
+  border-bottom-left-radius: 1.25rem;
+}
 .title {
   padding-left: 1rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 </style>

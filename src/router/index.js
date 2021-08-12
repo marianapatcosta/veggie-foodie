@@ -1,11 +1,11 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router'
-import Meals from '../screens/Meals.vue'
+import Home from '../screens/Home.vue'
 import Tabs from '../screens/Tabs.vue'
 
 const routes = [
   {
     path: '/',
-    redirect: '/tabs/meals'
+    redirect: '/tabs/home'
   },
   {
     path: '/tabs/',
@@ -13,7 +13,12 @@ const routes = [
     children: [
       {
         path: '',
-        redirect: '/tabs/meals'
+        redirect: '/tabs/home'
+      },
+      {
+        path: 'home',
+        name: 'home',
+        component: () => import('../screens/Home.vue')
       },
       {
         path: 'meals',
@@ -60,11 +65,11 @@ const routes = [
     path: '/recipes/add',
     name: 'add-recipe',
     component: () => import('../screens/AddOrEditRecipe.vue')
-  }, 
+  },
   {
     path: '/recipes/edit/:id',
     name: 'edit-recipe',
-    component: () => import('../screens/AddOrEditRecipe.vue')
+    component: () => import('../screens/AddOrEditRecipe.vue'),
   },
   {
     path: '/products/:id',
@@ -75,13 +80,13 @@ const routes = [
     path: '/products/add',
     name: 'add-product',
     component: () => import('../screens/AddOrEditProduct.vue')
-  }, 
+  },
   {
     path: '/products/edit/:id',
     name: 'edit-product',
     component: () => import('../screens/AddOrEditProduct.vue')
   },
-  { path: '/:pathMatch(.*)*', component: Meals }
+  { path: '/:pathMatch(.*)*', component: Home }
 ]
 
 const router = createRouter({

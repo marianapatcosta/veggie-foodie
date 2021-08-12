@@ -1,58 +1,44 @@
 <template>
   <div>
-    <ion-img v-if="item.imageUrl" :src="item.imageUrl" :alt="item.title" />
-    <div v-else class="image-placeholder" />
-    <ion-buttons>
-      <ion-button
-        v-if="isImageUrlAHttpUrl(item.imageurl)"
-        class="icon-button--clear"
-        fill="clear"
-        @click.prevent="onShareItem(item)"
-      >
-        <ion-icon slot="icon-only" :icon="shareSocial" />
-      </ion-button>
-      <ion-button
-        class="icon-button--clear"
-        fill="clear"
-        @click.prevent="onEditItem(item.id)"
-      >
-        <ion-icon slot="icon-only" :icon="pencil" />
-      </ion-button>
-      <ion-button
-        class="icon-button--clear"
-        fill="clear"
-        @click.prevent="onDeleteItem(item)"
-      >
-        <ion-icon slot="icon-only" :icon="trash" />
-      </ion-button>
-    </ion-buttons>
+    <div class="image-wrapper">
+      <ion-img v-if="item.imageUrl" :src="item.imageUrl" :alt="item.title" />
+      <image-placeholder v-else @click.prevent="onEditImage(item.id)" />
+      <item-action-buttons
+        :showShareButton="isImageUrlAHttpUrl(item.imageurl)"
+        @edit-item="onEditItem(item.id)"
+        @delete-item="onDeleteItem(item.id)"
+        @share-item="onShareItem(item.id)"
+      />
+    </div>
     <div class="details-body">
       <h2 class="ion-text-center">{{ item.title }}</h2>
-      <p class="ion-text-center">
-        {{ collection === COLLECTIONS.MEALS ? item.location : item.store }} -
+      <p>
+        {{ collection === COLLECTIONS.MEALS ? item.location : item.store }}
+      </p>
+      <p>
         {{ new Date(item.date).toLocaleString(language, dateOptions) }}
       </p>
-      <p class="ion-text-center">{{ item.description }}</p>
+      <p class="description">{{ item.description }}</p>
     </div>
   </div>
 </template>
 
 <script>
-import { IonImg, IonButton, IonButtons, IonIcon } from '@ionic/vue'
-import { pencil, trash, shareSocial } from 'ionicons/icons'
+import { IonImg } from '@ionic/vue'
 import { ref, toRefs, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { Share } from '@capacitor/share'
+import ImagePlaceholder from './ImagePlaceholder.vue'
+import ItemActionButtons from './ItemActionButtons.vue'
 import { useCrud } from '../composables/useCrud'
 import { COLLECTIONS } from '../utils/constants'
 import { isImageUrlAHttpUrl } from '../utils/utils'
 export default {
   components: {
     IonImg,
-    IonButton,
-    IonButtons,
-    IonIcon,
+    ImagePlaceholder,
+    ItemActionButtons,
   },
   props: {
     collection: {
@@ -71,7 +57,7 @@ export default {
     const { deleteItem } = useCrud(COLLECTIONS[collection.value.toUpperCase()])
 
     const dateOptions = ref({
-      weekday: 'short',
+      weekday: 'long',
       year: 'numeric',
       month: 'long',
       day: 'numeric',
@@ -92,6 +78,12 @@ export default {
         console.error(error)
       }
     }
+
+    const onEditImage = id =>
+      router.push({
+        path: `/${props.collection}/edit/${id}`,
+        query: { isEditImage: true },
+      })
     const onEditItem = id => router.push(`/${props.collection}/edit/${id}`)
 
     const onDeleteItem = itemToDelete => {
@@ -101,13 +93,11 @@ export default {
     }
 
     return {
-      pencil,
-      trash,
-      shareSocial,
       dateOptions,
       language,
       onShareItem,
       onEditItem,
+      onEditImage,
       onDeleteItem,
       isImageUrlAHttpUrl,
       COLLECTIONS,
@@ -116,19 +106,18 @@ export default {
 }
 </script>
 <style scoped>
-ion-buttons {
-  margin: 0.5rem 0 1.5rem;
-  justify-content: flex-end;
+p {
+  line-height: 1.5rem;
 }
-ion-icon {
-  color: var(--ion-color-item);
-}
-.image-placeholder {
-  background-color: var(--ion-color-primary);
-  width: 100%;
-  height: 13rem;
+.image-wrapper {
+  position: relative;
 }
 .details-body {
   margin: 0 0.5rem;
+}
+.description {
+  margin-top: 0.75rem;
+  font-size: 0.9rem;
+  line-height: 1.25rem;
 }
 </style>

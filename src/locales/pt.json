@@ -13,6 +13,7 @@
     "editSuccess": "O item foi editado.",
     "english": "inglês",
     "error": "Ocorreu um erro.",
+    "hello": "Hello {username}",
     "image": "imagem",
     "imageLink": "Link da imagem",
     "ingredients": "ingredientes",
@@ -20,6 +21,7 @@
     "light": "claro",
     "location": "localização",
     "municipality": "Município",
+    "noImage": "Não há imagem para mostrar. Adicione agora!",
     "ok": "ok",
     "orderBy": "Ordenar por",
     "portuguese": "português",
@@ -34,21 +36,27 @@
   },
   "meals": {
     "addMeal": "Adicionar refeição",
+    "details": "Detalhes da refeição",
     "editMeal": "Editar refeição",
     "myMeals": "As minhas refeições",
-    "noMeals": "Ainda não há refeições para mostrar."
+    "noMeals": "Ainda não há refeições para mostrar.",
+    "meals": "refeições"
   },
   "products": {
     "addProduct": "Adicionar producto",
+    "details": "Detalhes do producto",
     "editProduct": "Editar producto",
     "myProducts": "Os meus productos",
-    "noProducts": "Ainda não há produtos para mostrar."
+    "noProducts": "Ainda não há produtos para mostrar.",
+    "products": "produtos"
   },
   "recipes": {
     "addRecipe": "Adicionar receita",
+    "details": "Detalhes da receita",
     "editRecipe": "Editar receita",
     "myRecipes": "As minhas receitas",
-    "noRecipes": "Ainda não há receitas para mostrar."
+    "noRecipes": "Ainda não há receitas para mostrar.",
+    "recipes": "receitas"
   },
   "user": {
     "language": "Idioma",

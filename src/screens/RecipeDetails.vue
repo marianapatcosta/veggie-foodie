@@ -1,6 +1,6 @@
 <template>
   <layout
-    :screenTitle="item?.title"
+    :screenTitle="t('recipes.details')"
     :pageDefaultBackLink="`/tabs/${COLLECTIONS.RECIPES}`"
   >
     <recipe-item-details :collection="COLLECTIONS.RECIPES" :item="item" />
@@ -10,6 +10,7 @@
 <script>
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { RecipeItemDetails } from '../components'
 import { useCrud } from '../composables/useCrud'
 import { COLLECTIONS } from '../utils/constants'
@@ -19,6 +20,7 @@ export default {
   },
   setup() {
     const route = useRoute()
+    const { t } = useI18n()
     const itemId = ref(route.params.id)
     const item = ref(null)
     const { getItem } = useCrud(COLLECTIONS.RECIPES)
@@ -28,6 +30,7 @@ export default {
       item.value = itemResponseData
     })
     return {
+      t,
       COLLECTIONS,
       item,
     }

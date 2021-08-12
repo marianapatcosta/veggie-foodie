@@ -1,28 +1,23 @@
 <template>
-  <layout :screenTitle="t('meals.myMeals')">
+  <layout :screenTitle="t('meals.myMeals')" headerCurved>
     <list collection="meals" :noData="t('meals.noMeals')" />
     <template v-slot:fab-button>
-      <ion-fab-button :router-link="`/meals/add`" color="secondary">
-        <ion-icon :icon="add" />
-      </ion-fab-button>
+      <add-button link="/meals/add" />
     </template>
   </layout>
 </template>
 
 <script>
-import { IonFabButton, IonIcon } from '@ionic/vue'
 import { useI18n } from 'vue-i18n'
-import { add } from 'ionicons/icons'
-import { List } from '../components'
+import { AddButton, List } from '../components'
 export default {
   components: {
-    IonFabButton,
-    IonIcon,
+    AddButton,
     List,
   },
   setup() {
     const { t } = useI18n()
-    return { t, add }
+    return { t }
   },
 }
 </script>

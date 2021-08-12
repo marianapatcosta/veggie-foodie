@@ -1,6 +1,6 @@
 <template>
   <layout
-    :screenTitle="item?.title"
+    :screenTitle="t('products.details')"
     :pageDefaultBackLink="`/tabs/${COLLECTIONS.PRODUCTS}`"
   >
     <meal-or-product-item-details
@@ -13,6 +13,7 @@
 <script>
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { MealOrProductItemDetails } from '../components'
 import { useCrud } from '../composables/useCrud'
 import { COLLECTIONS } from '../utils/constants'
@@ -22,6 +23,7 @@ export default {
   },
   setup() {
     const route = useRoute()
+    const { t } = useI18n()
     const itemId = ref(route.params.id)
     const item = ref(null)
     const { getItem } = useCrud(COLLECTIONS.PRODUCTS)
@@ -31,6 +33,7 @@ export default {
       item.value = itemResponseData
     })
     return {
+      t,
       COLLECTIONS,
       item,
     }

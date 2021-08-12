@@ -10,9 +10,7 @@
       }"
     />
     <ion-item class="select-wrapper" lines="none">
-      <ion-label :style="{ display: 'none' }">{{
-        t('global.orderBy')
-      }}</ion-label>
+    
       <ion-select
         :interface-options="customAlertOptions"
         :value="orderBy"
@@ -65,7 +63,7 @@
       </ion-infinite-scroll-content>
     </ion-infinite-scroll>
   </div>
-  <ion-card v-else>{{ noData }}</ion-card>
+  <ion-card class="list-card" v-else>{{ noData }}</ion-card>
 </template>
 
 <script>
@@ -81,7 +79,6 @@ import {
   IonSelect,
   IonSelectOption,
   IonItem,
-  IonLabel,
   IonButton,
   IonButtons,
 } from '@ionic/vue'
@@ -107,7 +104,6 @@ export default {
     IonSelect,
     IonSelectOption,
     IonItem,
-    IonLabel,
     IonButton,
     IonButtons,
   },
@@ -137,7 +133,7 @@ export default {
     const keyword = ref('')
     const isInfiniteScrollDisabled = ref(false)
     const totalItemsCount = ref(0)
-    const customAlertOptions = ref({ cssClass: 'app-alert list-alert' })
+    const customAlertOptions = ref({ header: t('global.orderBy'), cssClass: 'app-alert list-alert' })
 
     const orderByOptions = computed(getItemsOrderBy[collection.value])
 
@@ -235,6 +231,12 @@ export default {
 }
 </script>
 <style >
+.list-card {
+  width: 90%;
+  margin: 3rem auto 0;
+  padding: 1.5rem;
+  text-align: center;
+}
 .filter-options {
   display: flex;
   align-items: center;
@@ -249,7 +251,7 @@ export default {
 .select-wrapper {
   --background: var(--ion-color-secondary);
 }
-.in-item {
+ion-item {
   max-width: 100% !important;
 }
 </style>
