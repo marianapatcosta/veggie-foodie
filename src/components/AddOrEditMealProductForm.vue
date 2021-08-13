@@ -60,7 +60,7 @@
         >{{ t('global.image') }}
       </ion-label>
       <div class="image-wrapper">
-        <ion-button class="icon-button" fill="outline" @click="takePhoto">
+        <ion-button class="icon-button" fill="outline" @click="handleTakePhoto">
           <ion-icon slot="icon-only" :icon="camera"></ion-icon>
         </ion-button>
 
@@ -95,12 +95,13 @@ import {
 } from '@ionic/vue'
 import { useI18n } from 'vue-i18n'
 import { camera, location as locationIcon } from 'ionicons/icons'
-import { Camera, CameraResultType, CameraSource } from '@capacitor/camera'
 import { Geolocation } from '@capacitor/geolocation'
 import axios from 'axios'
 import ImagePlaceholder from './ImagePlaceholder.vue'
 import { COLLECTIONS } from '../utils/constants'
 import { useCrud } from '../composables/useCrud'
+import { usePhoto } from '../composables/usePhoto'
+import { convertFilePathToHttp, showToast } from '../utils/utils'
 export default {
   emits: ['save-item'],
   props: {
@@ -126,42 +127,48 @@ export default {
     const { getItem, saveItem } = useCrud(
       COLLECTIONS[props.collection.toUpperCase()]
     )
+    const { takePhoto, savePhoto } = usePhoto()
     const item = ref(null)
     const title = ref('')
     const description = ref('')
     const imageUrl = ref('')
+    const photo = ref('')
     const store = ref('')
     const location = ref('')
     const date = ref(new Date().toISOString())
 
-    const takePhoto = async () => {
-      try {
-        const photo = await Camera.getPhoto({
-          resultType: CameraResultType.DataUrl, // stores images as data url in base 64
-          source: CameraSource.Prompt, // to open the camera or the file explorer so the user can select one image
-          quality: 60, // in %
-          allowEditing: true,
-        })
-        imageUrl.value = photo.dataUrl
-      } catch (error) {
-        console.error(error)
-      }
+    const handleTakePhoto = async () => {
+      const newPhoto = await takePhoto()
+      // image.webPath will contain a path that can be set as an image src.
+      // You can access the original file using image.path, which can be
+      // passed to the Filesystem API to read the raw data of the image
+      imageUrl.value = newPhoto.webPath
+      photo.value = newPhoto
     }
 
-    const submitForm = () => {
-      const data = {
-        title: title.value,
-        date: date.value,
-        imageUrl: imageUrl.value,
-        description: description.value,
+    const submitForm = async () => {
+      try {
+        const imageFileName = `${new Date().getTime()}.jpeg`
+        let savedFileImageUri
+        if (photo.value) {
+          savedFileImageUri = await savePhoto(photo.value, imageFileName)
+        }
+        const data = {
+          title: title.value,
+          date: date.value,
+          imageUrl: savedFileImageUri,
+          description: description.value,
+        }
+        if (props.collection === COLLECTIONS.PRODUCTS) {
+          data.store = store.value
+        }
+        if (props.collection === COLLECTIONS.MEALS) {
+          data.location = location.value
+        }
+        saveItem(data, props.itemId)
+      } catch (error) {
+        showToast()
       }
-      if (props.collection === COLLECTIONS.PRODUCTS) {
-        data.store = store.value
-      }
-      if (props.collection === COLLECTIONS.MEALS) {
-        data.location = location.value
-      }
-      saveItem(data, props.itemId)
     }
 
     const findCurrentLocation = async () => {
@@ -175,14 +182,14 @@ export default {
         )
         location.value = geolocation.data.features[0].place_name
       } catch (error) {
-        console.error(error)
+        showToast()
       }
     }
 
     watch(item, () => {
       title.value = item.value.title || ''
       description.value = item.value.description || ''
-      imageUrl.value = item.value.imageUrl || ''
+      imageUrl.value = convertFilePathToHttp(item.value.imageUrl) || ''
       location.value = item.value.location || ''
       store.value = item.value.store || ''
       date.value = item.value.date || new Date().toISOString()
@@ -207,7 +214,7 @@ export default {
       date,
       camera,
       locationIcon,
-      takePhoto,
+      handleTakePhoto,
       submitForm,
       findCurrentLocation,
       COLLECTIONS,

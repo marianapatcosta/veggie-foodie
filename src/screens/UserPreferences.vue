@@ -58,6 +58,7 @@ import { onMounted, ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { Storage } from '@capacitor/storage'
 import { getLanguages, getThemes } from '../utils/constants'
+import { showToast } from '../utils/utils'
 export default {
   components: {
     IonList,
@@ -79,12 +80,12 @@ export default {
     const updateLanguage = async event => {
       try {
         locale.value = event.target.value
-        await Storage.set({
+        Storage.set({
           key: 'language',
           value: event.target.value,
         })
       } catch (error) {
-        console.error(error)
+        showToast()
       }
     }
 
@@ -98,7 +99,7 @@ export default {
           value: event.target.value,
         })
       } catch (error) {
-        console.error(error)
+        showToast()
       }
     }
 
@@ -110,7 +111,7 @@ export default {
         theme.value =
           value || window.matchMedia('(prefers-color-scheme: dark)').matches
       } catch (error) {
-        console.error(error)
+        showToast()
       }
     }
 

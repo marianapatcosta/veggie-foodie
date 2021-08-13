@@ -1,5 +1,8 @@
 <template>
-  <layout :screenTitle="t('global.hello')" headerCurved>
+  <layout
+    :screenTitle="t('global.hello', { username: 'Veggie Foodie' })"
+    headerCurved
+  >
     <div class="lists-wrapper">
       <ion-refresher slot="fixed" @ionRefresh="onRefresh">
         <ion-refresher-content />
@@ -36,6 +39,7 @@ import { useI18n } from 'vue-i18n'
 import { LatestItemsList } from '../components'
 import { useCrud } from '../composables/useCrud'
 import { COLLECTIONS } from '../utils/constants'
+import { showToast } from '../utils/utils'
 export default {
   components: {
     IonRefresher,
@@ -70,15 +74,14 @@ export default {
           getLLatestRecipes(NUMBER_OF_ITEM_TO_LOAD),
           getLLatestProducts(NUMBER_OF_ITEM_TO_LOAD),
         ])
-
-        meals.value = latestMeals.items
+        meals.value = latestMeals?.items
         totalMealsCount.value = latestMeals.count
-        recipes.value = latestRecipes.items
+        recipes.value = latestRecipes?.items
         totalRecipesCount.value = latestRecipes.count
-        products.value = latestProducts.items
+        products.value = latestProducts?.items
         totalProductsCount.value = latestProducts.count
       } catch (error) {
-        console.error(error)
+        showToast()
       }
     }
     onMounted(async () => {

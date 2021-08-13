@@ -4,7 +4,7 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "io.costa.mariana",
+  "applicationId": "io.veggie.foodie.costa.mariana",
   "variantName": "release",
   "elements": [
     {

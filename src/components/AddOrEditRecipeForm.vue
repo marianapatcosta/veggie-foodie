@@ -37,7 +37,7 @@
         >{{ t('global.image') }}
       </ion-label>
       <div class="image-wrapper">
-        <ion-button class="icon-button" fill="outline" @click="takePhoto">
+        <ion-button class="icon-button" fill="outline" @click="handleTakePhoto">
           <ion-icon slot="icon-only" :icon="camera"></ion-icon>
         </ion-button>
         <ion-thumbnail slot="end">
@@ -46,7 +46,7 @@
         </ion-thumbnail>
       </div>
       <ion-input
-        v-model="imageUrl"
+        v-model="webImageUrl"
         :placeholder="t('global.imageLink')"
         max-length="350"
       />
@@ -56,7 +56,6 @@
     </ion-button>
   </form>
 </template>
- ~
 <script>
 import { ref, watch, onMounted } from 'vue'
 import {
@@ -72,10 +71,11 @@ import {
 } from '@ionic/vue'
 import { useI18n } from 'vue-i18n'
 import { camera } from 'ionicons/icons'
-import { Camera, CameraResultType, CameraSource } from '@capacitor/camera'
 import ImagePlaceholder from './ImagePlaceholder.vue'
 import { COLLECTIONS } from '../utils/constants'
 import { useCrud } from '../composables/useCrud'
+import { usePhoto } from '../composables/usePhoto'
+import { convertFilePathToHttp, isImageUrlAHttpUrl, showToast } from '../utils/utils'
 export default {
   emits: ['save-item'],
   props: {
@@ -99,36 +99,49 @@ export default {
   setup(props) {
     const { t } = useI18n()
     const { getItem, saveItem } = useCrud(COLLECTIONS.RECIPES)
+    const { takePhoto, savePhoto } = usePhoto()
     const item = ref(null)
     const title = ref('')
     const ingredients = ref('')
     const source = ref('')
     const preparation = ref('')
     const imageUrl = ref('')
+    const webImageUrl = ref('')
+    const photo = ref('')
 
-    const takePhoto = async () => {
+    const handleTakePhoto = async () => {
+      const newPhoto = await takePhoto()
+      imageUrl.value = newPhoto.webPath
+      photo.value = newPhoto
+    }
+
+    const submitForm = async () => {
       try {
-        const photo = await Camera.getPhoto({
-          resultType: CameraResultType.DataUrl, // stores images as data url in base 64
-          source: CameraSource.Prompt, // to open the camera or the file explorer so the user can select one image
-          quality: 60, // in %
-          allowEditing: true,
-        })
-        imageUrl.value = photo.dataUrl
+        const imageFileName = `${new Date().getTime()}.jpeg`
+        let savedFileImageUri
+        if (photo.value) {
+          savedFileImageUri = await savePhoto(photo.value, imageFileName)
+        }
+        const data = {
+          title: title.value,
+          ingredients: ingredients.value,
+          preparation: preparation.value,
+          source: source.value,
+          imageUrl: photo.value ? savedFileImageUri : webImageUrl.value,
+        }
+        await saveItem(data, props.itemId)
       } catch (error) {
-        console.error(error)
+        showToast()
       }
     }
 
-    const submitForm = () => {
-      const data = {
-        title: title.value,
-        ingredients: ingredients.value,
-        preparation: preparation.value,
-        source: source.value,
-        imageUrl: imageUrl.value,
+    const getImageUrl = imageUrl => {
+      if (!imageUrl) {
+        return ''
       }
-      saveItem(data, props.itemId)
+      return isImageUrlAHttpUrl(imageUrl)
+        ? imageUrl
+        : convertFilePathToHttp(imageUrl)
     }
 
     watch(item, () => {
@@ -136,7 +149,7 @@ export default {
       ingredients.value = item.value.ingredients || ''
       preparation.value = item.value.preparation || ''
       source.value = item.value.source || ''
-      imageUrl.value = item.value.imageUrl || ''
+      imageUrl.value = getImageUrl(item.value.imageUrl)
     })
 
     onMounted(async () => {
@@ -144,7 +157,7 @@ export default {
       const responseData = await getItem(props.itemId)
       item.value = responseData
       if (props.isEditImage) {
-        await takePhoto()
+        await handleTakePhoto()
       }
     })
 
@@ -154,9 +167,11 @@ export default {
       ingredients,
       preparation,
       imageUrl,
+      webImageUrl,
+      photo,
       source,
       camera,
-      takePhoto,
+      handleTakePhoto,
       submitForm,
       COLLECTIONS,
     }

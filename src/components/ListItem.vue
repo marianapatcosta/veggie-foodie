@@ -1,7 +1,11 @@
 <template>
   <ion-item :router-link="`/${path}/${item.id}`" color="secondary" lines="none">
     <ion-thumbnail slot="start">
-      <ion-img v-if="item.imageUrl" :src="item.imageUrl" :alt="item.title" />
+      <ion-img
+        v-if="item.imageUrl"
+        :src="convertFilePathToHttp(item.imageUrl)"
+        :alt="item.title"
+      />
       <image-placeholder v-else isSmall />
     </ion-thumbnail>
     <ion-label>{{ item.title }}</ion-label>
@@ -9,9 +13,9 @@
       <ion-button
         class="icon-button--clear"
         fill="clear"
-        @click.prevent="onEditItem(item.id)"
+        @click.prevent="onShareItem(item)"
       >
-        <ion-icon slot="icon-only" :icon="pencil" />
+        <ion-icon slot="icon-only" :icon="shareSocial" />
       </ion-button>
       <ion-button
         class="icon-button--clear"
@@ -34,10 +38,11 @@ import {
   IonButtons,
   IonIcon,
 } from '@ionic/vue'
-import { pencil, trash } from 'ionicons/icons'
+import { shareSocial, trash } from 'ionicons/icons'
 import ImagePlaceholder from './ImagePlaceholder.vue'
+import { convertFilePathToHttp } from '../utils/utils'
 export default {
-  emits: ['edit-item', 'delete-item'],
+  emits: ['share-item', 'delete-item'],
   props: {
     item: { type: Object, required: true },
     path: { type: String, required: true },
@@ -54,18 +59,19 @@ export default {
     ImagePlaceholder,
   },
   setup(_, context) {
-    const onEditItem = id => {
-      context.emit('edit-item', id)
+    const onShareItem = item => {
+      context.emit('share-item', item)
     }
     const onDeleteItem = item => {
       context.emit('delete-item', item)
     }
 
     return {
-      pencil,
+      shareSocial,
       trash,
-      onEditItem,
+      onShareItem,
       onDeleteItem,
+      convertFilePathToHttp,
     }
   },
 }

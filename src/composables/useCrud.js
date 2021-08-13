@@ -1,7 +1,8 @@
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import { useI18n } from 'vue-i18n'
-import { alertController, toastController } from '@ionic/vue'
+import { alertController } from '@ionic/vue'
+import { usePhoto } from './usePhoto'
 import {
   GET_ITEM_BY_ID_STATEMENT,
   INSERT_ITEM_STATEMENT,
@@ -13,10 +14,12 @@ import {
   GET_ITEMS_STATEMENT_SEARCH
 } from '../utils/crud-utils'
 import { ITEM_METADATA, ORDERS } from '../utils/constants'
+import { showToast } from '../utils/utils'
 
 export const useCrud = collection => {
   const router = useRouter()
   const store = useStore()
+  const { deletePhoto } = usePhoto()
   const { t } = useI18n()
   const database = store.getters.database
 
@@ -47,7 +50,7 @@ export const useCrud = collection => {
       const response = await database.query(statement)
       return response.values
     } catch (error) {
-      console.error(error)
+      showToast()
     }
   }
 
@@ -60,18 +63,18 @@ export const useCrud = collection => {
         ORDERS.DESC,
         nrItemsToLoad
       )
-
-      const [responseCount, responseMeals] = await Promise.all(
+      const [responseCount, responseItems] = await Promise.all(
         [countStatement, statement].map(
           async query => await database.query(query)
         )
       )
+
       return {
-        items: responseMeals.values,
+        items: responseItems.values,
         count: responseCount.values[0]['COUNT(*)']
       }
     } catch (error) {
-      console.error(error)
+      showToast()
     }
   }
 
@@ -106,7 +109,7 @@ export const useCrud = collection => {
         count: responseCount.values[0]['COUNT(*)']
       }
     } catch (error) {
-      console.error(error)
+      showToast()
     }
   }
 
@@ -117,7 +120,7 @@ export const useCrud = collection => {
       const response = await database.query(statement)
       return response.values[0]
     } catch (error) {
-      console.error(error)
+      showToast()
     }
   }
 
@@ -129,40 +132,30 @@ export const useCrud = collection => {
       const values = FIELDS.map(field => item[field])
       await database.run(statement, values)
       router.replace(`/tabs/${collection}`)
-      const toast = await toastController.create({
-        message: !itemId ? t('global.addSuccess') : t('global.editSuccess'),
-        duration: 2000,
-        color: 'success'
-      })
-      return toast.present()
+      const toastMessage = !itemId
+        ? t('global.addSuccess')
+        : t('global.editSuccess')
+      await showToast(toastMessage, 'success')
     } catch (error) {
-      const toast = await toastController.create({
-        message: t('global.error'),
-        duration: 2000,
-        color: 'danger'
-      })
-      return toast.present()
+      showToast()
     }
   }
 
-  const onConfirmDeleteItem = async (itemToDeleteId, onConfirmDelete) => {
+  const onConfirmDeleteItem = async (
+    itemToDeleteId,
+    itemImageFilePath,
+    onConfirmDelete
+  ) => {
     try {
+      if (itemImageFilePath) {
+        await deletePhoto(itemImageFilePath)
+      }
       const statement = DELETE_BY_ID_STATEMENT(collection, itemToDeleteId)
       await database.query(statement)
       await onConfirmDelete()
-      const toast = await toastController.create({
-        message: t('global.deleteSuccess'),
-        duration: 2000,
-        color: 'success'
-      })
-      return toast.present()
+      await showToast(t('global.deleteSuccess'), 'success')
     } catch (error) {
-      const toast = await toastController.create({
-        message: t('global.error'),
-        duration: 2000,
-        color: 'danger'
-      })
-      return toast.present()
+      showToast()
     }
   }
 
@@ -182,13 +175,18 @@ export const useCrud = collection => {
           },
           {
             text: t('global.ok'),
-            handler: () => onConfirmDeleteItem(itemToDelete.id, onConfirmDelete)
+            handler: () =>
+              onConfirmDeleteItem(
+                itemToDelete.id,
+                itemToDelete.imageUrl,
+                onConfirmDelete
+              )
           }
         ]
       })
-      return alert.present()
+      alert.present()
     } catch (error) {
-      console.error(error)
+      showToast()
     }
   }
 
