@@ -18,8 +18,8 @@
             </h2>
           </ion-col>
 
-          <ion-col size="3">
-            <ion-fab horizontal="end">
+          <ion-col size="3" class="fab-column">
+            <ion-fab horizontal="end" >
               <slot name="fab-button" />
             </ion-fab>
           </ion-col>
@@ -93,5 +93,9 @@ ion-button {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+.fab-column {
+  display: flex;
+  align-items: center;
 }
 </style>

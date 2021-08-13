@@ -18,6 +18,7 @@ import { useStore } from 'vuex'
 import { useI18n } from 'vue-i18n'
 import { defaultLocale } from './locales'
 import { CREATE_TABLES, DATABASE_NAME } from './utils/crud-utils'
+import { showToast } from './utils/utils'
 
 export default defineComponent({
   name: 'App',
@@ -47,7 +48,7 @@ export default defineComponent({
         await initDbTables()
         isDbInitialized.value = true
       } catch (error) {
-        console.error(error)
+        showToast()
       }
     }
 
@@ -55,7 +56,7 @@ export default defineComponent({
       try {
         database.value.execute(CREATE_TABLES)
       } catch (error) {
-        console.error(error)
+        showToast()
       }
     }
 
@@ -66,7 +67,7 @@ export default defineComponent({
         })
         locale.value = language || defaultLocale
       } catch (error) {
-        console.error(error)
+        showToast()
       }
     }
 
@@ -83,7 +84,7 @@ export default defineComponent({
           value: theme,
         })
       } catch (error) {
-        console.error(error)
+        showToast()
       }
     }
 

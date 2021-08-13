@@ -10,7 +10,6 @@
       }"
     />
     <ion-item class="select-wrapper" lines="none">
-    
       <ion-select
         :interface-options="customAlertOptions"
         :value="orderBy"
@@ -50,7 +49,7 @@
         :key="item.id"
         :item="item"
         :path="collection"
-        @edit-item="onEditItem"
+        @share-item="onShareItem"
         @delete-item="onDeleteItem"
       />
     </ion-list>
@@ -83,13 +82,14 @@ import {
   IonButtons,
 } from '@ionic/vue'
 import { ref, toRefs, computed, watch, onMounted } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { swapVertical } from 'ionicons/icons'
 import ListItem from './ListItem.vue'
 import { COLLECTIONS, getItemsOrderBy } from '../utils/constants'
 import { useCrud } from '../composables/useCrud'
 import { useSortSettings } from '../composables/useSortSettings'
+import { showToast, onShareItem } from '../utils/utils'
 export default {
   components: {
     ListItem,
@@ -121,7 +121,6 @@ export default {
     // using `toRefs` to create a Reactive Reference to the `user` property of props
     const { collection } = toRefs(props)
     const route = useRoute()
-    const router = useRouter()
     const { t } = useI18n()
     const { getItems, loadMore, deleteItem } = useCrud(
       COLLECTIONS[collection.value.toUpperCase()]
@@ -133,7 +132,10 @@ export default {
     const keyword = ref('')
     const isInfiniteScrollDisabled = ref(false)
     const totalItemsCount = ref(0)
-    const customAlertOptions = ref({ header: t('global.orderBy'), cssClass: 'app-alert list-alert' })
+    const customAlertOptions = ref({
+      header: t('global.orderBy'),
+      cssClass: 'app-alert list-alert',
+    })
 
     const orderByOptions = computed(getItemsOrderBy[collection.value])
 
@@ -142,7 +144,7 @@ export default {
         await updateOrder()
         await fetchItems()
       } catch (error) {
-        console.error(error)
+        showToast()
       }
     }
 
@@ -151,7 +153,7 @@ export default {
         await updateOrderBy(event.target.value)
         await fetchItems()
       } catch (error) {
-        console.error(error)
+        showToast()
       }
     }
 
@@ -172,7 +174,7 @@ export default {
         items.value = fetchedItems
         totalItemsCount.value = count
       } catch (error) {
-        console.error(error)
+        showToast()
       }
     }
 
@@ -189,11 +191,9 @@ export default {
           isInfiniteScrollDisabled.value = true
         }
       } catch (error) {
-        console.error(error)
+        showToast()
       }
     }
-
-    const onEditItem = id => router.push(`/${collection.value}/edit/${id}`)
 
     const onDeleteItem = itemToDelete => {
       deleteItem(itemToDelete, fetchItems)
@@ -222,7 +222,7 @@ export default {
       updateItemsOrder,
       updateItemsOrderBy,
       loadMoreItems,
-      onEditItem,
+      onShareItem,
       fetchItems,
       onRefresh,
       onDeleteItem,

@@ -1,6 +1,7 @@
 import { ref } from 'vue'
 import { Storage } from '@capacitor/storage'
 import { ORDERS, ITEM_METADATA } from '../utils/constants'
+import { showToast } from '../utils/utils'
 
 export const useSortSettings = collection => {
   const { ORDER_STORAGE, ORDER_BY_STORAGE, ORDER_BY_DEFAULT } = ITEM_METADATA[
@@ -27,7 +28,7 @@ export const useSortSettings = collection => {
       order.value = orderValue || ORDERS.DESC
       orderBy.value = orderByValue || ORDER_BY_DEFAULT
     } catch (error) {
-      console.error(error)
+      showToast()
     }
   }
 
@@ -39,7 +40,7 @@ export const useSortSettings = collection => {
         value: order.value
       })
     } catch (error) {
-      console.error(error)
+      showToast()
     }
   }
 
@@ -51,7 +52,7 @@ export const useSortSettings = collection => {
         value: orderBy.value
       })
     } catch (error) {
-      console.error(error)
+      showToast()
     }
   }
 

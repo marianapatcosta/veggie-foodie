@@ -1,13 +1,16 @@
 <template>
   <div>
     <div class="image-wrapper">
-      <ion-img v-if="item.imageUrl" :src="item.imageUrl" :alt="item.title" />
+      <ion-img
+        v-if="item?.imageUrl"
+        :src="convertFilePathToHttp(item.imageUrl)"
+        :alt="item.title"
+      />
       <image-placeholder v-else @click.prevent="onEditImage(item.id)" />
       <item-action-buttons
-        :showShareButton="isImageUrlAHttpUrl(item.imageurl)"
         @edit-item="onEditItem(item.id)"
-        @delete-item="onDeleteItem(item.id)"
-        @share-item="onShareItem(item.id)"
+        @delete-item="onDeleteItem(item)"
+        @share-item="onShareItem(item)"
       />
     </div>
     <div class="details-body">
@@ -28,12 +31,15 @@ import { IonImg } from '@ionic/vue'
 import { ref, toRefs, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { Share } from '@capacitor/share'
 import ImagePlaceholder from './ImagePlaceholder.vue'
 import ItemActionButtons from './ItemActionButtons.vue'
 import { useCrud } from '../composables/useCrud'
 import { COLLECTIONS } from '../utils/constants'
-import { isImageUrlAHttpUrl } from '../utils/utils'
+import {
+  isImageUrlAHttpUrl,
+  convertFilePathToHttp,
+  onShareItem,
+} from '../utils/utils'
 export default {
   components: {
     IonImg,
@@ -53,7 +59,7 @@ export default {
   setup(props) {
     const { collection } = toRefs(props)
     const router = useRouter()
-    const { t, locale } = useI18n()
+    const { locale } = useI18n()
     const { deleteItem } = useCrud(COLLECTIONS[collection.value.toUpperCase()])
 
     const dateOptions = ref({
@@ -64,20 +70,6 @@ export default {
     })
 
     const language = computed(() => locale.value)
-
-    const onShareItem = async item => {
-      if (!isImageUrlAHttpUrl(item.imageUrl)) return
-      try {
-        await Share.share({
-          title: t('global.shareTitle'),
-          text: item.title,
-          url: item.imageUrl,
-          dialogTitle: '',
-        })
-      } catch (error) {
-        console.error(error)
-      }
-    }
 
     const onEditImage = id =>
       router.push({
@@ -100,6 +92,7 @@ export default {
       onEditImage,
       onDeleteItem,
       isImageUrlAHttpUrl,
+      convertFilePathToHttp,
       COLLECTIONS,
     }
   },

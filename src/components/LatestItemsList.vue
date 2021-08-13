@@ -12,7 +12,8 @@
         :key="item.id"
         :item="item"
         :path="collection"
-        :showActionButtons="false"
+        @share-item="onShareItem"
+        @delete-item="onDeleteItem"
       />
     </ion-list>
     <ion-card v-else
@@ -26,6 +27,9 @@ import { IonList, IonCard, IonButton } from '@ionic/vue'
 import { useI18n } from 'vue-i18n'
 import AddButton from './AddButton.vue'
 import ListItem from './ListItem.vue'
+import { useCrud } from '../composables/useCrud'
+import { onShareItem } from '../utils/utils'
+import { COLLECTIONS } from '../utils/constants'
 export default {
   components: {
     IonList,
@@ -56,10 +60,17 @@ export default {
       required: true,
     },
   },
-  setup() {
+  setup(props) {
     const { t } = useI18n()
+    const { deleteItem } = useCrud(COLLECTIONS[props.collection.toUpperCase()])
+
+    const onDeleteItem = itemToDelete => {
+      deleteItem(itemToDelete)
+    }
     return {
       t,
+      onShareItem,
+      onDeleteItem,
     }
   },
 }
@@ -84,6 +95,7 @@ ion-card {
 }
 ion-button {
   color: var(--ion-color-item);
+  font-size: 16px;
 }
 .list-header {
   display: flex;
