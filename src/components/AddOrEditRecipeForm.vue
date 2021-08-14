@@ -117,10 +117,9 @@ export default {
 
     const submitForm = async () => {
       try {
-        const imageFileName = `${new Date().getTime()}.jpeg`
         let savedFileImageUri
         if (photo.value) {
-          savedFileImageUri = await savePhoto(photo.value, imageFileName)
+          savedFileImageUri = await savePhoto(photo.value)
         }
         const data = {
           title: title.value,

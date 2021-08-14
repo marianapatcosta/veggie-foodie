@@ -19,17 +19,20 @@ export const usePhoto = () => {
     }
   }
 
-  const savePhoto = async (photo, fileName) => {
+  const savePhoto = async photo => {
     try {
+      const fileName = `${new Date().getTime()}.jpeg`
       const file = await Filesystem.readFile({
         path: photo.path
       })
       const base64Data = file.data
       const savedFile = await Filesystem.writeFile({
         path: fileName,
-        data: base64Data,
+        data: base64Data, // image.webPath will contain a path that can be set as an image src.
+
         directory: Directory.Data
       })
+      
       return savedFile.uri
     } catch (error) {
       showToast()
