@@ -40,6 +40,10 @@
 		"classpath": "com.capacitorjs.plugins.storage.StoragePlugin"
 	},
 	{
+		"pkg": "capacitor-plugin-filesharer",
+		"classpath": "com.interapptive.filesharer.FileSharerPlugin"
+	},
+	{
 		"pkg": "@capacitor-community/sqlite",
 		"classpath": "com.getcapacitor.community.database.sqlite.CapacitorSQLitePlugin"
 	}
