@@ -1,6 +1,8 @@
 {
   "global": {
     "addSuccess": "O item foi adicionado.",
+    "authenticate": "autenticar com o Google",
+    "authenticationError": "Ocorreu um erro durante a autenticação.",
     "cancel": "cancelar",
     "confirmDelete": "Pretende eliminar {title}?",
     "created": "criação",
@@ -16,6 +18,7 @@
     "image": "imagem",
     "imageLink": "Link da imagem",
     "ingredients": "ingredientes",
+    "intro": "Gira as suas refeições, receitas e produtos vegan/vegetarianos preferidos com",
     "light": "claro",
     "location": "localização",
     "noImage": "Não há imagem para mostrar. Adicione agora!",
@@ -27,6 +30,7 @@
     "search": "Pesquisar",
     "shareError": "Não há link nem imagem para partilhar.",
     "shareTitle": "Muito Bom!!!",
+    "skipAuth": "ignorar autenticação",
     "source": "fonte",
     "store": "Loja",
     "title": "título"
@@ -57,8 +61,10 @@
   },
   "user": {
     "language": "Idioma",
+    "logout": "logout",
     "preferences": "Preferências",
     "selectOne": "Selecione um",
-    "theme": "Tema"
+    "theme": "Tema",
+    "username": "Nome de utilizador"
   }
 }

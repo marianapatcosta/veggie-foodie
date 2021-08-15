@@ -41,7 +41,7 @@
           <ion-icon slot="icon-only" :icon="camera"></ion-icon>
         </ion-button>
         <ion-thumbnail slot="end">
-          <ion-img v-if="imageUrl" :src="imageUrl" max-length="350" />
+          <ion-img v-if="imageUrl" :src="imageUrl" alt="item photo" />
           <image-placeholder v-else isSmall />
         </ion-thumbnail>
       </div>

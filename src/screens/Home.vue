@@ -1,8 +1,18 @@
 <template>
   <layout
-    :screenTitle="t('global.hello', { username: 'Veggie Foodie' })"
+    :screenTitle="
+      t('global.hello', {
+        username: userData?.fullName.split(' ')[0] || 'Veggie Foodie',
+      })
+    "
     headerCurved
+    :userHeader="!!userData"
   >
+    <template v-slot:header-right v-if="userData">
+      <ion-thumbnail class="avatar">
+        <ion-img :src="userData?.avatar" />
+      </ion-thumbnail>
+    </template>
     <div class="lists-wrapper">
       <ion-refresher slot="fixed" @ionRefresh="onRefresh">
         <ion-refresher-content />
@@ -33,15 +43,24 @@
 </template>
 
 <script>
-import { IonRefresher, IonRefresherContent } from '@ionic/vue'
-import { ref, onMounted } from 'vue'
+import {
+  IonThumbnail,
+  IonImg,
+  IonRefresher,
+  IonRefresherContent,
+} from '@ionic/vue'
+import { ref, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useStore } from 'vuex'
 import { LatestItemsList } from '../components'
 import { useCrud } from '../composables/useCrud'
 import { COLLECTIONS } from '../utils/constants'
 import { showToast } from '../utils/utils'
+
 export default {
   components: {
+    IonThumbnail,
+    IonImg,
     IonRefresher,
     IonRefresherContent,
     LatestItemsList,
@@ -53,6 +72,9 @@ export default {
     const { getLatestItems: getLLatestRecipes } = useCrud(COLLECTIONS.RECIPES)
     const { getLatestItems: getLLatestProducts } = useCrud(COLLECTIONS.PRODUCTS)
     const { t } = useI18n()
+
+    const store = useStore()
+    const userData = computed(() => store.getters.userData)
     const meals = ref([])
     const recipes = ref([])
     const products = ref([])
@@ -89,6 +111,7 @@ export default {
     })
     return {
       t,
+      userData,
       meals,
       recipes,
       products,
@@ -102,6 +125,17 @@ export default {
 }
 </script>
 <style scoped>
+.avatar {
+  margin-left: auto;
+  background: var(--ion-color-secondary);
+  padding: 0.2rem;
+  border-radius: 0.5rem;
+  width: 3.2rem;
+  height: 3.2rem;
+}
+.avatar ion-img {
+  border-radius: 0.5rem;
+}
 .lists-wrapper {
   padding-top: 0.5rem;
 }

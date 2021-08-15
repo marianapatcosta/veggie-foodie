@@ -1,7 +1,9 @@
 <template>
   <ion-page>
-    <ion-header class="ion-no-border">
-      <ion-toolbar :class="{ 'header-curved': headerCurved }">
+    <ion-header v-if="!hideHeader" class="ion-no-border">
+      <ion-toolbar
+        :class="{ 'header-curved': headerCurved, 'header-user': userHeader }"
+      >
         <ion-row>
           <ion-col
             class="ion-align-self-center"
@@ -18,10 +20,8 @@
             </h2>
           </ion-col>
 
-          <ion-col size="3" class="fab-column">
-            <ion-fab horizontal="end" >
-              <slot name="fab-button" />
-            </ion-fab>
+          <ion-col size="3" class="right-column">
+            <slot name="header-right" />
           </ion-col>
         </ion-row>
       </ion-toolbar>
@@ -40,7 +40,6 @@ import {
   IonContent,
   IonBackButton,
   IonButtons,
-  IonFab,
   IonCol,
   IonRow,
 } from '@ionic/vue'
@@ -50,6 +49,8 @@ export default {
     screenTitle: String,
     pageDefaultBackLink: String,
     headerCurved: { type: Boolean, default: false },
+    hideHeader: { type: Boolean, default: false },
+    userHeader: { type: Boolean, default: false },
   },
 
   components: {
@@ -59,7 +60,6 @@ export default {
     IonContent,
     IonBackButton,
     IonButtons,
-    IonFab,
     IonCol,
     IonRow,
   },
@@ -88,14 +88,21 @@ ion-button {
   border-bottom-right-radius: 1.25rem;
   border-bottom-left-radius: 1.25rem;
 }
+.header-user {
+  height: 5rem;
+  align-items: center;
+  display: flex;
+}
 .title {
   padding-left: 1rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.fab-column {
+.right-column {
   display: flex;
   align-items: center;
+  padding-right: 1rem;
+  margin-left: auto;
 }
 </style>

@@ -1,15 +1,15 @@
 {
-	"appId": "io.veggie.foodie.costa.mariana",
-	"appName": "Veggie Foodie",
-	"webDir": "dist",
-	"bundledWebRuntime": false,
-	"plugins": {
-		"SplashScreen": {
-			"launchShowDuration": 3000,
-			"backgroundColor": "#005b71",
-			"androidScaleType": "CENTER_CROP",
-			"splashFullScreen": false,
-			"splashImmersive": false
-		}
-	}
+  "appId": "io.costa.mariana.veggie.foodie",
+  "appName": "Veggie Foodie",
+  "webDir": "dist",
+  "bundledWebRuntime": false,
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 3000,
+      "backgroundColor": "#005b71",
+      "androidScaleType": "CENTER_CROP",
+      "splashFullScreen": false,
+      "splashImmersive": false
+    }
+  }
 }

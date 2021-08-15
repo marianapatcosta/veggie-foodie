@@ -1,11 +1,13 @@
 <template>
-  <ion-fab-button :router-link="link" color="secondary">
-    <ion-icon :icon="add" />
-  </ion-fab-button>
+  <ion-fab horizontal="end">
+    <ion-fab-button :router-link="link" color="secondary">
+      <ion-icon :icon="add" />
+    </ion-fab-button>
+  </ion-fab>
 </template>
 
 <script>
-import { IonFabButton, IonIcon } from '@ionic/vue'
+import { IonFab, IonFabButton, IonIcon } from '@ionic/vue'
 import { add } from 'ionicons/icons'
 
 export default {
@@ -19,6 +21,7 @@ export default {
   components: {
     IonFabButton,
     IonIcon,
+    IonFab,
   },
   setup() {
     return {

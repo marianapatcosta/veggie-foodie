@@ -1,4 +1,4 @@
-package io.veggie.foodie.costa.mariana;
+package io.costa.mariana.veggie.foodie;
 
 import com.getcapacitor.BridgeActivity;
 

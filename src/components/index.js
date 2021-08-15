@@ -1,6 +1,7 @@
 import AddButton from './AddButton.vue'
 import AddOrEditMealProductForm from './AddOrEditMealProductForm.vue'
 import AddOrEditRecipeForm from './AddOrEditRecipeForm.vue'
+import AuthenticationButton from './AuthenticationButton.vue'
 import ImagePlaceholder from './ImagePlaceholder.vue'
 import ItemActionButtons from './ItemActionButtons.vue'
 import LatestItemsList from './LatestItemsList.vue'
@@ -14,6 +15,7 @@ export {
   AddButton,
   AddOrEditMealProductForm,
   AddOrEditRecipeForm,
+  AuthenticationButton,
   ImagePlaceholder,
   ItemActionButtons,
   LatestItemsList,

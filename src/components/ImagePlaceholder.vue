@@ -51,7 +51,7 @@ export default {
   width: 40%;
   padding: 3rem 0 1.5rem;
   margin: 0 auto;
-  opacity: 0.2;
+  opacity: 0.3;
 }
 .image-placeholder--small {
   width: 70%;
