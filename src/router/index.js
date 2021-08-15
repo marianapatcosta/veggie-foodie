@@ -1,11 +1,25 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router'
+import { Storage } from '@capacitor/storage'
 import Home from '../screens/Home.vue'
 import Tabs from '../screens/Tabs.vue'
 
 const routes = [
   {
     path: '/',
-    redirect: '/tabs/home'
+    beforeEnter: async (to, from, next) => {
+      const { value: alreadyLaunched } = await Storage.get({
+        key: 'alreadyLaunched'
+      })
+
+      if (!alreadyLaunched) {
+        await Storage.set({
+          key: 'alreadyLaunched',
+          value: true
+        })
+      }
+
+      next({ name: alreadyLaunched ? 'home' : 'authenticate' })
+    }
   },
   {
     path: '/tabs/',
@@ -43,6 +57,11 @@ const routes = [
     ]
   },
   {
+    path: '/authenticate',
+    name: 'authenticate',
+    component: () => import('../screens/Authenticate.vue')
+  },
+  {
     path: '/meals/:id',
     component: () => import('../screens/MealDetails.vue')
   },
@@ -69,7 +88,7 @@ const routes = [
   {
     path: '/recipes/edit/:id',
     name: 'edit-recipe',
-    component: () => import('../screens/AddOrEditRecipe.vue'),
+    component: () => import('../screens/AddOrEditRecipe.vue')
   },
   {
     path: '/products/:id',

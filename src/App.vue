@@ -19,6 +19,7 @@ import { useI18n } from 'vue-i18n'
 import { defaultLocale } from './locales'
 import { CREATE_TABLES, DATABASE_NAME } from './utils/crud-utils'
 import { showToast } from './utils/utils'
+import { useAuth } from './composables/useAuth'
 
 export default defineComponent({
   name: 'App',
@@ -29,10 +30,11 @@ export default defineComponent({
   setup() {
     const store = useStore()
     const { locale } = useI18n()
+    const { loadAuthenticatedUser } = useAuth()
     const app = getCurrentInstance()
     const sqlite = ref(null)
     const database = computed(() => store.getters.database)
-    const isDbInitialized = ref(false)
+    const isDbInitialized = ref(true)
 
     const connectDatabase = async () => {
       try {
@@ -76,22 +78,29 @@ export default defineComponent({
         const { value } = await Storage.get({
           key: 'theme',
         })
-        const theme = value || 'light'
+        const theme =
+          value || window.matchMedia('(prefers-color-scheme: dark)').matches
         const prefersDark = theme === 'dark'
         document.body.classList.toggle('dark', prefersDark)
-        await Storage.set({
-          key: 'theme',
-          value: theme,
-        })
+        store.dispatch('setTheme', theme)
+        if (!value) {
+          await Storage.set({
+            key: 'theme',
+            value: theme,
+          })
+        }
       } catch (error) {
         showToast()
       }
     }
 
-    onMounted(() => {
-      connectDatabase()
-      setlocale()
-      setTheme()
+    onMounted(async () => {
+      await Promise.all([
+        connectDatabase(),
+        setlocale(),
+        setTheme(),
+        loadAuthenticatedUser(),
+      ])
     })
 
     onUnmounted(async () => sqlite.value.closeConnection(DATABASE_NAME))

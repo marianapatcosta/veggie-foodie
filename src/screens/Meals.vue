@@ -1,7 +1,7 @@
 <template>
   <layout :screenTitle="t('meals.myMeals')" headerCurved>
     <list collection="meals" :noData="t('meals.noMeals')" />
-    <template v-slot:fab-button>
+    <template v-slot:header-right>
       <add-button link="/meals/add" />
     </template>
   </layout>

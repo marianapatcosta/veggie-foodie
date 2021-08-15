@@ -15,7 +15,7 @@ export const usePhoto = () => {
       })
       return newPhoto
     } catch (error) {
-      showToast()
+      console.error(error)
     }
   }
 
@@ -32,7 +32,7 @@ export const usePhoto = () => {
 
         directory: Directory.Data
       })
-      
+
       return savedFile.uri
     } catch (error) {
       showToast()

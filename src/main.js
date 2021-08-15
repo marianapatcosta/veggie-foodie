@@ -120,7 +120,6 @@ app.config.globalProperties.$existingConn = {
   existConn,
   setExistConn
 }
-
 router.isReady().then(() => {
   app.mount('#app')
 })

@@ -28,33 +28,32 @@ export const showToast = async (message, color, duration) => {
 export const onShareItem = async item => {
   const shareUrl = item.source || item.imageUrl
   try {
-        if (!isImageUrlAHttpUrl(shareUrl) && !isImageFileUrl(shareUrl)) {
-          return await showToast(i18n.global.t('global.shareError'))
-        }
+    if (!isImageUrlAHttpUrl(shareUrl) && !isImageFileUrl(shareUrl)) {
+      return await showToast(i18n.global.t('global.shareError'))
+    }
 
-        if (isImageUrlAHttpUrl(shareUrl)) {
-          return await Share.share({
-            title: i18n.global.t('global.shareTitle'),
-            text: item.title,
-            url: shareUrl,
-            dialogTitle: ''
-          })
-        }
+    if (isImageUrlAHttpUrl(shareUrl)) {
+      return await Share.share({
+        title: i18n.global.t('global.shareTitle'),
+        text: item.title,
+        url: shareUrl,
+        dialogTitle: ''
+      })
+    }
 
-        const file = await Filesystem.readFile({
-          path: shareUrl
-        })
-
-        // share plugin works for http urls and for file urls if use image.path immediately after taking a photo (with  CameraResultType.Uri)
-        // but if the path is saved in the filesystem, the app is killed and got the error in terminal :
-        // Android: IllegalArgumentException: Failed to find configured root that contains /data/data/
-        // Use FileSharer plugin to share the base64 image data instead of the file url
-        await FileSharer.share({
-          filename: 'image.jpeg',
-          base64Data: file.data,
-          contentType: 'image/jpeg'
-        })
-      } catch (error) {
+    // share plugin works for http urls and for file urls if use image.path immediately after taking a photo (with  CameraResultType.Uri)
+    // but if the path is saved in the filesystem, the app is killed and got the error in terminal :
+    // Android: IllegalArgumentException: Failed to find configured root that contains /data/data/
+    // Use FileSharer plugin to share the base64 image data instead of the file url
+    const file = await Filesystem.readFile({
+      path: shareUrl
+    })
+    await FileSharer.share({
+      filename: 'image.jpeg',
+      base64Data: file.data,
+      contentType: 'image/jpeg'
+    })
+  } catch (error) {
     console.error(error)
   }
 }

@@ -1,5 +1,5 @@
 {
-  "appId": "io.veggie.foodie.costa.mariana",
+  "appId": "io.costa.mariana.veggie.foodie",
   "appName": "Veggie Foodie",
   "webDir": "dist",
   "bundledWebRuntime": false,

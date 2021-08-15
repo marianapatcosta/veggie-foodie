@@ -65,7 +65,7 @@
         </ion-button>
 
         <ion-thumbnail slot="end">
-          <img v-if="imageUrl" :src="imageUrl" />
+          <ion-img v-if="imageUrl" :src="imageUrl" alt="item photo"/>
           <image-placeholder v-else isSmall />
         </ion-thumbnail>
       </div>
@@ -90,6 +90,7 @@ import {
   IonTextarea,
   IonButton,
   IonThumbnail,
+  IonImg,
   IonIcon,
   IonDatetime,
 } from '@ionic/vue'
@@ -117,6 +118,7 @@ export default {
     IonTextarea,
     IonButton,
     IonThumbnail,
+    IonImg,
     IonIcon,
     IonDatetime,
     ImagePlaceholder,

@@ -4,8 +4,17 @@
     pageDefaultBackLink="/tabs/home"
     headerCurved
   >
-    <ion-list class="ion-padding preferences-list">
-      <ion-item class="preferences-select">
+    <ion-list class="ion-padding preferences">
+      <ion-item v-if="userData" class="user-data">
+        <div class="username">
+          <span>{{ t('user.username') }}</span>
+          <span>{{ userData.fullName }}</span>
+        </div>
+        <ion-thumbnail slot="end">
+          <ion-img :src="userData?.avatar" />
+        </ion-thumbnail>
+      </ion-item>
+      <ion-item>
         <ion-label>{{ t('user.language') }}</ion-label>
         <ion-select
           :interface-options="customAlertOptions"
@@ -23,8 +32,7 @@
           >
         </ion-select>
       </ion-item>
-
-      <ion-item class="preferences-select">
+      <ion-item>
         <ion-label>{{ t('user.theme') }}</ion-label>
         <ion-select
           :interface-options="customAlertOptions"
@@ -42,6 +50,11 @@
           >
         </ion-select>
       </ion-item>
+
+      <authentication-button v-if="!userData" />
+      <ion-button v-else expand="block" class="submit-button" @click="logout">
+        <p>{{ t('user.logout') }}</p></ion-button
+      >
     </ion-list>
   </layout>
 </template>
@@ -53,12 +66,17 @@ import {
   IonLabel,
   IonSelect,
   IonSelectOption,
+  IonThumbnail,
+  IonImg,
 } from '@ionic/vue'
-import { onMounted, ref, computed } from 'vue'
+import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { Storage } from '@capacitor/storage'
+import { useStore } from 'vuex'
+import { AuthenticationButton } from '../components'
 import { getLanguages, getThemes } from '../utils/constants'
 import { showToast } from '../utils/utils'
+import { useAuth } from '../composables/useAuth'
 export default {
   components: {
     IonList,
@@ -66,13 +84,17 @@ export default {
     IonLabel,
     IonSelect,
     IonSelectOption,
+    IonThumbnail,
+    IonImg,
+    AuthenticationButton,
   },
   setup() {
     const { t, locale } = useI18n()
-
-    const theme = ref('')
+    const store = useStore()
+    const { logout } = useAuth(9)
+    const theme = computed(() => store.getters.theme)
+    const userData = computed(() => store.getters.userData)
     const customAlertOptions = ref({ cssClass: 'app-alert preferences-alert' })
-
     const language = computed(() => locale.value)
     const languages = computed(getLanguages)
     const themes = computed(getThemes)
@@ -103,43 +125,48 @@ export default {
       }
     }
 
-    const getTheme = async () => {
-      try {
-        const { value } = await Storage.get({
-          key: 'theme',
-        })
-        theme.value =
-          value || window.matchMedia('(prefers-color-scheme: dark)').matches
-      } catch (error) {
-        showToast()
-      }
-    }
-
-    onMounted(getTheme)
-
     return {
       t,
       customAlertOptions,
+      userData,
       theme,
       language,
       languages,
       themes,
       updateLanguage,
       updateTheme,
+      logout,
     }
   },
 }
 </script>
 <style >
-.preferences-list {
-  background: var(--ion-color-secondary);
-  color: var(--ion-color-primary-contrast);
-}
-.preferences-select {
+ion-item {
   --background: var(--ion-color-secondary);
   margin: 1.5rem 0 1rem;
 }
+ion-thumbnail {
+  background: var(--ion-color-primary);
+  padding: 0.1rem;
+  border-radius: 0.5rem;
+  width: 3.2rem;
+  height: 3.2rem;
+}
+ion-img {
+  border-radius: 0.5rem;
+}
+.preferences {
+  background: var(--ion-color-secondary);
+  color: var(--ion-color-primary-contrast);
+}
 .preferences-alert .alert-message {
   display: none;
+}
+.user-data {
+  --inner-padding-bottom: 1.5rem;
+}
+.username {
+  display: flex;
+  flex-direction: column;
 }
 </style>
