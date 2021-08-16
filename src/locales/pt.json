@@ -61,6 +61,8 @@
   },
   "user": {
     "language": "Idioma",
+    "loggedIn": "Está autenticada/o com a sua conta Google!",
+    "loggedOut": "Não está autenticada/o!",
     "logout": "logout",
     "preferences": "Preferências",
     "selectOne": "Selecione um",

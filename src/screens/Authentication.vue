@@ -1,8 +1,6 @@
 <template>
   <layout hideHeader>
-    <div class="image-wrapper">
-      <ion-img :src="image" alt="veggie foodie" />
-    </div>
+    <ion-img :src="image" alt="veggie foodie" />
     <div class="ion-padding">
       <p class="intro-text">
         {{ t('global.intro') }} <strong>Veggie Foodie </strong>
@@ -38,7 +36,7 @@ export default {
   setup() {
     const { t } = useI18n()
     const router = useRouter()
-    const image = require('../assets/images/image-placeholder.png')
+    const image = require('../assets/images/intro.png')
 
     const onSkipAuthentication = async () => {
       try {
@@ -58,23 +56,20 @@ export default {
 </script>
 <style scoped>
 ion-img {
-  width: 80%;
+  width: 100%;
   margin: auto;
 }
 ion-row {
-  margin-top: 2.5rem;
+  margin-top: 1rem;
 }
 .intro-text {
   font-size: 16px;
   text-align: start;
-  margin: 2rem 0 3rem;
   line-height: 1.5rem;
   font-style: italic;
+  margin-bottom: 3rem;
 }
-.image-wrapper {
-  padding: 3rem 2.5rem;
-  background-color: var(--ion-color-primary);
-}
+
 .skip-link {
   color: var(--ion-color-item);
   font-size: 16px;
