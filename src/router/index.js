@@ -7,18 +7,14 @@ const routes = [
   {
     path: '/',
     beforeEnter: async (to, from, next) => {
-      const { value: alreadyLaunched } = await Storage.get({
-        key: 'alreadyLaunched'
-      })
-
-      if (!alreadyLaunched) {
-        await Storage.set({
-          key: 'alreadyLaunched',
-          value: true
+      try {
+        const { value: alreadyLaunched } = await Storage.get({
+          key: 'alreadyLaunched'
         })
+        next({ name: !alreadyLaunched ? 'authentication' : 'home' })
+      } catch (error) {
+        console.error(error)
       }
-
-      next({ name: alreadyLaunched ? 'home' : 'authenticate' })
     }
   },
   {
@@ -57,9 +53,9 @@ const routes = [
     ]
   },
   {
-    path: '/authenticate',
-    name: 'authenticate',
-    component: () => import('../screens/Authenticate.vue')
+    path: '/authentication',
+    name: 'authentication',
+    component: () => import('../screens/Authentication.vue')
   },
   {
     path: '/meals/:id',

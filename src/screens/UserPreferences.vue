@@ -10,7 +10,7 @@
           <span>{{ t('user.username') }}</span>
           <span>{{ userData.fullName }}</span>
         </div>
-        <ion-thumbnail slot="end">
+        <ion-thumbnail slot="end" class="preferences-avatar">
           <ion-img :src="userData?.avatar" />
         </ion-thumbnail>
       </ion-item>
@@ -91,14 +91,13 @@ export default {
   setup() {
     const { t, locale } = useI18n()
     const store = useStore()
-    const { logout } = useAuth(9)
+    const { logout } = useAuth()
     const theme = computed(() => store.getters.theme)
     const userData = computed(() => store.getters.userData)
     const customAlertOptions = ref({ cssClass: 'app-alert preferences-alert' })
     const language = computed(() => locale.value)
     const languages = computed(getLanguages)
     const themes = computed(getThemes)
-
     const updateLanguage = async event => {
       try {
         locale.value = event.target.value
@@ -116,6 +115,7 @@ export default {
         theme.value = event.target.value
         const prefersDark = event.target.value === 'dark'
         document.body.classList.toggle('dark', prefersDark)
+        store.dispatch('setTheme', theme.value)
         await Storage.set({
           key: 'theme',
           value: event.target.value,
@@ -145,14 +145,15 @@ ion-item {
   --background: var(--ion-color-secondary);
   margin: 1.5rem 0 1rem;
 }
-ion-thumbnail {
+.preferences-avatar {
   background: var(--ion-color-primary);
   padding: 0.1rem;
   border-radius: 0.5rem;
   width: 3.2rem;
   height: 3.2rem;
 }
-ion-img {
+
+.preferences-avatar ion-img {
   border-radius: 0.5rem;
 }
 .preferences {

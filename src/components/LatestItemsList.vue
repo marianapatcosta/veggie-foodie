@@ -17,8 +17,8 @@
       />
     </ion-list>
     <ion-card v-else
-      >{{ noData }} <add-button :link="`/${collection}/add`"
-    /></ion-card>
+      >{{ noData }} <add-button :link="`/${collection}/add`" />
+    </ion-card>
   </div>
 </template>
 
@@ -91,7 +91,7 @@ ion-card {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1rem;
+  padding: 1.5rem 1rem;
 }
 ion-button {
   color: var(--ion-color-item);

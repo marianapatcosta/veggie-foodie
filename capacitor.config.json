@@ -10,6 +10,16 @@
       "androidScaleType": "CENTER_CROP",
       "splashFullScreen": false,
       "splashImmersive": false
+    },
+     "GoogleAuth": {
+      "scopes": [
+        "profile",
+        "email",
+        "https://www.googleapis.com/auth/drive.file",
+        "https://www.googleapis.com/auth/drive.install"
+      ],
+      "serverClientId": "933947811936-8h34qbogveugd3dddgtv730bmocg22ti.apps.googleusercontent.com",
+      "forceCodeForRefreshToken": true
     }
   }
 }

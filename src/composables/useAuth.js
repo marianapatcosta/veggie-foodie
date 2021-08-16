@@ -1,39 +1,20 @@
+import { onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useStore } from 'vuex'
 import { Storage } from '@capacitor/storage'
-import { showToast } from '../utils/utils'
 import { useRouter, useRoute } from 'vue-router'
+import { GoogleAuth } from '@codetrix-studio/capacitor-google-auth'
+import { showToast } from '../utils/utils'
 
 export const useAuth = () => {
   const { t } = useI18n()
   const store = useStore()
   const router = useRouter()
   const route = useRoute()
-  const googleApiClient = window.gapi
   const authenticateWithGoogle = async () => {
     try {
-      // Authorization scopes required by the API; multiple scopes can be
-      // included, separated by spaces.
-      const SCOPES = 'https://www.googleapis.com/auth/userinfo.profile'
-      googleApiClient.load('client:auth2', async () => {
-        await googleApiClient.client.init({
-          apiKey: process.env.VUE_APP_GOOGLE_API_KEY,
-          clientId: process.env.VUE_APP_OAUTH_CLIENT_ID,
-          scope: SCOPES
-        })
-
-        if (googleApiClient.auth2.getAuthInstance().isSignedIn.get()) {
-          const userData = googleApiClient.auth2
-            .getAuthInstance()
-            .currentUser.get()
-          return onAuthenticationSuccess(userData)
-        }
-        await googleApiClient.auth2.getAuthInstance().signIn()
-        const userData = googleApiClient.auth2
-          .getAuthInstance()
-          .currentUser.get()
-        return onAuthenticationSuccess(userData)
-      })
+      const userData = await GoogleAuth.signIn()
+      return onAuthenticationSuccess(userData)
     } catch (error) {
       showToast(t('global.authenticationError'))
     }
@@ -42,9 +23,9 @@ export const useAuth = () => {
   const onAuthenticationSuccess = async userResponse => {
     try {
       const userData = {
-        fullName: userResponse.Ts.Ne,
-        avatar: userResponse.Ts.hJ,
-        token: `${userResponse.Zb.token_type} ${userResponse.Zb.access_token}`
+        fullName: userResponse.name || userResponse.displayName,
+        avatar: userResponse.imageUrl,
+        token: userResponse.authentication.idToken/* accessToken */
       }
       await Storage.set({
         key: 'userData',
@@ -71,7 +52,6 @@ export const useAuth = () => {
 
   const logout = async () => {
     try {
-      googleApiClient.auth2.getAuthInstance().signOut()
       store.dispatch('setUserData', null)
       await Storage.remove({ key: 'userData' })
     } catch (error) {
@@ -79,5 +59,10 @@ export const useAuth = () => {
     }
   }
 
-  return { authenticateWithGoogle, loadAuthenticatedUser, logout }
+  onMounted(() => {
+    GoogleAuth.init()
+    loadAuthenticatedUser()
+  })
+
+  return { authenticateWithGoogle, logout }
 }

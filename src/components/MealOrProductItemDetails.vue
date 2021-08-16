@@ -36,7 +36,6 @@ import ItemActionButtons from './ItemActionButtons.vue'
 import { useCrud } from '../composables/useCrud'
 import { COLLECTIONS } from '../utils/constants'
 import {
-  isImageUrlAHttpUrl,
   convertFilePathToHttp,
   onShareItem,
 } from '../utils/utils'
@@ -91,7 +90,6 @@ export default {
       onEditItem,
       onEditImage,
       onDeleteItem,
-      isImageUrlAHttpUrl,
       convertFilePathToHttp,
       COLLECTIONS,
     }
