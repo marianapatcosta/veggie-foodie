@@ -61,6 +61,8 @@
   },
   "user": {
     "language": "Language",
+    "loggedIn": "You are logged in with your Google account!",
+    "loggedOut": "You are not logged in!",
     "logout": "logout",
     "preferences": "Preferences",
     "selectOne": "Select one",

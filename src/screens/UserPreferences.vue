@@ -8,13 +8,15 @@
       <ion-item v-if="userData" class="user-data">
         <div class="username">
           <span>{{ t('user.username') }}</span>
-          <span>{{ userData.fullName }}</span>
+          <span
+            ><strong>{{ userData.fullName }}</strong></span
+          >
         </div>
         <ion-thumbnail slot="end" class="preferences-avatar">
           <ion-img :src="userData?.avatar" />
         </ion-thumbnail>
       </ion-item>
-      <ion-item>
+      <ion-item class="user-data">
         <ion-label>{{ t('user.language') }}</ion-label>
         <ion-select
           :interface-options="customAlertOptions"
@@ -32,7 +34,7 @@
           >
         </ion-select>
       </ion-item>
-      <ion-item>
+      <ion-item class="user-data">
         <ion-label>{{ t('user.theme') }}</ion-label>
         <ion-select
           :interface-options="customAlertOptions"
@@ -50,11 +52,16 @@
           >
         </ion-select>
       </ion-item>
-
-      <authentication-button v-if="!userData" />
-      <ion-button v-else expand="block" class="submit-button" @click="logout">
-        <p>{{ t('user.logout') }}</p></ion-button
-      >
+      <div class="authentication">
+        <p v-if="!userData" class="authentication-text">
+          {{ t('user.loggedOut') }}
+        </p>
+        <p v-else class="authentication-text">{{ t('user.loggedIn') }}</p>
+        <authentication-button v-if="!userData" />
+        <ion-button v-else expand="block" class="submit-button" @click="logout">
+          <p>{{ t('user.logout') }}</p></ion-button
+        >
+      </div>
     </ion-list>
   </layout>
 </template>
@@ -141,16 +148,18 @@ export default {
 }
 </script>
 <style >
-ion-item {
+.user-data {
   --background: var(--ion-color-secondary);
   margin: 1.5rem 0 1rem;
 }
+
 .preferences-avatar {
   background: var(--ion-color-primary);
   padding: 0.1rem;
   border-radius: 0.5rem;
-  width: 3.2rem;
-  height: 3.2rem;
+  width: 3.5rem;
+  height: 3.5rem;
+  align-self: flex-start;
 }
 
 .preferences-avatar ion-img {
@@ -169,5 +178,15 @@ ion-item {
 .username {
   display: flex;
   flex-direction: column;
+}
+.username span:last-child {
+  margin-top: 0.5rem;
+}
+.authentication {
+  margin: 5rem 0 0;
+}
+.authentication-text {
+  color: var(--ion-color-contrast);
+  margin-bottom: 0.5rem;
 }
 </style>
