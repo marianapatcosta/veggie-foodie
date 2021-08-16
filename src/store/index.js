@@ -26,8 +26,8 @@ const store = createStore({
     setUserData(context, userData) {
       context.commit('setUserData', userData)
     },
-    setTheme(state, theme) {
-      state.theme = theme
+    setTheme(context, theme) {
+      context.commit('setTheme', theme)
     }
   },
   getters: {

@@ -5,11 +5,10 @@ import { toastController } from '@ionic/vue'
 import { FileSharer } from 'capacitor-plugin-filesharer'
 import { i18n } from '../locales'
 
-export const isImageUrlAHttpUrl = imageUrl =>
-  imageUrl?.toLowerCase().substr(0, 8) === 'https://' ||
-  imageUrl?.toLowerCase().substr(0, 7) === 'http://'
+//eslint-disable-next-line
+export const isUrl = url =>!!url.match(/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/)
 
-export const isImageFileUrl = imageUrl =>
+export const isFileUrl = imageUrl =>
   imageUrl?.toLowerCase().substr(0, 8) === 'file:///'
 
 // 'file://' path to HTTP
@@ -28,11 +27,11 @@ export const showToast = async (message, color, duration) => {
 export const onShareItem = async item => {
   const shareUrl = item.source || item.imageUrl
   try {
-    if (!isImageUrlAHttpUrl(shareUrl) && !isImageFileUrl(shareUrl)) {
+    if (!isUrl(shareUrl) && !isFileUrl(shareUrl)) {
       return await showToast(i18n.global.t('global.shareError'))
     }
 
-    if (isImageUrlAHttpUrl(shareUrl)) {
+    if (isUrl(shareUrl)) {
       return await Share.share({
         title: i18n.global.t('global.shareTitle'),
         text: item.title,
@@ -49,7 +48,8 @@ export const onShareItem = async item => {
       path: shareUrl
     })
     await FileSharer.share({
-      filename: 'image.jpeg',
+      header: `${i18n.global.t('global.shareTitle')} - ${item.title}`,
+      filename: `${i18n.global.t('global.shareTitle')} - ${item.title}`,
       base64Data: file.data,
       contentType: 'image/jpeg'
     })

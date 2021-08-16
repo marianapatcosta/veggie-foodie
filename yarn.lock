@@ -952,6 +952,11 @@
   dependencies:
     tslib "^2.1.0"
 
+"@capacitor/device@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@capacitor/device/-/device-1.0.2.tgz#bcaa8e6fbd06f96ec51670bf157bd107151b3fed"
+  integrity sha512-742Mq/zAjqUcOd9khhP0m/HXsZmWlymJdt09G/gEQkK3s8737Oey4xZwCnjtdjwt3ztEqcP4X8+yR01O80TDsA==
+
 "@capacitor/filesystem@^1.0.2":
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/@capacitor/filesystem/-/filesystem-1.0.2.tgz#5327454addf354de0ad89e9a970443dc5563c646"
@@ -1004,6 +1009,11 @@
   dependencies:
     exec-sh "^0.3.2"
     minimist "^1.2.0"
+
+"@codetrix-studio/capacitor-google-auth@^3.0.2":
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/@codetrix-studio/capacitor-google-auth/-/capacitor-google-auth-3.0.2.tgz#a095135311805bf1134bcf81a8246788008f3849"
+  integrity sha512-DsWwiBPkwWY/2F7JPq4mpNrKJYafpVZY+6Pq/ov5CeospRXJPauxEPHexo6uV6N5Yi6YIAwSBJqZhOZCdBURTg==
 
 "@cypress/listr-verbose-renderer@0.4.1":
   version "0.4.1"

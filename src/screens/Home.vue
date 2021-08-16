@@ -2,7 +2,7 @@
   <layout
     :screenTitle="
       t('global.hello', {
-        username: userData?.fullName.split(' ')[0] || 'Veggie Foodie',
+        username: userData?.fullName?.split(' ')[0] || 'Veggie Foodie',
       })
     "
     headerCurved
@@ -128,7 +128,7 @@ export default {
 .avatar {
   margin-left: auto;
   background: var(--ion-color-secondary);
-  padding: 0.2rem;
+  padding: 0.1rem;
   border-radius: 0.5rem;
   width: 3.2rem;
   height: 3.2rem;

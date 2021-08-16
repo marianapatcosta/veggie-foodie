@@ -60,6 +60,6 @@ export default {
 }
 .image-placeholder-text {
   text-align: center;
-  color: var(--ion-color-icon);
+  color: var(--ion-color-item);
 }
 </style>

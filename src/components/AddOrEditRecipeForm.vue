@@ -3,11 +3,21 @@
     <ion-list>
       <ion-item>
         <ion-label position="floating">{{ t('global.title') }}</ion-label>
-        <ion-input type="text" required v-model="title" max-length="150" />
+        <ion-input
+          clear-input
+          type="text"
+          required
+          v-model="title"
+          max-length="150"
+        />
       </ion-item>
       <ion-item>
         <ion-label position="floating">{{ t('global.source') }}</ion-label>
-        <ion-input type="text" v-model="source" />
+        <ion-input
+          clear-input
+          pattern="^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$"
+          v-model="source"
+        />
       </ion-item>
       <ion-item>
         <ion-label position="floating">{{ t('global.ingredients') }}</ion-label>
@@ -46,6 +56,7 @@
         </ion-thumbnail>
       </div>
       <ion-input
+        clear-input
         v-model="webImageUrl"
         :placeholder="t('global.imageLink')"
         max-length="350"
@@ -75,7 +86,7 @@ import ImagePlaceholder from './ImagePlaceholder.vue'
 import { COLLECTIONS } from '../utils/constants'
 import { useCrud } from '../composables/useCrud'
 import { usePhoto } from '../composables/usePhoto'
-import { convertFilePathToHttp, isImageUrlAHttpUrl, showToast } from '../utils/utils'
+import { convertFilePathToHttp, isUrl, showToast } from '../utils/utils'
 export default {
   emits: ['save-item'],
   props: {
@@ -138,9 +149,8 @@ export default {
       if (!imageUrl) {
         return ''
       }
-      return isImageUrlAHttpUrl(imageUrl)
-        ? imageUrl
-        : convertFilePathToHttp(imageUrl)
+
+      return isUrl(imageUrl) ? imageUrl : convertFilePathToHttp(imageUrl)
     }
 
     watch(item, () => {

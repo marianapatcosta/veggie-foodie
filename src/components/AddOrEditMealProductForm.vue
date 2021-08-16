@@ -3,7 +3,7 @@
     <ion-list>
       <ion-item>
         <ion-label position="floating">{{ t('global.title') }}</ion-label>
-        <ion-input required v-model="title" max-length="150" />
+        <ion-input clear-input required v-model="title" max-length="150" />
       </ion-item>
       <ion-item class="item-datetime">
         <ion-label>{{ t('global.date') }} </ion-label>
@@ -15,7 +15,7 @@
       </ion-item>
       <ion-item v-if="collection === COLLECTIONS.PRODUCTS">
         <ion-label position="floating">{{ t('global.store') }}</ion-label>
-        <ion-input v-model="store" max-length="150" />
+        <ion-input clear-input v-model="store" max-length="150" />
       </ion-item>
       <ion-item
         v-else
@@ -25,7 +25,7 @@
       >
         <div class="location">
           <ion-label position="floating">{{ t('global.location') }} </ion-label>
-          <ion-input v-model="location" max-length="150" />
+          <ion-input clear-input v-model="location" max-length="150" />
         </div>
         <ion-button
           class="icon-button--absolute"

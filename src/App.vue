@@ -14,12 +14,11 @@ import {
 } from 'vue'
 import { IonApp, IonRouterOutlet } from '@ionic/vue'
 import { Storage } from '@capacitor/storage'
+import { Device } from '@capacitor/device';
 import { useStore } from 'vuex'
 import { useI18n } from 'vue-i18n'
-import { defaultLocale } from './locales'
 import { CREATE_TABLES, DATABASE_NAME } from './utils/crud-utils'
 import { showToast } from './utils/utils'
-import { useAuth } from './composables/useAuth'
 
 export default defineComponent({
   name: 'App',
@@ -30,7 +29,6 @@ export default defineComponent({
   setup() {
     const store = useStore()
     const { locale } = useI18n()
-    const { loadAuthenticatedUser } = useAuth()
     const app = getCurrentInstance()
     const sqlite = ref(null)
     const database = computed(() => store.getters.database)
@@ -64,10 +62,18 @@ export default defineComponent({
 
     const setlocale = async () => {
       try {
-        const { value: language } = await Storage.get({
+        let { value: language } = await Storage.get({
           key: 'language',
         })
-        locale.value = language || defaultLocale
+        if (!language) {
+          const deviceLanguage = await Device.getLanguageCode()
+          language = deviceLanguage.value.split('-')[0]
+           await Storage.set({
+            key: 'language',
+            value: language,
+          })
+        }
+        language && (locale.value = language)
       } catch (error) {
         showToast()
       }
@@ -75,11 +81,16 @@ export default defineComponent({
 
     const setTheme = async () => {
       try {
+        const deviceTheme = window.matchMedia('(prefers-color-scheme: dark)')
+          .matches
+          ? 'dark'
+          : 'light'
         const { value } = await Storage.get({
           key: 'theme',
         })
-        const theme =
-          value || window.matchMedia('(prefers-color-scheme: dark)').matches
+
+        const theme = value || deviceTheme
+
         const prefersDark = theme === 'dark'
         document.body.classList.toggle('dark', prefersDark)
         store.dispatch('setTheme', theme)
@@ -95,12 +106,7 @@ export default defineComponent({
     }
 
     onMounted(async () => {
-      await Promise.all([
-        connectDatabase(),
-        setlocale(),
-        setTheme(),
-        loadAuthenticatedUser(),
-      ])
+      await Promise.all([connectDatabase(), setlocale(), setTheme()])
     })
 
     onUnmounted(async () => sqlite.value.closeConnection(DATABASE_NAME))

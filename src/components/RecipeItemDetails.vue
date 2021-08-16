@@ -4,7 +4,7 @@
       <ion-img
         v-if="item?.imageUrl"
         :src="
-          isImageUrlAHttpUrl(item.imageurl)
+          isUrl(item.imageurl)
             ? item.imageUrl
             : convertFilePathToHttp(item.imageUrl)
         "
@@ -19,7 +19,11 @@
     </div>
     <div class="details-body">
       <h2>{{ item.title }}</h2>
-      <ion-router-link class="ion-text-center" :href="item.source">
+      <ion-router-link
+        v-if="item.source"
+        class="ion-text-center"
+        :href="item.source"
+      >
         {{ t('global.source') }}
       </ion-router-link>
       <h4>{{ t('global.ingredients') }}</h4>
@@ -40,11 +44,7 @@ import { useCrud } from '../composables/useCrud'
 import ImagePlaceholder from './ImagePlaceholder.vue'
 import ItemActionButtons from './ItemActionButtons.vue'
 import { COLLECTIONS } from '../utils/constants'
-import {
-  isImageUrlAHttpUrl,
-  convertFilePathToHttp,
-  onShareItem,
-} from '../utils/utils'
+import { isUrl, convertFilePathToHttp, onShareItem } from '../utils/utils'
 export default {
   components: {
     IonImg,
@@ -91,7 +91,7 @@ export default {
       onEditItem,
       onEditImage,
       onDeleteItem,
-      isImageUrlAHttpUrl,
+      isUrl,
       convertFilePathToHttp,
       COLLECTIONS,
     }
