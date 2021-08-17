@@ -22,9 +22,9 @@ export default {
     const route = useRoute()
     const { t } = useI18n()
     const itemId = ref(route.params.id)
-    const item = ref(/* null */{id: 'm1', source: 'http://www.sapo.pt'})
+    const item = ref(null )
     const { getItem } = useCrud(COLLECTIONS.RECIPES)
-
+    
     onMounted(async () => {
       const itemResponseData = await getItem(itemId.value)
       item.value = itemResponseData

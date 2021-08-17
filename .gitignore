@@ -31,4 +31,5 @@ npm-debug.log*
 /www
 
 
-.env*
+.env
+.env.production

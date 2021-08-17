@@ -31,11 +31,11 @@ export const showToast = async (message, color, duration) => {
 export const onShareItem = async item => {
   const shareUrl = item.source || item.imageUrl
   try {
-    if (!isUrl(shareUrl) && !isFileUrl(shareUrl)) {
+    if (!isHttpUrl(shareUrl) && !isFileUrl(shareUrl)) {
       return await showToast(i18n.global.t('global.shareError'))
     }
 
-    if (isUrl(shareUrl)) {
+    if (isHttpUrl(shareUrl)) {
       return await Share.share({
         title: i18n.global.t('global.shareTitle'),
         text: item.title,

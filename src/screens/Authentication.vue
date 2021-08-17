@@ -1,20 +1,22 @@
 <template>
   <layout hideHeader>
-    <ion-img :src="image" alt="veggie foodie" />
-    <div class="ion-padding">
-      <p class="intro-text">
-        {{ t('global.intro') }} <strong>Veggie Foodie </strong>
-      </p>
-      <authentication-button />
-      <ion-row class="ion-justify-content-end">
-        <ion-button
-          class="skip-link"
-          @click="onSkipAuthentication"
-          fill="clear"
-        >
-          <span>{{ t('global.skipAuth') }}</span>
-        </ion-button>
-      </ion-row>
+    <div>
+      <ion-img :src="image" alt="veggie foodie" />
+      <div class="ion-padding page-bottom">
+        <p class="intro-text">
+          {{ t('global.intro') }} <strong>Veggie Foodie </strong>
+        </p>
+        <authentication-button />
+        <ion-row class="ion-justify-content-end">
+          <ion-button
+            class="skip-link"
+            @click="onSkipAuthentication"
+            fill="clear"
+          >
+            <span>{{ t('global.skipAuth') }}</span>
+          </ion-button>
+        </ion-row>
+      </div>
     </div>
   </layout>
 </template>
@@ -36,7 +38,7 @@ export default {
   setup() {
     const { t } = useI18n()
     const router = useRouter()
-    const image = require('../assets/images/intro.png')
+    const image = require('../assets/images/intro.jpg')
 
     const onSkipAuthentication = async () => {
       try {
@@ -56,15 +58,20 @@ export default {
 </script>
 <style scoped>
 ion-img {
+  object-fit: cover;
+  height: calc(100vh - 13.5rem);
   width: 100%;
-  margin: auto;
 }
 ion-row {
   margin-top: 1rem;
 }
+.page-bottom {
+  height: 13.5rem;
+}
+
 .intro-text {
   font-size: 16px;
-  text-align: start;
+  text-align: center;
   line-height: 1.5rem;
   font-style: italic;
   margin-bottom: 3rem;
