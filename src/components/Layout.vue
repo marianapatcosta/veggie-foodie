@@ -89,7 +89,6 @@ ion-button {
   border-bottom-left-radius: 1.25rem;
 }
 .header-user {
-  height: 5rem;
   align-items: center;
   display: flex;
 }

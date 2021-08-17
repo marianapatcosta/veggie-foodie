@@ -14,7 +14,7 @@ export const useAuth = () => {
     const oauth2Options = {
       authorizationBaseUrl: 'https://accounts.google.com/o/oauth2/auth',
       accessTokenEndpoint: 'https://www.googleapis.com/oauth2/v4/token',
-      scope: 'email profile https://www.googleapis.com/auth/drive.appdata https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/drive.install',
+      scope: 'email profile',
       resourceUrl: 'https://www.googleapis.com/userinfo/v2/me',
       logsEnabled: true,
       web: {

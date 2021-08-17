@@ -61,5 +61,6 @@ export default {
 .image-placeholder-text {
   text-align: center;
   color: var(--ion-color-item);
+  margin: 0 3.5rem;
 }
 </style>

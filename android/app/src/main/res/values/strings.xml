@@ -4,5 +4,4 @@
     <string name="title_activity_main">Veggie Foodie</string>
     <string name="package_name">io.costa.mariana.veggie.foodie</string>
     <string name="custom_url_scheme">io.costa.mariana.veggie.foodie</string>
-    <string name="server_client_id">933947811936-8h34qbogveugd3dddgtv730bmocg22ti.apps.googleusercontent.com</string>
 </resources>
