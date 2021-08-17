@@ -6,7 +6,11 @@ import { FileSharer } from 'capacitor-plugin-filesharer'
 import { i18n } from '../locales'
 
 //eslint-disable-next-line
-export const isUrl = url =>!!url.match(/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/)
+export const isUrl = url => !!url.match(/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/)
+
+export const isHttpUrl = url =>
+  url?.toLowerCase().substr(0, 8) === 'https://' ||
+  url?.toLowerCase().substr(0, 7) === 'http://'
 
 export const isFileUrl = imageUrl =>
   imageUrl?.toLowerCase().substr(0, 8) === 'file:///'

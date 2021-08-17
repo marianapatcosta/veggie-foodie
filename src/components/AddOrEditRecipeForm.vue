@@ -86,7 +86,7 @@ import ImagePlaceholder from './ImagePlaceholder.vue'
 import { COLLECTIONS } from '../utils/constants'
 import { useCrud } from '../composables/useCrud'
 import { usePhoto } from '../composables/usePhoto'
-import { convertFilePathToHttp, isUrl, showToast } from '../utils/utils'
+import { convertFilePathToHttp, isHttpUrl, isUrl, showToast } from '../utils/utils'
 export default {
   emits: ['save-item'],
   props: {
@@ -136,7 +136,7 @@ export default {
           title: title.value,
           ingredients: ingredients.value,
           preparation: preparation.value,
-          source: source.value,
+          source: isHttpUrl(source.value) ? source.value : `http:\\${source.value}`,
           imageUrl: photo.value ? savedFileImageUri : webImageUrl.value,
         }
         await saveItem(data, props.itemId)

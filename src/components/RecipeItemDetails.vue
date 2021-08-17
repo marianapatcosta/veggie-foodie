@@ -22,6 +22,7 @@
       <ion-router-link
         v-if="item.source"
         class="ion-text-center"
+        
         :href="item.source"
       >
         {{ t('global.source') }}
