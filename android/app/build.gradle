@@ -1,3 +1,4 @@
+
 apply plugin: 'com.android.application'
 
 android {
@@ -38,6 +39,10 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
     implementation project(':capacitor-cordova-android-plugins')
 }
+
+android.defaultConfig.manifestPlaceholders = [
+        'appAuthRedirectScheme': 'io.costa.mariana.veggie.foodie'
+]
 
 apply from: 'capacitor.build.gradle'
 

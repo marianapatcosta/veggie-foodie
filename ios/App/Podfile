@@ -9,6 +9,7 @@ install! 'cocoapods', :disable_input_output_paths => true
 def capacitor_pods
   pod 'Capacitor', :path => '../../node_modules/@capacitor/ios'
   pod 'CapacitorCordova', :path => '../../node_modules/@capacitor/ios'
+  pod 'ByteowlsCapacitorOauth2', :path => '..\..\node_modules\@byteowls\capacitor-oauth2'
   pod 'CapacitorApp', :path => '..\..\node_modules\@capacitor\app'
   pod 'CapacitorCamera', :path => '..\..\node_modules\@capacitor\camera'
   pod 'CapacitorDevice', :path => '..\..\node_modules\@capacitor\device'
@@ -20,7 +21,6 @@ def capacitor_pods
   pod 'CapacitorSplashScreen', :path => '..\..\node_modules\@capacitor\splash-screen'
   pod 'CapacitorStatusBar', :path => '..\..\node_modules\@capacitor\status-bar'
   pod 'CapacitorStorage', :path => '..\..\node_modules\@capacitor\storage'
-  pod 'CodetrixStudioCapacitorGoogleAuth', :path => '..\..\node_modules\@codetrix-studio\capacitor-google-auth'
   pod 'CapacitorPluginFilesharer', :path => '..\..\node_modules\capacitor-plugin-filesharer'
   pod 'CapacitorCommunitySqlite', :path => '..\..\node_modules\@capacitor-community\sqlite'
 end

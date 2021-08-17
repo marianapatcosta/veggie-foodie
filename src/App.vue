@@ -14,11 +14,12 @@ import {
 } from 'vue'
 import { IonApp, IonRouterOutlet } from '@ionic/vue'
 import { Storage } from '@capacitor/storage'
-import { Device } from '@capacitor/device';
+import { Device } from '@capacitor/device'
 import { useStore } from 'vuex'
 import { useI18n } from 'vue-i18n'
 import { CREATE_TABLES, DATABASE_NAME } from './utils/crud-utils'
 import { showToast } from './utils/utils'
+import { useAuth } from './composables/useAuth'
 
 export default defineComponent({
   name: 'App',
@@ -29,6 +30,7 @@ export default defineComponent({
   setup() {
     const store = useStore()
     const { locale } = useI18n()
+    const { loadAuthenticatedUser } = useAuth()
     const app = getCurrentInstance()
     const sqlite = ref(null)
     const database = computed(() => store.getters.database)
@@ -68,7 +70,7 @@ export default defineComponent({
         if (!language) {
           const deviceLanguage = await Device.getLanguageCode()
           language = deviceLanguage.value.split('-')[0]
-           await Storage.set({
+          await Storage.set({
             key: 'language',
             value: language,
           })
@@ -106,7 +108,12 @@ export default defineComponent({
     }
 
     onMounted(async () => {
-      await Promise.all([connectDatabase(), setlocale(), setTheme()])
+      await Promise.all([
+        connectDatabase(),
+        loadAuthenticatedUser(),
+        setlocale(),
+        setTheme(),
+      ])
     })
 
     onUnmounted(async () => sqlite.value.closeConnection(DATABASE_NAME))

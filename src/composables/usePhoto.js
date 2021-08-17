@@ -29,7 +29,6 @@ export const usePhoto = () => {
       const savedFile = await Filesystem.writeFile({
         path: fileName,
         data: base64Data, // image.webPath will contain a path that can be set as an image src.
-
         directory: Directory.Data
       })
 
