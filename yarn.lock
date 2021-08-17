@@ -903,6 +903,11 @@
     "@babel/helper-validator-identifier" "^7.14.5"
     to-fast-properties "^2.0.0"
 
+"@byteowls/capacitor-oauth2@^3.0.1":
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@byteowls/capacitor-oauth2/-/capacitor-oauth2-3.0.1.tgz#7524b73fb6824846927b3e1f9196809179d97fc5"
+  integrity sha512-VE5oOeben+AcCvlfYSQGxaXcVzqJMDtNc5/8SntyMPlotOSDIP6DjDO1iI9k7nJ2t27xQL5VQucxg7+LgrZyPA==
+
 "@capacitor-community/sqlite@^3.0.0-rc.2":
   version "3.0.0-rc.2"
   resolved "https://registry.yarnpkg.com/@capacitor-community/sqlite/-/sqlite-3.0.0-rc.2.tgz#1b84f3c5df06912e9728c68de7c3b2ea3b5e5f8c"
@@ -1009,11 +1014,6 @@
   dependencies:
     exec-sh "^0.3.2"
     minimist "^1.2.0"
-
-"@codetrix-studio/capacitor-google-auth@^3.0.2":
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/@codetrix-studio/capacitor-google-auth/-/capacitor-google-auth-3.0.2.tgz#a095135311805bf1134bcf81a8246788008f3849"
-  integrity sha512-DsWwiBPkwWY/2F7JPq4mpNrKJYafpVZY+6Pq/ov5CeospRXJPauxEPHexo6uV6N5Yi6YIAwSBJqZhOZCdBURTg==
 
 "@cypress/listr-verbose-renderer@0.4.1":
   version "0.4.1"

@@ -1,5 +1,9 @@
 [
 	{
+		"pkg": "@byteowls/capacitor-oauth2",
+		"classpath": "com.byteowls.capacitor.oauth2.OAuth2ClientPlugin"
+	},
+	{
 		"pkg": "@capacitor/app",
 		"classpath": "com.capacitorjs.plugins.app.AppPlugin"
 	},
@@ -42,10 +46,6 @@
 	{
 		"pkg": "@capacitor/storage",
 		"classpath": "com.capacitorjs.plugins.storage.StoragePlugin"
-	},
-	{
-		"pkg": "@codetrix-studio/capacitor-google-auth",
-		"classpath": "com.codetrixstudio.capacitor.GoogleAuth.GoogleAuth"
 	},
 	{
 		"pkg": "capacitor-plugin-filesharer",

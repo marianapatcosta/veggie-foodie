@@ -16,7 +16,7 @@ Installs all the dependencies required to run and develop this application.
 #### `yarn serve` or `ionic serve`
 
 Runs the app in the development mode.\
-Open [http://localhost:8080](http://localhost:8080) to view it in the browser.
+Open [http://localhost:8081](http://localhost:8081) to view it in the browser.
 
 
 #### `yarn build` or `ionic build`

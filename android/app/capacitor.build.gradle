@@ -9,6 +9,7 @@ android {
 
 apply from: "../capacitor-cordova-android-plugins/cordova.variables.gradle"
 dependencies {
+    implementation project(':byteowls-capacitor-oauth2')
     implementation project(':capacitor-app')
     implementation project(':capacitor-camera')
     implementation project(':capacitor-device')
@@ -20,7 +21,6 @@ dependencies {
     implementation project(':capacitor-splash-screen')
     implementation project(':capacitor-status-bar')
     implementation project(':capacitor-storage')
-    implementation project(':codetrix-studio-capacitor-google-auth')
     implementation project(':capacitor-plugin-filesharer')
     implementation project(':capacitor-community-sqlite')
 

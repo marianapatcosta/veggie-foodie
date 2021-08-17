@@ -1,10 +1,9 @@
-import { onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useStore } from 'vuex'
 import { Storage } from '@capacitor/storage'
 import { useRouter, useRoute } from 'vue-router'
-import { GoogleAuth } from '@codetrix-studio/capacitor-google-auth'
 import { showToast } from '../utils/utils'
+import { OAuth2Client } from '@byteowls/capacitor-oauth2'
 
 export const useAuth = () => {
   const { t } = useI18n()
@@ -12,8 +11,32 @@ export const useAuth = () => {
   const router = useRouter()
   const route = useRoute()
   const authenticateWithGoogle = async () => {
+    const oauth2Options = {
+      authorizationBaseUrl: 'https://accounts.google.com/o/oauth2/auth',
+      accessTokenEndpoint: 'https://www.googleapis.com/oauth2/v4/token',
+      scope: 'email profile https://www.googleapis.com/auth/drive.appdata https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/drive.install',
+      resourceUrl: 'https://www.googleapis.com/userinfo/v2/me',
+      logsEnabled: true,
+      web: {
+        appId: process.env.VUE_APP_OAUTH_CLIENT_ID_WEB,
+        responseType: 'token', 
+        accessTokenEndpoint: '', 
+        redirectUrl: 'http://localhost:8100',
+        windowOptions: 'height=600,left=0,top=0'
+      },
+      android: {
+        appId: process.env.VUE_APP_OAUTH_CLIENT_ID,
+        responseType: 'code', 
+        redirectUrl: 'io.costa.mariana.veggie.foodie:/' 
+      },
+      ios: {
+        appId: process.env.VUE_APP_OAUTH_CLIENT_ID,
+        responseType: 'code',
+        redirectUrl: 'io.costa.mariana.veggie.foodie:/'
+      }
+    }
     try {
-      const userData = await GoogleAuth.signIn()
+      const userData = await OAuth2Client.authenticate(oauth2Options)
       return onAuthenticationSuccess(userData)
     } catch (error) {
       showToast(t('global.authenticationError'))
@@ -24,8 +47,9 @@ export const useAuth = () => {
     try {
       const userData = {
         fullName: userResponse.name || userResponse.displayName,
-        avatar: userResponse.imageUrl,
-        token: userResponse.authentication.idToken/* accessToken */
+        avatar: userResponse.picture,
+        accessToken: userResponse.access_token,
+          refreshToken: userResponse.authorization_response?.refresh_token
       }
       await Storage.set({
         key: 'userData',
@@ -52,17 +76,14 @@ export const useAuth = () => {
 
   const logout = async () => {
     try {
+      await OAuth2Client.logout()
       store.dispatch('setUserData', null)
       await Storage.remove({ key: 'userData' })
+      await Storage.remove({ key: 'alreadyLaunched' })
     } catch (error) {
       showToast()
     }
   }
 
-  onMounted(() => {
-    GoogleAuth.init()
-    loadAuthenticatedUser()
-  })
-
-  return { authenticateWithGoogle, logout }
+  return { authenticateWithGoogle, loadAuthenticatedUser, logout }
 }

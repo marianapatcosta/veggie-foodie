@@ -2,7 +2,7 @@
   "global": {
     "addSuccess": "The item was added.",
     "authenticate": "authenticate with Google",
-    "authenticationError": "An error occurred while trying to authenticate.",
+    "authenticationError": "It was not possible to log you.",
     "cancel": "cancel",
     "created": "created",
     "confirmDelete": "Do you want to delete {title}?",
