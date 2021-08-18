@@ -5,7 +5,8 @@ const store = createStore({
     return {
       database: null,
       userData: null,
-      theme: null
+      theme: null,
+      isOffline: null
     }
   },
   mutations: {
@@ -17,6 +18,9 @@ const store = createStore({
     },
     setTheme(state, theme) {
       state.theme = theme
+    },
+    setIsOffline(state, isOffline) {
+      state.isOffline = isOffline
     }
   },
   actions: {
@@ -28,6 +32,9 @@ const store = createStore({
     },
     setTheme(context, theme) {
       context.commit('setTheme', theme)
+    },
+    setIsOffline(context, isOffline) {
+      context.commit('setIsOffline', isOffline)
     }
   },
   getters: {
@@ -39,6 +46,9 @@ const store = createStore({
     },
     theme(state) {
       return state.theme
+    },
+    isOffline(state) {
+      return state.isOffline
     }
   }
 })

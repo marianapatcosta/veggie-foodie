@@ -17,6 +17,7 @@ import { Storage } from '@capacitor/storage'
 import { Device } from '@capacitor/device'
 import { useStore } from 'vuex'
 import { useI18n } from 'vue-i18n'
+import { Network } from '@capacitor/network'
 import { CREATE_TABLES, DATABASE_NAME } from './utils/crud-utils'
 import { showToast } from './utils/utils'
 import { useAuth } from './composables/useAuth'
@@ -107,16 +108,31 @@ export default defineComponent({
       }
     }
 
+    const updateNetworkStatus = status => {
+      store.dispatch('setIsOffline', !status.connected)
+    }
+
+    const getInitialNetworkStatus = async () => {
+      const status = await Network.getStatus()
+      updateNetworkStatus(status)
+    }
+
     onMounted(async () => {
+      Network.addListener('networkStatusChange', updateNetworkStatus)
+
       await Promise.all([
         connectDatabase(),
         loadAuthenticatedUser(),
         setlocale(),
         setTheme(),
+        getInitialNetworkStatus(),
       ])
     })
 
-    onUnmounted(async () => sqlite.value.closeConnection(DATABASE_NAME))
+    onUnmounted(async () => {
+      Network.removeAllListeners()
+      sqlite.value.closeConnection(DATABASE_NAME)
+    })
 
     return {
       app: sqlite,

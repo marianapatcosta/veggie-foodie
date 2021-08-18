@@ -1,9 +1,11 @@
+import { computed } from 'vue'
+import { toastController } from '@ionic/vue'
 import { Capacitor } from '@capacitor/core'
 import { Filesystem } from '@capacitor/filesystem'
 import { Share } from '@capacitor/share'
-import { toastController } from '@ionic/vue'
 import { FileSharer } from 'capacitor-plugin-filesharer'
 import { i18n } from '../locales'
+import { useStore } from 'vuex'
 
 //eslint-disable-next-line
 export const isUrl = url => !!url.match(/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/)
@@ -19,18 +21,25 @@ export const isFileUrl = imageUrl =>
 export const convertFilePathToHttp = fileUri =>
   fileUri && Capacitor.convertFileSrc(fileUri)
 
-export const showToast = async (message, color, duration) => {
+export const showToast = async (message, color, duration, position) => {
   const toast = await toastController.create({
     message: message || i18n.global.t('global.error'),
     duration: duration || 2000,
-    color: color || 'danger'
+    color: color || 'danger',
+    position: position || 'bottom'
   })
   toast.present()
 }
 
 export const onShareItem = async item => {
+  const store = useStore()
+  const isOffline = computed(() => store.getters.isOffline)
   const shareUrl = item.source || item.imageUrl
   try {
+    if (isOffline.value) {
+      return await showToast(i18n.global.t('global.offlineWarning'), 'warning')
+    }
+
     if (!isHttpUrl(shareUrl) && !isFileUrl(shareUrl)) {
       return await showToast(i18n.global.t('global.shareError'))
     }

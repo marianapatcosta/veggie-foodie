@@ -22,6 +22,7 @@
     "light": "light",
     "location": "location",
     "noImage": "No image to display. Add it now!",
+    "offlineWarning": "You are currently offline!",
     "ok": "ok",
     "orderBy": "Order by",
     "portuguese": "portuguese",
