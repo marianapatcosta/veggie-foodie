@@ -34,7 +34,7 @@ export default defineComponent({
     const app = getCurrentInstance()
     const sqlite = ref(null)
     const database = computed(() => store.getters.database)
-    const isDbInitialized = ref(true)
+    const isDbInitialized = ref(false)
 
     const connectDatabase = async () => {
       try {

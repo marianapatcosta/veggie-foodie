@@ -15,7 +15,7 @@ export const isHttpUrl = url =>
 export const isFileUrl = imageUrl =>
   imageUrl?.toLowerCase().substr(0, 8) === 'file:///'
 
-// 'file://' path to HTTP
+// 'file:///' path to HTTP
 export const convertFilePathToHttp = fileUri =>
   fileUri && Capacitor.convertFileSrc(fileUri)
 
