@@ -162,7 +162,7 @@ export default {
 }
 
 .preferences-list {
-  height: calc(100vh - 17rem);
+  height: calc(100vh - 21.5rem);
 }
 
 .preferences-avatar {
@@ -201,7 +201,9 @@ export default {
 
 .authentication {
   height: 7rem;
+  margin-bottom: 1.5rem;
 }
+
 .authentication-text {
   color: var(--ion-color-contrast);
   margin-bottom: 1rem;

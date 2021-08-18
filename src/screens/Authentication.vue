@@ -63,7 +63,7 @@ ion-img {
   width: 100%;
 }
 ion-row {
-  margin-top: 1rem;
+  margin-top: 0.75rem;
 }
 .page-bottom {
   height: 13.5rem;
@@ -74,7 +74,7 @@ ion-row {
   text-align: center;
   line-height: 1.5rem;
   font-style: italic;
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
 }
 
 .skip-link {

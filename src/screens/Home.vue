@@ -6,7 +6,6 @@
       })
     "
     headerCurved
-    :userHeader="!!userData"
   >
     <template v-slot:header-right v-if="userData">
       <ion-thumbnail class="avatar">
@@ -126,7 +125,7 @@ export default {
 </script>
 <style scoped>
 .avatar {
-  margin-left: auto;
+  margin: 0.5rem 0 0.5rem auto;
   background: var(--ion-color-secondary);
   padding: 0.1rem;
   border-radius: 0.5rem;
