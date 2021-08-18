@@ -19,15 +19,15 @@ export const useAuth = () => {
       logsEnabled: true,
       web: {
         appId: process.env.VUE_APP_OAUTH_CLIENT_ID_WEB,
-        responseType: 'token', 
-        accessTokenEndpoint: '', 
+        responseType: 'token',
+        accessTokenEndpoint: '',
         redirectUrl: 'http://localhost:8100',
         windowOptions: 'height=600,left=0,top=0'
       },
       android: {
         appId: process.env.VUE_APP_OAUTH_CLIENT_ID,
-        responseType: 'code', 
-        redirectUrl: 'io.costa.mariana.veggie.foodie:/' 
+        responseType: 'code',
+        redirectUrl: 'io.costa.mariana.veggie.foodie:/'
       },
       ios: {
         appId: process.env.VUE_APP_OAUTH_CLIENT_ID,
@@ -54,6 +54,10 @@ export const useAuth = () => {
       await Storage.set({
         key: 'userData',
         value: JSON.stringify(userData)
+      })
+      await Storage.set({
+        key: 'alreadyLaunched',
+        value: JSON.stringify(true)
       })
       store.dispatch('setUserData', userData)
       const currentRoute = route.name

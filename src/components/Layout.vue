@@ -2,7 +2,7 @@
   <ion-page>
     <ion-header v-if="!hideHeader" class="ion-no-border">
       <ion-toolbar
-        :class="{ 'header-curved': headerCurved, 'header-user': userHeader }"
+        :class="{ 'header-curved': headerCurved }"
       >
         <ion-row>
           <ion-col
@@ -49,8 +49,7 @@ export default {
     screenTitle: String,
     pageDefaultBackLink: String,
     headerCurved: { type: Boolean, default: false },
-    hideHeader: { type: Boolean, default: false },
-    userHeader: { type: Boolean, default: false },
+    hideHeader: { type: Boolean, default: false }
   },
 
   components: {
