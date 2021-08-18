@@ -22,7 +22,7 @@
       <ion-router-link
         v-if="item.source"
         class="ion-text-center"
-        
+
         :href="item.source"
       >
         {{ t('global.source') }}
@@ -68,7 +68,6 @@ export default {
     const { t } = useI18n()
     const router = useRouter()
     const { deleteItem } = useCrud(COLLECTIONS[collection.value.toUpperCase()])
-
     const onEditItem = id => router.push(`/${props.collection}/edit/${id}`)
 
     const onEditImage = id =>

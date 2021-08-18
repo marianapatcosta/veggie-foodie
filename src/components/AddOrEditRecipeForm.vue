@@ -136,9 +136,10 @@ export default {
           title: title.value,
           ingredients: ingredients.value,
           preparation: preparation.value,
-          source: isHttpUrl(source.value) ? source.value : `http:\\${source.value}`,
+          source: isHttpUrl(source.value) ? source.value : `http://${source.value}`,
           imageUrl: photo.value ? savedFileImageUri : webImageUrl.value,
         }
+
         await saveItem(data, props.itemId)
       } catch (error) {
         showToast()

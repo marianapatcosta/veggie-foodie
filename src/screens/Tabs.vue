@@ -68,6 +68,7 @@ export default {
 ion-tabs {
   background: var(--ion-color-secondary);
 }
+
 ion-tab-bar {
   border-top-right-radius: 1.5rem;
   border-top-left-radius: 1.5rem;
@@ -75,7 +76,9 @@ ion-tab-bar {
   border: none;
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2),
     0 1px 5px 0 rgba(0, 0, 0, 0.12);
+  padding-bottom: env(safe-area-inset-bottom);
 }
+
 ion-tab-button {
   background: var(--ion-color-primary);
 }

@@ -203,3 +203,8 @@ ion-list {
   margin: 0;
   padding: 0;
 }
+
+body {
+  padding-top: env(safe-area-inset-top);
+  padding-top: constant(safe-area-inset-top);
+}
