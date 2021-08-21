@@ -63,7 +63,6 @@ export default {
   setup(props) {
     const { t } = useI18n()
     const { deleteItem } = useCrud(COLLECTIONS[props.collection.toUpperCase()])
-
     const onDeleteItem = itemToDelete => {
       deleteItem(itemToDelete)
     }

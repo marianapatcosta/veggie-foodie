@@ -14,7 +14,7 @@
       <item-action-buttons
         @edit-item="onEditItem(item.id)"
         @delete-item="onDeleteItem(item)"
-        @share-item="onShareItem(item)"
+        @share-item="onShareItem(item, isOffline)"
       />
     </div>
     <div class="details-body">
@@ -22,7 +22,6 @@
       <ion-router-link
         v-if="item.source"
         class="ion-text-center"
-
         :href="item.source"
       >
         {{ t('global.source') }}
@@ -38,9 +37,10 @@
 <script>
 import { IonImg, IonRouterLink } from '@ionic/vue'
 import { pencil, trash, shareSocial } from 'ionicons/icons'
-import { toRefs } from 'vue'
+import { toRefs, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 import { useCrud } from '../composables/useCrud'
 import ImagePlaceholder from './ImagePlaceholder.vue'
 import ItemActionButtons from './ItemActionButtons.vue'
@@ -69,6 +69,8 @@ export default {
     const router = useRouter()
     const { deleteItem } = useCrud(COLLECTIONS[collection.value.toUpperCase()])
     const onEditItem = id => router.push(`/${props.collection}/edit/${id}`)
+    const store = useStore()
+    const isOffline = computed(() => store.getters.isOffline)
 
     const onEditImage = id =>
       router.push({
@@ -87,6 +89,7 @@ export default {
       pencil,
       trash,
       shareSocial,
+      isOffline,
       onShareItem,
       onEditItem,
       onEditImage,

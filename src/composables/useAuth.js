@@ -49,7 +49,7 @@ export const useAuth = () => {
         fullName: userResponse.name || userResponse.displayName,
         avatar: userResponse.picture,
         accessToken: userResponse.access_token,
-          refreshToken: userResponse.authorization_response?.refresh_token
+        refreshToken: userResponse.authorization_response?.refresh_token
       }
       await Storage.set({
         key: 'userData',

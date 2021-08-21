@@ -22,7 +22,7 @@ export default {
     const route = useRoute()
     const { t } = useI18n()
     const itemId = ref(route.params.id)
-    const item = ref(null )
+    const item = ref(null/* {id: 'M1', source: 'rwrew', title: 'ewrewr'} */ )
     const { getItem } = useCrud(COLLECTIONS.RECIPES)
     
     onMounted(async () => {
