@@ -10,7 +10,7 @@
       <item-action-buttons
         @edit-item="onEditItem(item.id)"
         @delete-item="onDeleteItem(item)"
-        @share-item="onShareItem(item)"
+        @share-item="onShareItem(item, isOffline)"
       />
     </div>
     <div class="details-body">
@@ -31,6 +31,7 @@ import { IonImg } from '@ionic/vue'
 import { ref, toRefs, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
+import { useStore } from 'vuex'
 import ImagePlaceholder from './ImagePlaceholder.vue'
 import ItemActionButtons from './ItemActionButtons.vue'
 import { useCrud } from '../composables/useCrud'
@@ -60,6 +61,8 @@ export default {
     const router = useRouter()
     const { locale } = useI18n()
     const { deleteItem } = useCrud(COLLECTIONS[collection.value.toUpperCase()])
+    const store = useStore()
+    const isOffline = computed(() => store.getters.isOffline)
 
     const dateOptions = ref({
       weekday: 'long',
@@ -86,6 +89,7 @@ export default {
     return {
       dateOptions,
       language,
+      isOffline,
       onShareItem,
       onEditItem,
       onEditImage,

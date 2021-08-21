@@ -1,11 +1,9 @@
-import { computed } from 'vue'
 import { toastController } from '@ionic/vue'
 import { Capacitor } from '@capacitor/core'
 import { Filesystem } from '@capacitor/filesystem'
 import { Share } from '@capacitor/share'
 import { FileSharer } from 'capacitor-plugin-filesharer'
 import { i18n } from '../locales'
-import { useStore } from 'vuex'
 
 //eslint-disable-next-line
 export const isUrl = url => !!url.match(/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/)
@@ -31,9 +29,7 @@ export const showToast = async (message, color, duration, position) => {
   toast.present()
 }
 
-export const onShareItem = async item => {
-  const store = useStore()
-  const isOffline = computed(() => store.getters.isOffline)
+export const onShareItem = async (item, isOffline) => {
   const shareUrl = item.source || item.imageUrl
   try {
     if (isOffline.value) {
@@ -52,7 +48,6 @@ export const onShareItem = async item => {
         dialogTitle: ''
       })
     }
-
     // share plugin works for http urls and for file urls if use image.path immediately after taking a photo (with  CameraResultType.Uri)
     // but if the path is saved in the filesystem, the app is killed and got the error in terminal :
     // Android: IllegalArgumentException: Failed to find configured root that contains /data/data/
@@ -60,9 +55,10 @@ export const onShareItem = async item => {
     const file = await Filesystem.readFile({
       path: shareUrl
     })
+   
     await FileSharer.share({
       header: `${i18n.global.t('global.shareTitle')} - ${item.title}`,
-      filename: `${i18n.global.t('global.shareTitle')} - ${item.title}`,
+      filename: `${item.title}.jpeg`,
       base64Data: file.data,
       contentType: 'image/jpeg'
     })

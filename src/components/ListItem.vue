@@ -13,7 +13,7 @@
       <ion-button
         class="icon-button--clear"
         fill="clear"
-        @click.prevent="onShareItem(item)"
+        @click.prevent="onShareItem(item, isOffline)"
       >
         <ion-icon slot="icon-only" :icon="shareSocial" />
       </ion-button>
@@ -39,6 +39,8 @@ import {
   IonIcon,
 } from '@ionic/vue'
 import { shareSocial, trash } from 'ionicons/icons'
+import { computed } from 'vue'
+import { useStore } from 'vuex'
 import ImagePlaceholder from './ImagePlaceholder.vue'
 import { convertFilePathToHttp } from '../utils/utils'
 export default {
@@ -59,8 +61,10 @@ export default {
     ImagePlaceholder,
   },
   setup(_, context) {
-    const onShareItem = item => {
-      context.emit('share-item', item)
+    const store = useStore()
+    const isOffline = computed(() => store.getters.isOffline)
+    const onShareItem = (item, isOffline) => {
+      context.emit('share-item', item, isOffline)
     }
     const onDeleteItem = item => {
       context.emit('delete-item', item)
@@ -69,6 +73,7 @@ export default {
     return {
       shareSocial,
       trash,
+      isOffline,
       onShareItem,
       onDeleteItem,
       convertFilePathToHttp,
