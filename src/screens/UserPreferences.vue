@@ -1,6 +1,6 @@
 <template>
   <layout
-    :screenTitle="t('user.preferences')"
+    :screenTitle="t('user.settings')"
     pageDefaultBackLink="/tabs/home"
     headerCurved
   >
@@ -10,8 +10,8 @@
           <div class="username">
             <span>{{ t('user.username') }}</span>
             <span
-              ><strong>{{ userData.fullName }}</strong></span
-            >
+              ><strong>{{ userData.fullName }}</strong>
+            </span>
           </div>
           <ion-thumbnail slot="end" class="preferences-avatar">
             <ion-img :src="userData?.avatar" />
@@ -52,8 +52,11 @@
               >{{ theme.label }}</ion-select-option
             >
           </ion-select>
-        </ion-item></ion-list
-      >
+        </ion-item>
+        <ion-item class="user-data" @click="goToPrivacyPolicy">
+          {{ t('global.privacyPolicy') }}
+        </ion-item>
+      </ion-list>
 
       <div class="authentication">
         <p v-if="!userData" class="authentication-text">
@@ -81,8 +84,9 @@ import {
 } from '@ionic/vue'
 import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { Storage } from '@capacitor/storage'
 import { useStore } from 'vuex'
+import { Storage } from '@capacitor/storage'
+import { Browser } from '@capacitor/browser'
 import { AuthenticationButton } from '../components'
 import { getLanguages, getThemes } from '../utils/constants'
 import { showToast } from '../utils/utils'
@@ -135,6 +139,12 @@ export default {
       }
     }
 
+    const goToPrivacyPolicy = async () => {
+      const PRIVACY_AND_POLICY__WEBSITE =
+        'https://github.com/marianapatcosta/veggie-foodie'
+      await Browser.open({ url: PRIVACY_AND_POLICY__WEBSITE })
+    }
+
     return {
       t,
       customAlertOptions,
@@ -146,6 +156,7 @@ export default {
       updateLanguage,
       updateTheme,
       logout,
+      goToPrivacyPolicy,
     }
   },
 }
@@ -162,7 +173,7 @@ export default {
 }
 
 .preferences-list {
-  height: calc(100vh - 21.5rem);
+  height: calc(100vh - 20.5rem);
 }
 
 .preferences-avatar {

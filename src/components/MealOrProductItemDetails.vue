@@ -1,11 +1,16 @@
 <template>
   <div>
     <div class="image-wrapper">
-      <ion-img
-        v-if="item?.imageUrl"
-        :src="convertFilePathToHttp(item.imageUrl)"
-        :alt="item.title"
-      />
+      <ion-slides v-if="item?.imageUrl" :options="sliderOptions">
+        <ion-slide>
+          <div class="swiper-zoom-container">
+            <img
+              :src="convertFilePathToHttp(item.imageUrl)"
+              :alt="item.title"
+            />
+          </div>
+        </ion-slide>
+      </ion-slides>
       <image-placeholder v-else @click.prevent="onEditImage(item.id)" />
       <item-action-buttons
         @edit-item="onEditItem(item.id)"
@@ -27,7 +32,7 @@
 </template>
 
 <script>
-import { IonImg } from '@ionic/vue'
+import { IonSlides, IonSlide } from '@ionic/vue'
 import { ref, toRefs, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
@@ -36,13 +41,11 @@ import ImagePlaceholder from './ImagePlaceholder.vue'
 import ItemActionButtons from './ItemActionButtons.vue'
 import { useCrud } from '../composables/useCrud'
 import { COLLECTIONS } from '../utils/constants'
-import {
-  convertFilePathToHttp,
-  onShareItem,
-} from '../utils/utils'
+import { convertFilePathToHttp, onShareItem } from '../utils/utils'
 export default {
   components: {
-    IonImg,
+    IonSlides,
+    IonSlide,
     ImagePlaceholder,
     ItemActionButtons,
   },
@@ -73,6 +76,12 @@ export default {
 
     const language = computed(() => locale.value)
 
+    const sliderOptions = ref({
+      zoom: { maxRatio: 2 },
+      allowSlideNext: false,
+      allowSlidePrev: false,
+    })
+
     const onEditImage = id =>
       router.push({
         path: `/${props.collection}/edit/${id}`,
@@ -90,6 +99,7 @@ export default {
       dateOptions,
       language,
       isOffline,
+      sliderOptions,
       onShareItem,
       onEditItem,
       onEditImage,

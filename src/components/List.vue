@@ -80,6 +80,7 @@ import {
   IonItem,
   IonButton,
   IonButtons,
+  onIonViewWillEnter,
 } from '@ionic/vue'
 import { ref, toRefs, computed, watch, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
@@ -206,8 +207,12 @@ export default {
 
     onMounted(async () => {
       await getSortSettings()
+    })
+
+    onIonViewWillEnter(async () => {
       await fetchItems()
     })
+
     return {
       t,
       swapVertical,

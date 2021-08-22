@@ -79,6 +79,6 @@ ion-row {
 
 .skip-link {
   color: var(--ion-color-item);
-  font-size: 16px;
+  font-size: 1rem;
 }
 </style>

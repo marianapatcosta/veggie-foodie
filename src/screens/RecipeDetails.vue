@@ -8,7 +8,8 @@
 </template>
 
 <script>
-import { ref, onMounted } from 'vue'
+import { onIonViewWillEnter } from '@ionic/vue'
+import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { RecipeItemDetails } from '../components'
@@ -22,13 +23,14 @@ export default {
     const route = useRoute()
     const { t } = useI18n()
     const itemId = ref(route.params.id)
-    const item = ref(null/* {id: 'M1', source: 'rwrew', title: 'ewrewr'} */ )
+    const item = ref(null)
     const { getItem } = useCrud(COLLECTIONS.RECIPES)
-    
-    onMounted(async () => {
+
+    onIonViewWillEnter(async () => {
       const itemResponseData = await getItem(itemId.value)
       item.value = itemResponseData
     })
+
     return {
       t,
       COLLECTIONS,
