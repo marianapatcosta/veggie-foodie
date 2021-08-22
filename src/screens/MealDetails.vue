@@ -11,7 +11,8 @@
 </template>
 
 <script>
-import { ref, onMounted } from 'vue'
+import { onIonViewWillEnter } from '@ionic/vue'
+import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { MealOrProductItemDetails } from '../components'
@@ -28,10 +29,11 @@ export default {
     const item = ref(null)
     const { getItem } = useCrud(COLLECTIONS.MEALS)
 
-    onMounted(async () => {
+    onIonViewWillEnter(async () => {
       const itemResponseData = await getItem(itemId.value)
       item.value = itemResponseData
     })
+    
     return {
       t,
       COLLECTIONS,

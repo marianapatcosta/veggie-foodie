@@ -25,15 +25,16 @@
     "offlineWarning": "Está offline!",
     "ok": "ok",
     "orderBy": "Ordenar por",
+    "privacyPolicy": "Política de Privacidade",
     "portuguese": "português",
     "preparation": "preparação",
     "save": "Guardar",
-    "search": "Pesquisar",
+    "search": "Pesquisar por título",
     "shareError": "Não há link nem imagem para partilhar.",
     "shareTitle": "Muito Bom!!!",
     "skipAuth": "ignorar autenticação",
-    "source": "site url",
-    "store": "Loja",
+    "source": "site URL",
+    "store": "loja",
     "title": "título"
   },
   "meals": {
@@ -41,8 +42,9 @@
     "details": "Detalhes da refeição",
     "editMeal": "Editar refeição",
     "myMeals": "As minhas refeições",
-    "noMeals": "Ainda não há refeições para mostrar.",
-    "meals": "refeições"
+    "meals": "refeições",
+    "mealsCount": "0 refeições | {count} refeição | {count} refeições",
+    "noMeals": "Ainda não há refeições para mostrar."
   },
   "products": {
     "addProduct": "Adicionar producto",
@@ -50,7 +52,8 @@
     "editProduct": "Editar producto",
     "myProducts": "Os meus productos",
     "noProducts": "Ainda não há produtos para mostrar.",
-    "products": "produtos"
+    "products": "produtos",
+    "productsCount": "0 produtos | {count} produto | {count} produtos"
   },
   "recipes": {
     "addRecipe": "Adicionar receita",
@@ -58,15 +61,16 @@
     "editRecipe": "Editar receita",
     "myRecipes": "As minhas receitas",
     "noRecipes": "Ainda não há receitas para mostrar.",
-    "recipes": "receitas"
+    "recipes": "receitas",
+    "recipesCount": "0 receitas | {count} receita | {count} receitas"
   },
   "user": {
     "language": "Idioma",
     "loggedIn": "Está autenticada/o com a sua conta Google!",
     "loggedOut": "Não está autenticada/o!",
     "logout": "logout",
-    "preferences": "Preferências",
     "selectOne": "Selecione um",
+    "settings": "Definições",
     "theme": "Tema",
     "username": "Nome de utilizador"
   }

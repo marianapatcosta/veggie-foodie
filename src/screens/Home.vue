@@ -20,21 +20,21 @@
         :collection="COLLECTIONS.MEALS"
         :title="t('meals.myMeals')"
         :items="meals"
-        :total="`${totalMealsCount} ${t('meals.meals')}`"
+        :total="t('meals.mealsCount', { count: totalMealsCount })"
         :noData="t('meals.noMeals')"
       />
       <latest-items-list
         :collection="COLLECTIONS.RECIPES"
         :title="t('recipes.myRecipes')"
         :items="recipes"
-        :total="`${totalRecipesCount} ${t('recipes.recipes')}`"
+        :total="t('recipes.recipesCount', { count: totalRecipesCount })"
         :noData="t('recipes.noRecipes')"
       />
       <latest-items-list
         :collection="COLLECTIONS.PRODUCTS"
         :title="t('products.myProducts')"
         :items="products"
-        :total="`${totalProductsCount} ${t('products.products')}`"
+        :total="t('products.productsCount', { count: totalProductsCount })"
         :noData="t('products.noProducts')"
       />
     </div>
@@ -47,8 +47,9 @@ import {
   IonImg,
   IonRefresher,
   IonRefresherContent,
+  onIonViewWillEnter
 } from '@ionic/vue'
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useStore } from 'vuex'
 import { LatestItemsList } from '../components'
@@ -105,9 +106,11 @@ export default {
         showToast()
       }
     }
-    onMounted(async () => {
+
+    onIonViewWillEnter(async () => {
       await fetchItems()
     })
+
     return {
       t,
       userData,

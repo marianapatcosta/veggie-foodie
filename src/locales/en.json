@@ -25,15 +25,16 @@
     "offlineWarning": "You are currently offline!",
     "ok": "ok",
     "orderBy": "Order by",
+    "privacyPolicy": "Privacy Policy",
     "portuguese": "portuguese",
     "preparation": "preparation",
     "save": "Save",
-    "search": "Search",
+    "search": "Search by title",
     "shareError": "There is no link nor image to share.",
     "shareTitle": "Very Good!!!",
     "skipAuth": "skip authentication",
-    "source": "site url",
-    "store": "Store",
+    "source": "site URL",
+    "store": "store",
     "title": "title"
   },
   "meals": {
@@ -42,7 +43,8 @@
     "editMeal": "Edit meal",
     "meals": "meals",
     "myMeals": "My meals",
-    "noMeals": "No meals to show yet."
+    "noMeals": "No meals to show yet.",
+    "mealsCount": "0 meals | {count} meal | {count} meals"
   },
   "products": {
     "addProduct": "Add product",
@@ -50,7 +52,8 @@
     "editMeal": "Edit product",
     "myProducts": "My products",
     "noProducts": "No products to show yet.",
-    "products": "products"
+    "products": "products",
+    "productsCount": "0 products | {count} product | {count} products"
   },
   "recipes": {
     "addRecipe": "Add recipe",
@@ -58,15 +61,16 @@
     "editRecipe": "Edit recipe",
     "myRecipes": "My recipes",
     "noRecipes": "No recipes to show yet.",
-    "recipes": "recipes"
+    "recipes": "recipes",
+    "recipesCount": "0 recipes | {count} recipes | {count} recipes"
   },
   "user": {
     "language": "Language",
     "loggedIn": "You are logged in with your Google account!",
     "loggedOut": "You are not logged in!",
     "logout": "logout",
-    "preferences": "Preferences",
     "selectOne": "Select one",
+    "settings": "Settings",
     "theme": "Theme",
     "username": "Username"
   }
