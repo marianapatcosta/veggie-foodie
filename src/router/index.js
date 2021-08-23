@@ -69,6 +69,8 @@ const routes = [
   {
     path: '/meals/edit/:id',
     name: 'edit-meal',
+    //props: true, // thus we could access id prop using "props" 
+    //objects instead of extract it use route.params
     component: () => import('../screens/AddOrEditMeal.vue')
   },
   {

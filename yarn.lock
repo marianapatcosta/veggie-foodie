@@ -1007,10 +1007,10 @@
   resolved "https://registry.yarnpkg.com/@capacitor/splash-screen/-/splash-screen-1.1.0.tgz#1cd4c69a89a5d6d97fcc28b237eb84980a106046"
   integrity sha512-DJ7TiWtfe84NFYdxuvw1etVhVoZgJp5jggOa6hXcADshhNi3XjPXI8CKnuhmmgHmV7gmwV9SFmSX2TtGf4tyAw==
 
-"@capacitor/status-bar@1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@capacitor/status-bar/-/status-bar-1.0.1.tgz#08994946acfb31bb2e90136fd9d5fc302215e1d4"
-  integrity sha512-5JwaseLxyhT8P86WiL776+1UTxR3k7klH4hU+gBD5UdAHRP4/jyS1/FiEuUpkMAMy6yvCJcDwZl8b6P1zWbiMQ==
+"@capacitor/status-bar@^1.0.1":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@capacitor/status-bar/-/status-bar-1.0.2.tgz#b432403bab8ff5dc4b4f013c35aa1f85cc0651c8"
+  integrity sha512-NgAZIw8Uq2lm6Ln1lWipAqi/YxqIDd92boO4k81Z1WMOdZJt6oLxZB8LfJRDLXU7xNkpW97zHcNBf5pIXJIFqw==
 
 "@capacitor/storage@^1.0.2":
   version "1.0.3"
