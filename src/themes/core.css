@@ -204,7 +204,13 @@ ion-list {
   padding: 0;
 }
 
+/* fix to consider ios safe area for header height */
 body {
   padding-top: env(safe-area-inset-top);
   padding-top: constant(safe-area-inset-top);
+}
+
+/* Fix to add extra padding for Android header to compensate for StatusBar.setOverlaysWebView({ overlay: true }) */
+ion-header.md ion-toolbar:first-child {
+  --padding-top: 27px;
 }

@@ -13,14 +13,15 @@ import {
   onUnmounted,
 } from 'vue'
 import { IonApp, IonRouterOutlet } from '@ionic/vue'
-import { Storage } from '@capacitor/storage'
 import { Device } from '@capacitor/device'
+import { Network } from '@capacitor/network'
+import { Storage } from '@capacitor/storage'
+import { StatusBar } from '@capacitor/status-bar'
 import { useStore } from 'vuex'
 import { useI18n } from 'vue-i18n'
-import { Network } from '@capacitor/network'
+import { useAuth } from './composables/useAuth'
 import { CREATE_TABLES, DATABASE_NAME } from './utils/crud-utils'
 import { showToast } from './utils/utils'
-import { useAuth } from './composables/useAuth'
 
 export default defineComponent({
   name: 'App',
@@ -97,6 +98,7 @@ export default defineComponent({
         const prefersDark = theme === 'dark'
         document.body.classList.toggle('dark', prefersDark)
         store.dispatch('setTheme', theme)
+    
         if (!value) {
           await Storage.set({
             key: 'theme',
@@ -126,6 +128,7 @@ export default defineComponent({
         setlocale(),
         setTheme(),
         getInitialNetworkStatus(),
+        StatusBar.setOverlaysWebView({ overlay: true })
       ])
     })
 
