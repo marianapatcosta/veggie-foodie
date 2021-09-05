@@ -10,6 +10,7 @@
 <script>
 import { useI18n } from 'vue-i18n'
 import { AddButton, List } from '../components'
+
 export default {
   components: {
     AddButton,

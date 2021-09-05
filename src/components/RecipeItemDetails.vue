@@ -6,7 +6,7 @@
           <div class="swiper-zoom-container">
             <img
               :src="
-                isUrl(item.imageurl)
+                isUrl(item.imageUrl)
                   ? item.imageUrl
                   : convertFilePathToHttp(item.imageUrl)
               "

@@ -28,6 +28,7 @@
     "privacyPolicy": "Privacy Policy",
     "portuguese": "portuguese",
     "preparation": "preparation",
+    "remove": "remove",
     "save": "Save",
     "search": "Search by title",
     "shareError": "There is no link nor image to share.",
@@ -49,7 +50,7 @@
   "products": {
     "addProduct": "Add product",
     "details": "Product details",
-    "editMeal": "Edit product",
+    "editProduct": "Edit product",
     "myProducts": "My products",
     "noProducts": "No products to show yet.",
     "products": "products",

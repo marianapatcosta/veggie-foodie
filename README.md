@@ -1,7 +1,7 @@
 # Veggie Foodie App
 
-Cross-platform mobile app that allows to keep a record of favorite vegetarian meals, recipes and products, by listing, creating, editing and deleting them. The user can upload or take photos of each item, and order the listed items by different fields, in ascending and descending way. All data handling is managed in the storage device. Share functionality is also available for external HTTP images or source.  It was developed using Ionic, Capacitor, Vue 3 with Composition API, Vuex and SQLite database.
-![veggie-foodie-overview](https://user-images.githubusercontent.com/43031902/126183764-04281715-b8ae-4085-b8e0-5bdcfa57cc51.png)
+Cross-platform mobile app that allows to keep a record of favorite vegetarian meals, recipes and products, by listing, creating, editing and deleting them. The user can upload or take photos of each item, and order the listed items by different fields, in ascending and descending way. All data handling is managed in the storage device. The items can also be shared. Includes optional login with Google OAuth It was developed using Ionic, Capacitor, Vue 3 with Composition API, Vuex and SQLite database.
+![veggie-foodie-overview](https://user-images.githubusercontent.com/43031902/131841618-e5cb64eb-88a5-43e0-b7e1-ff8f13520780.png)
 
 
 ### Available Scripts

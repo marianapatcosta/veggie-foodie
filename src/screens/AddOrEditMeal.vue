@@ -27,7 +27,6 @@ export default {
     const { t } = useI18n()
     const itemId = ref(route.params.id)
     const isEditImage = route.query.isEditImage
-
     return {
       t,
       itemId,

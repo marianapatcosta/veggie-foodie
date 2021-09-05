@@ -89,6 +89,7 @@ ion-list {
   --box-shadow: 0 0.3rem var(--ion-color-primary-shade);
   font-size: 1.1rem;
   height: 2.5rem;
+  --padding-top: 0.35rem;
 }
 
 .submit-button:active {

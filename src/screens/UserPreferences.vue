@@ -53,7 +53,7 @@
             >
           </ion-select>
         </ion-item>
-        <ion-item class="user-data" @click="goToPrivacyPolicy">
+        <ion-item class="user-data privacy-policy" @click="goToPrivacyPolicy">
           {{ t('global.privacyPolicy') }}
         </ion-item>
       </ion-list>
@@ -140,8 +140,7 @@ export default {
     }
 
     const goToPrivacyPolicy = async () => {
-      const PRIVACY_AND_POLICY__WEBSITE =
-        'https://github.com/marianapatcosta/veggie-foodie'
+      const PRIVACY_AND_POLICY__WEBSITE = 'https://veggie-foodie.netlify.app'
       await Browser.open({ url: PRIVACY_AND_POLICY__WEBSITE })
     }
 
@@ -218,5 +217,9 @@ export default {
 .authentication-text {
   color: var(--ion-color-contrast);
   margin-bottom: 1rem;
+}
+
+.privacy-policy {
+  color: var(--ion-color-contrast);
 }
 </style>
