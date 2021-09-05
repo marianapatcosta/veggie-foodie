@@ -59,6 +59,7 @@ const routes = [
   },
   {
     path: '/meals/:id',
+    name: 'meal-details',
     component: () => import('../screens/MealDetails.vue')
   },
   {
@@ -69,7 +70,7 @@ const routes = [
   {
     path: '/meals/edit/:id',
     name: 'edit-meal',
-    //props: true, // thus we could access id prop using "props" 
+    //props: true, // thus we could access id prop using "props"
     //objects instead of extract it use route.params
     component: () => import('../screens/AddOrEditMeal.vue')
   },

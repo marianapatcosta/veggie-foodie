@@ -22,6 +22,7 @@
         :items="meals"
         :total="t('meals.mealsCount', { count: totalMealsCount })"
         :noData="t('meals.noMeals')"
+        :onConfirmDeleteItem="fetchMeals"
       />
       <latest-items-list
         :collection="COLLECTIONS.RECIPES"
@@ -29,6 +30,7 @@
         :items="recipes"
         :total="t('recipes.recipesCount', { count: totalRecipesCount })"
         :noData="t('recipes.noRecipes')"
+        :onConfirmDeleteItem="fetchRecipes"
       />
       <latest-items-list
         :collection="COLLECTIONS.PRODUCTS"
@@ -36,6 +38,7 @@
         :items="products"
         :total="t('products.productsCount', { count: totalProductsCount })"
         :noData="t('products.noProducts')"
+        :onConfirmDeleteItem="fetchProducts"
       />
     </div>
   </layout>
@@ -47,7 +50,7 @@ import {
   IonImg,
   IonRefresher,
   IonRefresherContent,
-  onIonViewWillEnter
+  onIonViewWillEnter,
 } from '@ionic/vue'
 import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -107,6 +110,35 @@ export default {
       }
     }
 
+    const fetchMeals = async () => {
+      try {
+        const latestMeals = await getLLatestMeals(NUMBER_OF_ITEM_TO_LOAD)
+        meals.value = latestMeals?.items
+        totalMealsCount.value = latestMeals.count
+      } catch (error) {
+        showToast()
+      }
+    }
+
+    const fetchRecipes = async () => {
+      try {
+        const latestRecipes = await getLLatestRecipes(NUMBER_OF_ITEM_TO_LOAD)
+        recipes.value = latestRecipes?.items
+        totalRecipesCount.value = latestRecipes.count
+      } catch (error) {
+        showToast()
+      }
+    }
+
+    const fetchProducts = async () => {
+      try {
+        const latestProducts = await getLLatestProducts(NUMBER_OF_ITEM_TO_LOAD)
+        products.value = latestProducts?.items
+        totalProductsCount.value = latestProducts.count
+      } catch (error) {
+        showToast()
+      }
+    }
     onIonViewWillEnter(async () => {
       await fetchItems()
     })
@@ -122,6 +154,9 @@ export default {
       totalProductsCount,
       COLLECTIONS,
       onRefresh,
+      fetchMeals,
+      fetchRecipes,
+      fetchProducts
     }
   },
 }

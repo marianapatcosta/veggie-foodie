@@ -63,15 +63,27 @@
         <ion-button class="icon-button" fill="outline" @click="handleTakePhoto">
           <ion-icon slot="icon-only" :icon="camera"></ion-icon>
         </ion-button>
-
-        <ion-thumbnail slot="end">
-          <ion-img v-if="imageUrl" :src="imageUrl" alt="item photo"/>
-          <image-placeholder v-else isSmall />
-        </ion-thumbnail>
+        <div slot="end">
+          <ion-thumbnail>
+            <ion-img
+              v-if="imageUrl || webImageUrl"
+              :src="convertFilePathToHttp(imageUrl || webImageUrl)"
+              alt="item photo"
+            />
+            <image-placeholder v-else isSmall />
+          </ion-thumbnail>
+          <ion-button
+            v-if="imageUrl"
+            class="button--remove"
+            @click="removePhoto"
+            fill="clear"
+            >{{ t('global.remove') }}
+          </ion-button>
+        </div>
       </div>
       <ion-input
         v-if="collection === COLLECTIONS.PRODUCTS"
-        v-model="imageUrl"
+        v-model="webImageUrl"
         :placeholder="t('global.imageLink')"
       />
     </ion-item>
@@ -102,7 +114,7 @@ import ImagePlaceholder from './ImagePlaceholder.vue'
 import { COLLECTIONS } from '../utils/constants'
 import { useCrud } from '../composables/useCrud'
 import { usePhoto } from '../composables/usePhoto'
-import { convertFilePathToHttp, showToast } from '../utils/utils'
+import { convertFilePathToHttp, showToast, isHttpUrl } from '../utils/utils'
 export default {
   emits: ['save-item'],
   props: {
@@ -135,6 +147,7 @@ export default {
     const description = ref('')
     const imageUrl = ref('')
     const photo = ref('')
+    const webImageUrl = ref('')
     const store = ref('')
     const location = ref('')
     const date = ref(new Date().toISOString())
@@ -148,6 +161,15 @@ export default {
       photo.value = newPhoto
     }
 
+    const removePhoto = () => (imageUrl.value = '')
+
+    const getUrl = url => {
+      if (!url) {
+        return
+      }
+      return isHttpUrl(url) ? url : `http://${url}`
+    }
+
     const submitForm = async () => {
       try {
         let savedFileImageUri
@@ -157,7 +179,8 @@ export default {
         const data = {
           title: title.value,
           date: date.value,
-          imageUrl: savedFileImageUri,
+          imageUrl:
+            savedFileImageUri || imageUrl.value || getUrl(webImageUrl.value),
           description: description.value,
         }
         if (props.collection === COLLECTIONS.PRODUCTS) {
@@ -176,7 +199,9 @@ export default {
       try {
         const language = locale.value
         const GEOLOCATION_KEY = process.env.VUE_APP_GEOLOCATION_KEY
-        const coordinates = await Geolocation.getCurrentPosition()
+        const coordinates = await Geolocation.getCurrentPosition({
+          enableHighAccuracy: true,
+        })
         const geolocationParams = `${coordinates.coords.longitude},${coordinates.coords.latitude}`
         const geolocation = await axios.get(
           `https://api.mapbox.com/geocoding/v5/mapbox.places/${geolocationParams}.json?access_token=${GEOLOCATION_KEY}&autocomplete=false&language=${language}`
@@ -190,7 +215,10 @@ export default {
     watch(item, () => {
       title.value = item.value.title || ''
       description.value = item.value.description || ''
-      imageUrl.value = convertFilePathToHttp(item.value.imageUrl) || ''
+      imageUrl.value = item.value.imageUrl || ''
+      webImageUrl.value = isHttpUrl(item.value.imageUrl)
+        ? item.value.imageUrl
+        : ''
       location.value = item.value.location || ''
       store.value = item.value.store || ''
       date.value = item.value.date || new Date().toISOString()
@@ -210,15 +238,18 @@ export default {
       title,
       description,
       imageUrl,
+      webImageUrl,
       store,
       location,
       date,
       camera,
       locationIcon,
       handleTakePhoto,
+      removePhoto,
       submitForm,
       findCurrentLocation,
       COLLECTIONS,
+      convertFilePathToHttp,
     }
   },
 }
@@ -271,8 +302,14 @@ span {
   width: 100%;
   align-items: center;
   justify-content: space-between;
+  margin-bottom: 0.5rem;
 }
 .location {
   width: calc(100% - 3.75rem);
+}
+.button--remove {
+  --padding-start: 0;
+  --padding-end: 0;
+  color: var(--ion-color-item);
 }
 </style>

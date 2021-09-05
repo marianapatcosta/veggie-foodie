@@ -59,13 +59,17 @@ export default {
       type: String,
       required: true,
     },
+    onConfirmDeleteItem: {
+      type: Object,
+      required: false,
+    },
   },
   setup(props) {
     const { t } = useI18n()
     const { deleteItem } = useCrud(COLLECTIONS[props.collection.toUpperCase()])
-    const onDeleteItem = itemToDelete => {
-      deleteItem(itemToDelete)
-    }
+    const onDeleteItem = itemToDelete =>
+      deleteItem(itemToDelete, props.onConfirmDeleteItem)
+
     return {
       t,
       onShareItem,

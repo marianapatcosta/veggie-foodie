@@ -131,7 +131,11 @@ export const useCrud = collection => {
         : INSERT_ITEM_STATEMENT(collection, FIELDS)
       const values = FIELDS.map(field => item[field])
       await database.run(statement, values)
-      router.replace(`/tabs/${collection}`)
+      const redirectTo = !itemId
+        ? `/tabs/${collection}`
+        : `/${collection}/${itemId}`
+      router.replace(redirectTo)
+
       const toastMessage = !itemId
         ? t('global.addSuccess')
         : t('global.editSuccess')

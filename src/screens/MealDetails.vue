@@ -33,7 +33,7 @@ export default {
       const itemResponseData = await getItem(itemId.value)
       item.value = itemResponseData
     })
-    
+
     return {
       t,
       COLLECTIONS,

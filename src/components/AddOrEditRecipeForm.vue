@@ -50,10 +50,23 @@
         <ion-button class="icon-button" fill="outline" @click="handleTakePhoto">
           <ion-icon slot="icon-only" :icon="camera"></ion-icon>
         </ion-button>
-        <ion-thumbnail slot="end">
-          <ion-img v-if="imageUrl" :src="imageUrl" alt="item photo" />
-          <image-placeholder v-else isSmall />
-        </ion-thumbnail>
+        <div slot="end">
+          <ion-thumbnail>
+            <ion-img
+              v-if="imageUrl || webImageUrl"
+              :src="convertFilePathToHttp(imageUrl || webImageUrl)"
+              alt="item photo"
+            />
+            <image-placeholder v-else isSmall />
+          </ion-thumbnail>
+          <ion-button
+            v-if="imageUrl"
+            class="button--remove"
+            @click="removePhoto"
+            fill="clear"
+            >{{ t('global.remove') }}
+          </ion-button>
+        </div>
       </div>
       <ion-input
         clear-input
@@ -86,12 +99,7 @@ import ImagePlaceholder from './ImagePlaceholder.vue'
 import { COLLECTIONS } from '../utils/constants'
 import { useCrud } from '../composables/useCrud'
 import { usePhoto } from '../composables/usePhoto'
-import {
-  convertFilePathToHttp,
-  isHttpUrl,
-  isUrl,
-  showToast,
-} from '../utils/utils'
+import { convertFilePathToHttp, isHttpUrl, showToast } from '../utils/utils'
 export default {
   emits: ['save-item'],
   props: {
@@ -131,23 +139,29 @@ export default {
       photo.value = newPhoto
     }
 
+    const removePhoto = () => (imageUrl.value = '')
+
+    const getUrl = url => {
+      if (!url) {
+        return
+      }
+      return isHttpUrl(url) ? url : `http://${url}`
+    }
+
     const submitForm = async () => {
       try {
         let savedFileImageUri
         if (photo.value) {
           savedFileImageUri = await savePhoto(photo.value)
         }
+
         const data = {
           title: title.value,
           ingredients: ingredients.value,
           preparation: preparation.value,
-          imageUrl: photo.value ? savedFileImageUri : webImageUrl.value,
-        }
-
-        if (source.value) {
-          data.source = isHttpUrl(source.value)
-            ? source.value
-            : `http://${source.value}`
+          source: getUrl(source.value),
+          imageUrl:
+            savedFileImageUri || imageUrl.value || getUrl(webImageUrl.value),
         }
 
         await saveItem(data, props.itemId)
@@ -156,20 +170,15 @@ export default {
       }
     }
 
-    const getImageUrl = imageUrl => {
-      if (!imageUrl) {
-        return ''
-      }
-
-      return isUrl(imageUrl) ? imageUrl : convertFilePathToHttp(imageUrl)
-    }
-
     watch(item, () => {
       title.value = item.value.title || ''
       ingredients.value = item.value.ingredients || ''
       preparation.value = item.value.preparation || ''
       source.value = item.value.source || ''
-      imageUrl.value = getImageUrl(item.value.imageUrl)
+      imageUrl.value = item.value.imageUrl
+      webImageUrl.value = isHttpUrl(item.value.imageUrl)
+        ? item.value.imageUrl
+        : ''
     })
 
     onMounted(async () => {
@@ -192,8 +201,10 @@ export default {
       source,
       camera,
       handleTakePhoto,
+      removePhoto,
       submitForm,
       COLLECTIONS,
+      convertFilePathToHttp,
     }
   },
 }
@@ -246,5 +257,10 @@ span {
   width: 100%;
   align-items: center;
   justify-content: space-between;
+}
+.button--remove {
+  --padding-start: 0;
+  --padding-end: 0;
+  color: var(--ion-color-item);
 }
 </style>

@@ -60,7 +60,7 @@ export default {
     IonIcon,
     ImagePlaceholder,
   },
-  setup(_, context) {
+  setup(props, context) {
     const store = useStore()
     const isOffline = computed(() => store.getters.isOffline)
     const onShareItem = (item, isOffline) => {

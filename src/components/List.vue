@@ -205,13 +205,9 @@ export default {
     })
 
     onMounted(async () => {
-      await fetchItems()
       await getSortSettings()
-    })
-/* 
-    onIonViewWillEnter(async () => {
       await fetchItems()
-    }) */
+    })
 
     return {
       t,

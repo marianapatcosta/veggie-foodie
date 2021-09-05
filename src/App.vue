@@ -98,7 +98,7 @@ export default defineComponent({
         const prefersDark = theme === 'dark'
         document.body.classList.toggle('dark', prefersDark)
         store.dispatch('setTheme', theme)
-    
+
         if (!value) {
           await Storage.set({
             key: 'theme',
@@ -128,7 +128,7 @@ export default defineComponent({
         setlocale(),
         setTheme(),
         getInitialNetworkStatus(),
-        StatusBar.setOverlaysWebView({ overlay: true })
+        StatusBar.setOverlaysWebView({ overlay: true }),
       ])
     })
 
