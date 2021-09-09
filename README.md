@@ -4,6 +4,12 @@ Cross-platform mobile app that allows to keep a record of favorite vegetarian me
 ![veggie-foodie-overview](https://user-images.githubusercontent.com/43031902/131841618-e5cb64eb-88a5-43e0-b7e1-ff8f13520780.png)
 
 
+The following environnement variable must be configured:
+- VUE_APP_GEOLOCATION_KEY
+- VUE_APP_GOOGLE_API_KEY
+- VUE_APP_OAUTH_CLIENT_ID
+- VUE_APP_OAUTH_CLIENT_ID_WEB
+
 ### Available Scripts
 
 In the project directory, you can run:
